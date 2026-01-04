@@ -1,24 +1,19 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
-
+import { Slot, router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect } from "react";
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
 
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
+  useEffect(() => {
+    const check = async () => {
+      const done = await AsyncStorage.getItem("onboarding");
+      if (done) {
+        router.replace("./onboarding/step1");
+      } else {
+        router.replace("./(tabs)");
+      };
+    };
+    check();
+  }, []);
+
+  return <Slot />;
 }
