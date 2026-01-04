@@ -16,13 +16,14 @@ const Login = () => {
         console.log('Login successful!');
       }
       if(!email || !password) {
-        setError('Please enter email and password');
+        setError('يرجى ملء جميع الحقول');
         return;
       }
       if(password.length < 6) {
-        setError('Password must be at least 6 characters long');
+        setError('كلمة المرور يجب ان تكون على الاقل 6 حروف');
         return;
       }
+      router.replace('/(tabs)');
     }
   return (
     <SafeAreaView style={styles.container}>
@@ -121,6 +122,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#A7C7FF',
       alignItems: 'center',
       justifyContent: 'center',
+    paddingBottom: 20
     },
     title: {
       fontSize: 20,
@@ -150,7 +152,7 @@ const styles = StyleSheet.create({
     New: {
       fontSize: 14,
       color: '#000',
-      marginTop: 10
+      marginTop: 5
     },
   deviderContainer: {
     flexDirection: "row",

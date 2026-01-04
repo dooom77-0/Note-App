@@ -1,6 +1,7 @@
 import { Slot, router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 export default function RootLayout() {
 
   useEffect(() => {
@@ -15,5 +16,9 @@ export default function RootLayout() {
     check();
   }, []);
 
-  return <Slot />;
+  return(
+  <SafeAreaProvider>
+      <Slot />
+  </SafeAreaProvider>
+  );
 }
