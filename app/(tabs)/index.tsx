@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   showNotes: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#E6F4FE",
+    backgroundColor: "#EEF2FF",
   },
   note: {
     borderWidth: 1,
@@ -154,9 +154,10 @@ const styles = StyleSheet.create({
     textAlign: "right"
   },
   noNotes: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
-    marginTop: 20
+    marginTop: 20,
+    color: "#333"
   }
 });

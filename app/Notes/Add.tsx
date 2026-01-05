@@ -1,5 +1,4 @@
-// Add screen
-
+// Add Notes screen 
 
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
@@ -8,8 +7,10 @@ import { router } from 'expo-router'
 
 const Add = () => {
     return (
-      <SafeAreaView style={{flex:1}}>
-        <Text>Add</Text> 
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={styles.container}>
+          <Text>Add</Text> 
+        </View>
       </SafeAreaView>
     
   )
@@ -18,5 +19,10 @@ const Add = () => {
 export default Add
 
 const styles = StyleSheet.create({
-
+  container: {
+    flex: 1,
+    backgroundColor: '#F2F2F2',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 })

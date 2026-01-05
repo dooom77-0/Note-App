@@ -5,19 +5,23 @@ const TabsScreen = () => {
   return (
     <Tabs screenOptions={{
       headerShown: false,
+      tabBarActiveTintColor: '#f9f9f9',
+      tabBarInactiveTintColor: '#818181',
       tabBarStyle: {
-        height: 60
+        borderTopWidth: 0,
+        height: 60,
+        backgroundColor: '#A7C7FF',
       }
      }}>
       <Tabs.Screen name="index" options={{
-        title: 'Notes',
+        title: 'ملاحظاتي',
         headerShown: false,
         tabBarIcon: ({ color }) => (
           <Ionicons name="clipboard" size={24} color={color} />
         )
       }} />
       <Tabs.Screen name="settings" options={{
-        title: 'Settings',
+        title: 'الإعدادات',
         headerShown: false,
         tabBarIcon: ({ color }) => (
           <Ionicons name="settings" size={24} color={color} />

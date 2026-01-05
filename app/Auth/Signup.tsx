@@ -107,21 +107,21 @@ const Signup = () => {
             source={require("@/assets/images/google.png")}
             style={{ width: 30, height: 30, marginRight: 10 }}
             />
-            <Text style={styles.iconText}>Continue with Google</Text>
+            <Text style={styles.iconText}>المتابعة بواسطة Google</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.icons}>
             <Image
             source={require("@/assets/images/facebook.png")}
             style={{ width: 30, height: 30, marginRight: 10 }}
             />
-            <Text style={styles.iconText}>Continue with Facebook</Text>
+            <Text style={styles.iconText}>المتابعة بواسطة Facebook</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.icons}>
             <Image
               source={require("@/assets/images/twitter.png")}
               style={{ width: 30, height: 30, marginRight: 10 }}
             />
-            <Text style={styles.iconText}>Continue with X/Twitter</Text>
+            <Text style={styles.iconText}>المتابعة بواسطة Twitter/X</Text>
           </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     borderRadius: 10
   },
   iconText: {
-    fontSize: 14,
+    fontSize: 16,
     justifyContent: "center"
   }
 })
