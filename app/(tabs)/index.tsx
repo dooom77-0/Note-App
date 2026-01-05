@@ -1,9 +1,36 @@
 import { Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-// import { router } from "expo-router";
+import { router } from "expo-router";
+import { useState, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function Index() {
+  type Note = {
+    id: string;
+    title: string;
+    content: string;
+  }
+
+  const [notes, setNotes] = useState<Note[]>([]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const loadNotes = async () => {
+        const stored = await AsyncStorage.getItem("notes");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          setNotes(parsed);
+        }
+      };
+      loadNotes()
+    }, [])
+  )
+
+  const Add = () => {
+    router.push("/Notes/Add");
+  }
   return (
     <>
       {/*====== HEADER =======*/}
@@ -12,7 +39,7 @@ export default function Index() {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>ملاحظاتي </Text>
 
-        <TouchableOpacity style={styles.Add}>
+        <TouchableOpacity style={styles.Add} onPress={Add}>
           <Text style={styles.AddText}> إضافة +</Text>
         </TouchableOpacity>
         </View>
@@ -31,33 +58,7 @@ export default function Index() {
             />
           </View>
           <FlatList
-            data={[
-              {
-                id: "1",
-                title: "ملاحظة 1",
-                content: "محتوى الملاحظة 1",
-              },
-              {
-                id: "2",
-                title: "ملاحظة 2",
-                content: "محتوى الملاحظة 2",
-              },
-              {
-                id: "3",
-                title: "ملاحظة 3",
-                content: "محتوى الملاحظة 3",
-              },
-              {
-                id: "4",
-                title: "ملاحظة 4",
-                content: "محتوى الملاحظة 4",
-              },
-              {
-                id: "5",
-                title: "ملاحظة 5",
-                content: "محتوى الملاحظة 5",
-              },
-            ]}
+            data={notes}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <View>
@@ -72,7 +73,7 @@ export default function Index() {
             ListEmptyComponent={() => {
               return (
                 <View>
-                  <Text style={styles.noNotes}>لا يوجد ملاحظات 📝</Text>
+                  <Text style={styles.noNotes}>لا توجد ملاحظات 📝</Text>
                 </View>
               )
             }}
