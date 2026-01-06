@@ -28,7 +28,7 @@ const Details = () => {
             }
         }
         loadNote();
-    }, [id])
+    }, [id, note])
 
     const deleteNote = async () => {
         Alert.alert(

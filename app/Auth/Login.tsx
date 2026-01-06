@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { Button, TextInput } from 'react-native-paper';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
 
 const Login = () => {
     const [email, setEmail] = useState<string>('');
@@ -28,52 +27,44 @@ const Login = () => {
       router.replace('/(tabs)');
     }
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#A7C7FF',padding: 10}}>
       <View style={styles.container}>
-          <Image
-          source={require("@/assets/images/noteLogin.png")}
-          style={{ width: 100, height: 100, marginBottom: 30, marginTop:30 }}
-          />
-          <Text style={{textAlign: 'center', marginBottom: 20}}>تنبيه ! تسجيل الدخول ليس حقيقيا</Text>
-          <Text style={styles.title}>تسجيل الدخول</Text>
-        
-          <TextInput
+        <Text style={styles.title}>تسجيل الدخول</Text>
+        <TextInput
           label="البريد الالكتروني"
-          onChangeText={setEmail}
           value={email}
-          keyboardType='email-address'
-          placeholder='example@gmail.com'
+          onChangeText={(text) => setEmail(text)}
           mode="outlined"
-          outlineColor="#E0E0E0"
-          activeOutlineColor="#333"
-          theme={{ roundness: 12 }}
+          keyboardType="email-address"
+          textContentType="emailAddress"
+          error={!!error}
+          activeOutlineColor='#000'
+          theme={{roundness: 12}}
           style={styles.inputs}
-          error={!!error}
-          
-          />
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10, backgroundColor: '#EFEFEF', borderRadius: 20, paddingHorizontal: 10 }}>
-          <TextInput
-          label="كلمة المرور"
-          onChangeText={setPassword}
-          value={password}
-          mode="outlined"
-          placeholder='أدخل كلمة المرور'
-          secureTextEntry={!showPassword}
-          outlineColor="#E0E0E0"
-          activeOutlineColor="#333"
-          theme={{ roundness: 12 }}
-          style={{ flex: 1, marginRight: 10, backgroundColor: '#EFEFEF', borderRadius: 20, borderColor: '#EFEFEF' }}
-          error={!!error}
+
+          right={
+            <TextInput.Icon
+              icon="email"
+            />
+          }
         />
-        <TouchableOpacity>
-          <Ionicons
-            name={showPassword ? 'eye-off' : 'eye'}
-            size={24}
-            color="#333"
-            onPress={() => setShowPassword(!showPassword)}
-          />
-        </TouchableOpacity>
-          </View>
+        <TextInput
+          label="كلمة المرور"
+          value={password}
+          error={!!error}
+          onChangeText={(text) => setPassword(text)}
+          secureTextEntry={!showPassword}
+          mode="outlined"
+          activeOutlineColor='#000'
+          style={styles.inputs}
+          theme={{roundness: 12}}
+          right={
+            <TextInput.Icon
+              icon={showPassword ? 'eye-off' : 'eye'}
+              onPress={() => setShowPassword(!showPassword)}
+            />
+          } 
+        />
           
         
         {error && <Text style={{ color: 'red', marginBottom: 10 }}>{error}</Text>}
@@ -97,8 +88,8 @@ const Login = () => {
             <Text style={styles.or}>أو</Text>
             <View  style={styles.devider}/>
           </View>
-          
-        <TouchableOpacity
+          <View style={styles.iconsContainer}>
+            <TouchableOpacity
         style={styles.icons}
         >
           <Image
@@ -121,6 +112,8 @@ const Login = () => {
           />
           <Text style={styles.iconText}>المتابعة بواسطة Twitter/X</Text>
         </TouchableOpacity>
+          </View>
+        
       </View>
     </SafeAreaView>
   )
@@ -141,14 +134,20 @@ const styles = StyleSheet.create({
       fontSize: 20,
       fontWeight: 'bold',
       marginBottom: 20,
-    },
-    inputs: {
-      width: 300,
+  },
+  inputContainer: {
+      alignItems: 'flex-start',
       marginBottom: 20,
-      borderRadius: 20,
-      borderColor: '#EFEFEF',
-      backgroundColor: '#EFEFEF'
-    },
+  },
+  inputs: {
+    width: 300,
+    borderRadius: 20,
+    backgroundColor: '#EFEFEF',
+    textAlign: 'left', 
+    marginBottom: 10,
+
+
+  },
     login:{
       flexDirection:'row',
       width: 300,
@@ -181,6 +180,12 @@ const styles = StyleSheet.create({
   or: {
     marginHorizontal: 8,
     fontSize: 16
+  },
+  iconsContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 10
   },
   icons: {
     flexDirection: "row",

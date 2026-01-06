@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import { useState } from 'react'
-import { TextInput, Button } from 'react-native-paper'
+import { TextInput } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { router } from 'expo-router'
 const Signup = () => {
@@ -8,6 +8,8 @@ const Signup = () => {
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
+  const [showPassword1, setShowPassword1] = useState<boolean>(false);
+  const [showPassword2, setShowPassword2] = useState<boolean>(false);
 
   const handleSignup = () => {
     if ( !email || !password || !confirmPassword) {
@@ -30,74 +32,78 @@ const Signup = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
-        <Image
-        source={require("@/assets/images/noteLogin.png")}
-        style={{ width: 100, height: 100, marginBottom: 30, marginTop:30 }}
-        />
         <Text style={styles.title}>إنشاء حساب </Text>
-        <TextInput
-        value={email}
-        label="البريد الالكتروني"
-        mode="outlined"
-        outlineColor="#E0E0E0"
-        activeOutlineColor="#333"
-        placeholder='example@gmail.com'
-        style={styles.inputs}
-        theme={{roundness: 12}}
-        onChangeText={setEmail}
-        error={!!error}
-        />
-        <TextInput
-        value={password}
-        label="كلمة المرور"
-        mode="outlined"
-        outlineColor="#E0E0E0"
-        activeOutlineColor="#333"
-        placeholder='أدخل كلمة المرور'
-        style={styles.inputs}
-        secureTextEntry
-        theme={{roundness: 12}}
-        onChangeText={setPassword}
-        error={!!error}
-        />
-        <TextInput
-        value={confirmPassword}
-        label="تاكيد كلمة المرور"
-        mode="outlined"
-        outlineColor="#E0E0E0"
-        activeOutlineColor="#333"
-        placeholder='أدخل كلمة المرور مرة أخرى'
-        style={styles.inputs}
-        secureTextEntry
-        theme={{roundness: 12}}
-        onChangeText={setConfirmPassword}
-        error={!!error}
-        />
-
-        {error && <Text style={{color: 'red', marginBottom: 10}}>{error}</Text>}
-
-        <TouchableOpacity style={styles.Signup}>
-          <Image
-          source={require("@/assets/images/signup.png")}
-          style={{ width: 30, height: 30 }}
-          tintColor={'white'}
+        
+        <View style={styles.inputContainer}>
+          <TextInput
+            label='البريد الالكتروني'
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            style={styles.input}
+            mode='outlined'
+            theme={{roundness: 12}}
+            placeholder='example@gmail.com'
+            right={
+              <TextInput.Icon
+                icon='email'
+              />
+            }
+            
           />
-          <Text style={styles.SignupText} onPress={handleSignup}>إنشاء الحساب </Text>
+          <TextInput
+            label='كلمة المرور'
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            secureTextEntry={!showPassword1}
+            style={styles.input}
+            mode='outlined'
+            theme={{ roundness: 12 }}
+            placeholder='password'
+            right={
+              <TextInput.Icon
+                icon={showPassword1 ? 'eye-off' : 'eye'}
+                onPress={() => setShowPassword1(!showPassword1)}
+              />
+            }
+          />
+          <TextInput
+            label='تاكيد كلمة المرور'
+            value={confirmPassword}
+            onChangeText={(text) => setConfirmPassword(text)}
+            secureTextEntry={!showPassword2}
+            style={styles.input}
+            mode='outlined'
+            theme={{roundness: 12}}
+            placeholder='password again'
+            right={
+              <TextInput.Icon
+                icon={showPassword2 ? 'eye-off' : 'eye'}
+                onPress={() => setShowPassword2(!showPassword2)}
+              />
+            }
+          />
+          
+        </View>
+              
+        {error && <Text style={{ color: 'red' }}>{error}</Text>}
+        
+        <TouchableOpacity style={styles.Signup} onPress={handleSignup}>
+          <Image
+            source={require("@/assets/images/signup.png")}
+            style={{ width: 20, height: 20, marginRight: 10 }}
+            tintColor={'white'}
+          />
+          <Text style={styles.SignupText}>إنشاء حساب</Text>
         </TouchableOpacity>
 
-        <Button
-          mode="text"
-          labelStyle={{ color: '#000' }}
-          style={styles.old}
-          onPress={() => router.replace('./Login')}
-        >
-          لديك حساب بالفعل ؟
-        </Button>
+        <TouchableOpacity onPress={() => router.replace('/Auth/Login')} style={styles.backLogin}>
+          <Text style={styles.backLoginText}>لديك حساب بالفعل ؟</Text>
+        </TouchableOpacity>
 
         <View style={styles.OrContainer}>
-          <View style={styles.OrLine} />
-          <Text style={styles.OrText}>أو</Text>
-          <View style={styles.OrLine} />
+          <View style={styles.OrLine}></View>
+          <Text style={styles.OrText}>او</Text>
+          <View style={styles.OrLine}></View>
         </View>
 
         <TouchableOpacity
@@ -125,7 +131,6 @@ const Signup = () => {
           </TouchableOpacity>
       </View>
     </SafeAreaView>
-    
   )
 }
 
@@ -138,19 +143,22 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
       paddingBottom: 10,
+    paddingVertical: 20
       
     },
   title: {
       fontSize: 20,
       fontWeight: 'bold',
       marginBottom: 10,
-    },
-  inputs: {
-      width: 300,
-      marginBottom: 10,
-      borderRadius: 20,
-      backgroundColor: '#EFEFEF',
-      
+  },
+  inputContainer: {
+    alignItems: 'flex-start',
+    marginBottom: 10,
+  },
+  input: {
+    width: 300,
+    backgroundColor: '#EFEFEF',
+    textAlign: 'left',
   },
   old: {
       flexDirection:'row',
@@ -165,7 +173,8 @@ const styles = StyleSheet.create({
       flexDirection:'row',
       width: 300,
       alignItems: 'center',
-      borderRadius: 20,
+    borderRadius: 20,
+      marginVertical: 10,
       justifyContent: 'center',
       backgroundColor: '#3A7BD5',
       padding: 5
@@ -176,10 +185,23 @@ const styles = StyleSheet.create({
      textAlign: 'center',
       padding: 5
   },
+  backLogin: {
+      width: 300,
+      alignItems: 'center',
+      borderRadius: 20,
+      justifyContent: 'center',
+      backgroundColor: '#A7C7FF',
+      padding: 5
+  },
+  backLoginText: {
+    fontSize: 16,
+     textAlign: 'center',
+      padding: 5
+  },
   OrContainer: {
      flexDirection: "row",
     alignItems: "center",
-    marginVertical: 20
+    marginVertical: 10
   },
   OrLine: {
     flex: 1,
