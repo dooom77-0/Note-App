@@ -14,6 +14,9 @@ export default function Index() {
   }
 
   const [notes, setNotes] = useState<Note[]>([]);
+  const [search, setSearch] = useState<string>('');
+
+  const filteredNotes = notes.filter((note) => note.title.toLowerCase().includes(search.toLowerCase()) || note.content.toLowerCase().includes(search.toLowerCase()));
 
   useFocusEffect(
     useCallback(() => {
@@ -52,6 +55,8 @@ export default function Index() {
           <View style={styles.searchbar}>
             <Ionicons name="search" size={20} color="#999" style={{ marginLeft: 8 }} />
             <TextInput 
+            value={search}
+            onChangeText={(text) => setSearch(text)}
             placeholder="البحث عن ملاحظة ..."
             style={styles.search}
             textAlign="right"
@@ -59,7 +64,7 @@ export default function Index() {
             />
           </View>
           <FlatList
-            data={notes}
+            data={filteredNotes}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <View>
@@ -78,7 +83,12 @@ export default function Index() {
             ListEmptyComponent={() => {
               return (
                 <View>
-                  <Text style={styles.noNotes}>لا توجد ملاحظات 📝</Text>
+                  {search.length > 0 ? (
+                    <Text style={styles.noNotes}>لا توجد ملاحظات مطابقة 📝</Text>
+
+                  ) :
+                    (<Text style={styles.noNotes}>لا توجد ملاحظات 📝</Text>)
+                  }
                 </View>
               )
             }}

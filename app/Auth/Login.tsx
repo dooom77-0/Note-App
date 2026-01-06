@@ -3,11 +3,13 @@ import { useState } from 'react'
 import { Button, TextInput } from 'react-native-paper';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 
 const Login = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
     
     const handleLogin = () => {
       if(email && password) {
@@ -49,20 +51,30 @@ const Login = () => {
           error={!!error}
           
           />
-          
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10, backgroundColor: '#EFEFEF', borderRadius: 20, paddingHorizontal: 10 }}>
           <TextInput
           label="كلمة المرور"
           onChangeText={setPassword}
           value={password}
           mode="outlined"
           placeholder='أدخل كلمة المرور'
-          secureTextEntry
+          secureTextEntry={!showPassword}
           outlineColor="#E0E0E0"
           activeOutlineColor="#333"
           theme={{ roundness: 12 }}
-          style={styles.inputs}
+          style={{ flex: 1, marginRight: 10, backgroundColor: '#EFEFEF', borderRadius: 20, borderColor: '#EFEFEF' }}
           error={!!error}
         />
+        <TouchableOpacity>
+          <Ionicons
+            name={showPassword ? 'eye-off' : 'eye'}
+            size={24}
+            color="#333"
+            onPress={() => setShowPassword(!showPassword)}
+          />
+        </TouchableOpacity>
+          </View>
+          
         
         {error && <Text style={{ color: 'red', marginBottom: 10 }}>{error}</Text>}
           
@@ -122,7 +134,8 @@ const styles = StyleSheet.create({
       backgroundColor: '#A7C7FF',
       alignItems: 'center',
       justifyContent: 'center',
-    paddingBottom: 20
+      paddingBottom: 20,
+      paddingHorizontal: 12
     },
     title: {
       fontSize: 20,
@@ -133,6 +146,7 @@ const styles = StyleSheet.create({
       width: 300,
       marginBottom: 20,
       borderRadius: 20,
+      borderColor: '#EFEFEF',
       backgroundColor: '#EFEFEF'
     },
     login:{

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Image, Alert } from 'react-native'
 import {useState, useEffect} from 'react'
 import { useLocalSearchParams, router } from 'expo-router'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -31,13 +31,29 @@ const Details = () => {
     }, [id])
 
     const deleteNote = async () => {
-        const stored = await AsyncStorage.getItem("notes");
-        const notes: Note[] = stored ? JSON.parse(stored) : [];
+        Alert.alert(
+            "حذف",
+            "هل أنت متأكد من حذف هذا الملاحظة؟",
+            [
+                {
+                    text: "نعم",
+                    style: "destructive",
+                    onPress: async () => {
+                        const stored = await AsyncStorage.getItem("notes");
+                        const notes: Note[] = stored ? JSON.parse(stored) : [];
+                        const updatedNotes = notes.filter((n) => n.id !== id);
+                        await AsyncStorage.setItem("notes", JSON.stringify(updatedNotes));
+                        router.back();
+                    },
+                },
+                {
+                    text: "لا",
+                    style: "cancel",
+                },
+            ]
+        )
 
-        const updatedNotes = notes.filter((n) => n.id !== id);
-        await AsyncStorage.setItem("notes", JSON.stringify(updatedNotes));
-
-        router.back();
+        
     }
   return (
       <SafeAreaView edges={["top"]} style={styles.container}>
