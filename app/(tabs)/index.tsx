@@ -28,6 +28,7 @@ export default function Index() {
     }, [])
   )
 
+
   const Add = () => {
     router.push("/Notes/Add");
   }
@@ -38,10 +39,10 @@ export default function Index() {
       <StatusBar style="auto" backgroundColor="#A7C7FF" />
       <View style={styles.header}>
         <Text style={styles.headerTitle}>ملاحظاتي </Text>
-
-        <TouchableOpacity style={styles.Add} onPress={Add}>
+            <TouchableOpacity style={styles.Add} onPress={Add}>
           <Text style={styles.AddText}> إضافة +</Text>
         </TouchableOpacity>
+        
         </View>
         {/* ======= END HEADER ===== */}
 
@@ -62,11 +63,15 @@ export default function Index() {
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <View>
-                <TouchableOpacity
+                  <TouchableOpacity
                   style={styles.note}
+                  onPress={() => {
+                    router.push(`/Notes/${item.id}`);
+                  }}
                 >
                   <Text style={styles.noteTitle}>{item.title}</Text>
                 </TouchableOpacity>
+                
                 
               </View>
             )}
@@ -77,6 +82,7 @@ export default function Index() {
                 </View>
               )
             }}
+            
           />
         </View>
         {/*======= END SHOW NOTES =======*/}
@@ -103,6 +109,19 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: "bold",
+  },
+  delete: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#DC2626",
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5
+  },
+  deleteText: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#fff"
   },
   Add: {
     justifyContent: "center",
@@ -151,6 +170,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 5,
+    textAlign: "right"
+  },
+  noteContent: {
+    fontSize: 14,
     textAlign: "right"
   },
   noNotes: {
