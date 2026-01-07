@@ -35,6 +35,7 @@ export default function Index() {
   const Add = () => {
     router.push("/Notes/Add");
   }
+
   return (
     <>
       {/*====== HEADER =======*/}

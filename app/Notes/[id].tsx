@@ -55,6 +55,8 @@ const Details = () => {
 
         
     }
+
+     
   return (
       <SafeAreaView edges={["top"]} style={styles.container}>
           <StatusBar style="auto" backgroundColor="#f7f7f7" />
@@ -63,7 +65,7 @@ const Details = () => {
                 <TouchableOpacity style={styles.delete}>
                     <Text onPress={deleteNote} style={styles.deleteText}>حذف 🗑️</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.edit}>
+                <TouchableOpacity style={styles.edit} onPress={() => router.push(`/Notes/Edit/${id}`)}>
                     <Text style={styles.editText}>تعديل ✏️</Text>
                 </TouchableOpacity>
               </View>

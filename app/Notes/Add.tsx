@@ -24,7 +24,7 @@ const Add = () => {
     const newNote = {
       id: Date.now().toString(),
       title,
-      content
+      content,
     }
     try {
       const stored = await AsyncStorage.getItem('notes')
@@ -36,6 +36,8 @@ const Add = () => {
       console.log(error)
     }
   }
+
+  
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar style="auto" backgroundColor="#F3F3F3" />
@@ -147,6 +149,5 @@ const styles = StyleSheet.create({
   inputContent: {
     fontSize: 16,
     marginBottom: 10,
-    textAlign: "right",
   },
 })
