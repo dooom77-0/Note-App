@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     delete: {
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#DC2626",
+        backgroundColor: "#DC2720",
         borderRadius: 10,
         paddingHorizontal: 10,
         paddingVertical: 5

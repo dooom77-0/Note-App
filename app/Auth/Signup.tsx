@@ -38,9 +38,11 @@ const Signup = () => {
           <TextInput
             label='البريد الالكتروني'
             value={email}
+            keyboardType='email-address'
             onChangeText={(text) => setEmail(text)}
             style={styles.input}
             mode='outlined'
+            activeOutlineColor='#000'
             theme={{roundness: 12}}
             placeholder='example@gmail.com'
             right={
@@ -57,6 +59,7 @@ const Signup = () => {
             secureTextEntry={!showPassword1}
             style={styles.input}
             mode='outlined'
+            activeOutlineColor='#000'
             theme={{ roundness: 12 }}
             placeholder='password'
             right={
@@ -73,6 +76,7 @@ const Signup = () => {
             secureTextEntry={!showPassword2}
             style={styles.input}
             mode='outlined'
+            activeOutlineColor='#000'
             theme={{roundness: 12}}
             placeholder='password again'
             right={

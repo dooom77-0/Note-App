@@ -11,6 +11,7 @@ const TabsScreen = () => {
         borderTopWidth: 0,
         height: 60,
         backgroundColor: '#A7C7FF',
+        display: 'none',
       }
      }}>
       <Tabs.Screen name="index" options={{
@@ -25,6 +26,13 @@ const TabsScreen = () => {
         headerShown: false,
         tabBarIcon: ({ color }) => (
           <Ionicons name="settings" size={24} color={color} />
+        )
+      }} />
+      <Tabs.Screen name="profile" options={{
+        title: 'الملف الشخصي',
+        headerShown: false,
+        tabBarIcon: ({ color }) => (
+          <Ionicons name="person" size={24} color={color} />
         )
       }} />
     </Tabs>

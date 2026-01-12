@@ -1,8 +1,8 @@
-import { Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList, Animated, Dimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { router } from "expo-router";
-import { useState, useCallback } from "react";
+import { router, useSegments } from "expo-router";
+import { useState, useCallback, useRef } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -12,6 +12,12 @@ export default function Index() {
     title: string;
     content: string;
   }
+
+  const { width } = Dimensions.get('window');
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const animatedValue = useRef(new Animated.Value(0)).current;
+  const segments = useSegments();
+  const currentTab = segments[1] || 'index';
 
   const [notes, setNotes] = useState<Note[]>([]);
   const [search, setSearch] = useState<string>('');
@@ -36,12 +42,72 @@ export default function Index() {
     router.push("/Notes/Add");
   }
 
+  const toggleDrawer = () => {
+    const toValue = drawerOpen ? 0 : 1;
+    setDrawerOpen(!drawerOpen);
+    Animated.timing(animatedValue, {
+      toValue,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const translateX = animatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [width, 0],
+  });
+
+  const Drawer = () => {
+    const isActive = (tab: string) => currentTab === tab;
+    return (
+      <Animated.View style={[styles.drawer, { transform: [{ translateX }] }]}>
+        <View style={styles.drawerHeader}>
+          <TouchableOpacity style={styles.closeButton} onPress={toggleDrawer}>
+            <Ionicons name="close" size={28} color="#333" />
+          </TouchableOpacity>
+          <Text style={styles.drawerTitle}>القائمة</Text>
+        </View>
+        
+        <View style={styles.drawerContent}>
+          <TouchableOpacity style={[styles.menuItem, isActive('index') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('/(tabs)'); }}>
+            <Ionicons name="document-text" size={24} color="#333" />
+            <Text style={styles.menuText}>ملاحظاتي</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.menuItem, isActive('profile') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('/(tabs)/profile' as any); }}>
+            <Ionicons name="trash" size={24} color="#333" />
+            <Text style={styles.menuText}>سلة المحذوفات</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.menuItem, isActive('settings') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('/(tabs)/settings'); }}>
+            <Ionicons name="settings" size={24} color="#333" />
+            <Text style={styles.menuText}>الإعدادات</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.menuItem, isActive('favorites') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('/(tabs)/favorites' as any); }}>
+            <Ionicons name="heart" size={24} color="#333" />
+            <Text style={styles.menuText}>المفضلة</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.menuItem, isActive('profile') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('/(tabs)/profile' as any); }}>
+            <Ionicons name="person" size={24} color="#333" />
+            <Text style={styles.menuText}>الملف الشخصي</Text>
+          </TouchableOpacity>
+
+        </View>
+      </Animated.View>
+    );
+  };
+
   return (
-    <>
+    <View style={{ flex: 1 }}>
       {/*====== HEADER =======*/}
       <SafeAreaView edges={["top"]} style={styles.container}>
-      <StatusBar style="auto" backgroundColor="#A7C7FF" />
+      <StatusBar style={drawerOpen ? "light" : "auto"} backgroundColor={drawerOpen ? "#000" : "#A7C7FF"} />
       <View style={styles.header}>
+        <TouchableOpacity onPress={toggleDrawer} style={styles.menuButton}>
+          <Ionicons name="menu" size={24} color="black" />
+        </TouchableOpacity>
         <Text style={styles.headerTitle}>ملاحظاتي </Text>
             <TouchableOpacity style={styles.Add} onPress={Add}>
           <Text style={styles.AddText}> إضافة +</Text>
@@ -98,7 +164,9 @@ export default function Index() {
         </View>
         {/*======= END SHOW NOTES =======*/}
       </SafeAreaView>
-    </>
+      {drawerOpen && <TouchableOpacity style={styles.overlay} onPress={toggleDrawer} />}
+      <Drawer />
+    </View>
     
   );
 }
@@ -118,7 +186,7 @@ const styles = StyleSheet.create({
 
   },
   headerTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
   },
   delete: {
@@ -132,7 +200,8 @@ const styles = StyleSheet.create({
   deleteText: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "#fff"
+    color: "#fff",
+    textAlign: "center"
   },
   Add: {
     justifyContent: "center",
@@ -143,7 +212,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5
   },
   AddText: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: "bold",
     color: "#fff",
   },
@@ -193,5 +262,73 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 20,
     color: "#333"
+  },
+  menuButton: {
+    marginRight: 20,
+  },
+  drawerHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    borderBottomColor: '#eee',
+  },
+  closeButton: {
+    padding: 10, 
+    borderRadius: 5,
+    paddingTop: 40,
+    },
+  drawerTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    paddingTop: 50,
+    textAlign: 'right',
+    paddingHorizontal: 20,
+    marginBottom: 20,
+  },
+  drawer: {
+    flex: 1,
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: Dimensions.get('window').width * 0.75,
+    height: '100%',
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: -2, height: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 10,
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  drawerContent: {
+    flex: 1,
+    paddingTop: 50,
+    paddingHorizontal: 20,
+  },
+  menuItem: {
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    paddingHorizontal: 10,
+    borderBottomColor: '#eee',
+  },
+  menuText: {
+    fontSize: 18,
+    marginRight: 15,
+    color: '#333',
+  },
+  activeMenuItem: {
+    backgroundColor: '#e0e0e0',
+    borderRadius: 8,
+    paddingHorizontal: 10,
   }
 });
