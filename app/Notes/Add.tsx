@@ -25,6 +25,7 @@ const Add = () => {
       id: Date.now().toString(),
       title,
       content,
+      createdAt: new Date().toISOString(),
     }
     try {
       const stored = await AsyncStorage.getItem('notes')

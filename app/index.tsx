@@ -11,6 +11,7 @@ export default function Index() {
     id: string;
     title: string;
     content: string;
+    createdAt: string;
   }
 
   const { width } = Dimensions.get('window');
@@ -69,27 +70,27 @@ export default function Index() {
         </View>
         
         <View style={styles.drawerContent}>
-          <TouchableOpacity style={[styles.menuItem, isActive('index') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('/(tabs)'); }}>
+          <TouchableOpacity style={[styles.menuItem, isActive('index') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('/'); }}>
             <Ionicons name="document-text" size={24} color="#333" />
             <Text style={styles.menuText}>ملاحظاتي</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.menuItem, isActive('profile') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('/(tabs)/profile' as any); }}>
+          <TouchableOpacity style={[styles.menuItem, isActive('TrashPin') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./TrashPin' as any); }}>
             <Ionicons name="trash" size={24} color="#333" />
             <Text style={styles.menuText}>سلة المحذوفات</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.menuItem, isActive('settings') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('/(tabs)/settings'); }}>
+          <TouchableOpacity style={[styles.menuItem, isActive('settings') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./settings'); }}>
             <Ionicons name="settings" size={24} color="#333" />
             <Text style={styles.menuText}>الإعدادات</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.menuItem, isActive('favorites') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('/(tabs)/favorites' as any); }}>
+          <TouchableOpacity style={[styles.menuItem, isActive('favorites') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./favorites' as any); }}>
             <Ionicons name="heart" size={24} color="#333" />
             <Text style={styles.menuText}>المفضلة</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.menuItem, isActive('profile') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('/(tabs)/profile' as any); }}>
+          <TouchableOpacity style={[styles.menuItem, isActive('profile') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./profile' as any); }}>
             <Ionicons name="person" size={24} color="#333" />
             <Text style={styles.menuText}>الملف الشخصي</Text>
           </TouchableOpacity>
@@ -105,12 +106,12 @@ export default function Index() {
       <SafeAreaView edges={["top"]} style={styles.container}>
       <StatusBar style={drawerOpen ? "light" : "auto"} backgroundColor={drawerOpen ? "#000" : "#A7C7FF"} />
       <View style={styles.header}>
-        <TouchableOpacity onPress={toggleDrawer} style={styles.menuButton}>
-          <Ionicons name="menu" size={24} color="black" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>ملاحظاتي </Text>
             <TouchableOpacity style={styles.Add} onPress={Add}>
           <Text style={styles.AddText}> إضافة +</Text>
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>ملاحظاتي </Text>
+        <TouchableOpacity onPress={toggleDrawer} style={styles.menuButton}>
+          <Ionicons name="menu" size={24} color="black" />
         </TouchableOpacity>
         
         </View>
@@ -133,8 +134,9 @@ export default function Index() {
           <FlatList
             data={filteredNotes}
             keyExtractor={(item) => item.id}
+            numColumns={2}
             renderItem={({ item }) => (
-              <View>
+              <View style={styles.noteContainer}>
                   <TouchableOpacity
                   style={styles.note}
                   onPress={() => {
@@ -142,6 +144,7 @@ export default function Index() {
                   }}
                 >
                   <Text style={styles.noteTitle}>{item.title}</Text>
+                  <Text style={styles.noteContent} numberOfLines={1}>{item.content}</Text>
                 </TouchableOpacity>
                 
                 
@@ -237,24 +240,31 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "#EEF2FF",
   },
+  noteContainer: {
+    flex: 1,
+    margin: 5,
+  },
   note: {
+    flex: 1,
     borderWidth: 1,
     borderColor: "#A7C7FF",
-    borderRadius: 10,
-    padding: 10,
+    borderRadius: 15,
+    padding: 15,
     backgroundColor: "#fff",
     elevation: 2,
-    marginBottom: 5
+    height: 150,
+    justifyContent: 'flex-start',
   },
   noteTitle: {
     fontSize: 16,
     fontWeight: "bold",
-    marginBottom: 5,
+    marginBottom: 15,
     textAlign: "right"
   },
   noteContent: {
     fontSize: 14,
-    textAlign: "right"
+    textAlign: "right",
+    color: 'gray',
   },
   noNotes: {
     fontSize: 16,
@@ -264,7 +274,7 @@ const styles = StyleSheet.create({
     color: "#333"
   },
   menuButton: {
-    marginRight: 20,
+    marginRight: 5,
   },
   drawerHeader: {
     flexDirection: 'row',

@@ -9,6 +9,7 @@ const Details = () => {
         id: string;
         title: string;
         content: string;
+        createdAt: string;
     }
     const { id } = useLocalSearchParams();
     const [note, setNote] = useState< Note | null>(null);
@@ -41,8 +42,18 @@ const Details = () => {
                     onPress: async () => {
                         const stored = await AsyncStorage.getItem("notes");
                         const notes: Note[] = stored ? JSON.parse(stored) : [];
-                        const updatedNotes = notes.filter((n) => n.id !== id);
-                        await AsyncStorage.setItem("notes", JSON.stringify(updatedNotes));
+                        const noteToDelete = notes.find((n) => n.id === id);
+                        if (noteToDelete) {
+                            // إضافة الملاحظة إلى سلة المهملات
+                            const deletedStored = await AsyncStorage.getItem("deletedNotes");
+                            const deletedNotes: Note[] = deletedStored ? JSON.parse(deletedStored) : [];
+                            deletedNotes.push(noteToDelete);
+                            await AsyncStorage.setItem("deletedNotes", JSON.stringify(deletedNotes));
+                            
+                            // حذف الملاحظة من الملاحظات العادية
+                            const updatedNotes = notes.filter((n) => n.id !== id);
+                            await AsyncStorage.setItem("notes", JSON.stringify(updatedNotes));
+                        }
                         router.back();
                     },
                 },
@@ -84,6 +95,7 @@ const Details = () => {
           <View style={styles.content}>
               <Text style={styles.title}>{note?.title}</Text>
               <View style={styles.line} />
+              <Text style={styles.date}>تاريخ الإنشاء: {new Date(note?.createdAt || '').toLocaleDateString('en-US')}</Text>
               <Text style={styles.contentText}>{note?.content}</Text>
           </View>
         
@@ -154,6 +166,12 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: "bold",
+        marginBottom: 10,
+        textAlign: "right"
+    },
+    date: {
+        fontSize: 14,
+        color: 'gray',
         marginBottom: 10,
         textAlign: "right"
     },

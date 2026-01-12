@@ -10,7 +10,7 @@ export default function RootLayout() {
       if (!done) {
         router.replace("./onboarding/step1");
       } else {
-        router.replace("./(tabs)");
+        router.replace("/");
       };
     };
     check();
