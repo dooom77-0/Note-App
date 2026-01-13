@@ -1,10 +1,16 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image, Alert } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native'
 import {useState, useEffect} from 'react'
 import { useLocalSearchParams, router } from 'expo-router'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ar';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(relativeTime);
+dayjs.locale('ar');
 const Details = () => {
     type Note = {
         id: string;
@@ -89,10 +95,9 @@ const Details = () => {
               <View>
                   <TouchableOpacity style={styles.back} onPress={() => router.back()}>
                       <Text style={{fontSize: 14, fontWeight: "bold"}}>رجوع</Text>
-                      <Image
-                          source={require("@/assets/images/back.png")}
-                          style={{width: 30, height: 30}}
-                      />
+                      <Ionicons name="arrow-forward" size={20} color="#000"
+                        style={{paddingLeft: 5}}
+                    />
                   </TouchableOpacity>
               </View>
             
@@ -101,7 +106,10 @@ const Details = () => {
           <View style={styles.content}>
               <Text style={styles.title}>{note?.title}</Text>
               <View style={styles.line} />
-              <Text style={styles.date}>تاريخ الإنشاء: {new Date(note?.createdAt || '').toLocaleDateString('en-US')}</Text>
+              <Text style={styles.date}>
+                {dayjs().diff(dayjs(note?.createdAt), 'day') > 7 
+                ? dayjs(note?.createdAt).format('DD MMMM YYYY') 
+                : dayjs(note?.createdAt).fromNow()}</Text>
               <Text style={styles.contentText}>{note?.content}</Text>
           </View>
         

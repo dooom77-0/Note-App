@@ -88,7 +88,6 @@ const TrashPin = () => {
     inputRange: [0, 1],
     outputRange: [width, 0],
   });
-
   const Drawer = () => {
     const isActive = (tab: string) => currentTab === tab;
     return (
@@ -142,6 +141,7 @@ const TrashPin = () => {
           </TouchableOpacity>
         
           <Text style={styles.headerTitle}>سلة المحذوفات</Text>
+
 
         </View>
 
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     height: 70,
-    justifyContent: 'center',  
+    justifyContent: 'space-between',  
     alignItems: 'center',
     backgroundColor: '#A7C7FF',
     position: 'relative',
@@ -229,6 +229,15 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 16,
     fontWeight: 'bold',
+    textAlign: 'center',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+  },
+  DELALL: {
+    position: 'absolute',
+    left: 20,
+    top: 22,
   },
   drawer: {
     flex: 1,

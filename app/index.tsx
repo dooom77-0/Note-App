@@ -1,11 +1,17 @@
-import { Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList, Animated, Dimensions, Image } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList, Animated, Dimensions, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { router, useSegments } from "expo-router";
 import { useState, useCallback, useRef } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import dayjs from "dayjs";
+import 'dayjs/locale/ar';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import * as Clipboard from 'expo-clipboard';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+dayjs.extend(relativeTime);
+dayjs.locale('ar');
 export default function Index() {
   type Note = {
     id: string;
@@ -26,24 +32,6 @@ export default function Index() {
   const [favorites, setFavorites] = useState<Note[]>([]);
 
   const filteredNotes = notes.filter((note) => note.title.toLowerCase().includes(search.toLowerCase()) || note.content.toLowerCase().includes(search.toLowerCase()));
-
-  const getRelativeTime = (dateString: string): string => {
-    const now = new Date();
-    const date = new Date(dateString);
-    const diffMs = now.getTime() - date.getTime();
-    const diffSec = Math.floor(diffMs / 1000);
-    const diffMin = Math.floor(diffSec / 60);
-    const diffHour = Math.floor(diffMin / 60);
-    const diffDay = Math.floor(diffHour / 24);
-
-    if (diffSec < 60) return 'منذ ثواني';
-    if (diffMin === 1) return 'منذ دقيقة واحدة';
-    if (diffMin < 60) return `منذ ${diffMin} دقائق`;
-    if (diffHour === 1) return 'منذ ساعة واحدة';
-    if (diffHour < 24) return `منذ ${diffHour} ساعة`;
-    if (diffDay === 1) return 'منذ يوم واحد';
-    return `منذ ${diffDay} يوم`;
-  };
 
   useFocusEffect(
     useCallback(() => {
@@ -87,6 +75,11 @@ export default function Index() {
     inputRange: [0, 1],
     outputRange: [width, 0],
   });
+
+  const handleCopy = async (text: string) => {
+    await Clipboard.setStringAsync(text);
+    Alert.alert("تم النسخ", " تم نسخ المحتوى الى الحافظة", [{ text: "حسنا" }]);
+  }
 
   const Drawer = () => {
     const isActive = (tab: string) => currentTab === tab;
@@ -167,10 +160,12 @@ export default function Index() {
             renderItem={({ item }) => (
               <View style={styles.noteContainer}>
                   <TouchableOpacity
+                  activeOpacity={0.7}
                   style={styles.note}
                   onPress={() => {
                     router.push(`/Notes/${item.id}`);
                   }}
+                  onLongPress={() => handleCopy(`${item.title}\n${item.content}`)}
                 >
                   <TouchableOpacity
                     onPress={async () => {
@@ -201,7 +196,9 @@ export default function Index() {
                   </TouchableOpacity>
                   <Text style={styles.noteTitle}>{item.title}</Text>
                   <Text style={styles.noteContent} numberOfLines={1}>{item.content}</Text>
-                  <Text style={styles.noteDate}>{getRelativeTime(item.createdAt)}</Text>
+                  <Text style={styles.noteDate}>
+                    {dayjs(item.createdAt).fromNow()}
+                  </Text>
                 </TouchableOpacity>
                 
                 
@@ -223,7 +220,7 @@ export default function Index() {
             
           />
           <TouchableOpacity style={styles.Add} onPress={Add}>
-            <Image source={require('@/assets/images/add.png')} tintColor={'white'} style={{ width: 30, height: 30, resizeMode: 'contain' }} />
+            <Ionicons name="add" size={32} color="#fff" />
           </TouchableOpacity>
         </View>
         {/*======= END SHOW NOTES =======*/}

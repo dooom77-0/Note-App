@@ -1,6 +1,6 @@
 // Add Notes screen 
 
-import { StyleSheet, Text, TouchableOpacity, View, Image, TextInput } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, TextInput } from 'react-native'
 import {useState, useRef, useEffect} from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { router } from 'expo-router'
@@ -48,10 +48,9 @@ const Add = () => {
           </TouchableOpacity>
           <TouchableOpacity style={styles.BackCon} onPress={() => router.back()}>
             <Text style={styles.Back}>رجوع</Text>
-            <Image
-              source={require("@/assets/images/back.png")}
-              style={{ width: 30, height: 30 }}
-            />
+            <Ionicons name="arrow-forward" size={20} color="#000"
+              style={{paddingLeft: 5}}
+             />
           </TouchableOpacity>
         </View>
         {/* END HEADER */}
