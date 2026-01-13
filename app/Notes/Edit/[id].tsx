@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { router, useLocalSearchParams } from 'expo-router'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StatusBar } from 'expo-status-bar';
+import { Ionicons } from '@expo/vector-icons';
 const EditPage = () => {
     const { id } = useLocalSearchParams();
     const [title, setTitle] = useState<string>('');
@@ -46,13 +47,14 @@ const EditPage = () => {
           <StatusBar style="auto" backgroundColor='#f7f7f7' />
           <View style={styles.header}>
             <TouchableOpacity style={styles.save} onPress={handleSave}>
+                <Ionicons name="save" size={20} color="#fff" style={{marginRight: 5}} />
                 <Text style={styles.saveText}>حفظ</Text>
             </TouchableOpacity>   
               <TouchableOpacity onPress={() => router.back()} style={styles.back}>
                   <Text style={styles.backText}>رجوع</Text>
                   <Image
                       source={require('@/assets/images/back.png')}
-                      style={{ width: 20, height: 20, marginRight: 10 }}
+                      style={{ width: 30, height: 30, marginRight: 10 }}
                       resizeMode="contain"
                       tintColor={'black'}
                   />
@@ -94,10 +96,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#f7f7f7',
         elevation: 5
     },
-    save: {
+      save: {
+        flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#3B82F6',
+        backgroundColor: '#28A745',
         borderRadius: 10,
         paddingHorizontal: 12,
         paddingVertical: 10

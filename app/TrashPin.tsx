@@ -3,7 +3,6 @@ import { Text, View, StyleSheet, TouchableOpacity, FlatList, Animated, Dimension
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import Ionicons from '@expo/vector-icons/build/Ionicons'
-import Add from './Notes/Add'
 import { router, useSegments } from 'expo-router'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useState, useRef, useCallback } from 'react'
@@ -32,6 +31,11 @@ const TrashPin = () => {
   useFocusEffect(
     useCallback(() => {
       const loadNotes = async () => {
+        // قراءة الملاحظات المحذوفة من AsyncStorage
+        // "deletedNotes" ده مخزن منفصل في AsyncStorage
+        // AsyncStorage يخزن البيانات كـ key-value pairs
+        // عندما نحذف ملاحظة، بننقلها من "notes" إلى "deletedNotes"
+        // لو المخزن مش موجود، getItem يرجع null، ونبدأ بمصفوفة فارغة
         const stored = await AsyncStorage.getItem("deletedNotes");
         if (stored) {
           const parsed = JSON.parse(stored);
@@ -106,16 +110,17 @@ const TrashPin = () => {
             <Ionicons name="trash" size={24} color="#333" />
             <Text style={styles.menuText}>سلة المحذوفات</Text>
           </TouchableOpacity>
+          
+          <TouchableOpacity style={[styles.menuItem, isActive('favorites') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./favorites' as any); }}>
+            <Ionicons name="heart" size={24} color="#333" />
+            <Text style={styles.menuText}>المفضلة</Text>
+          </TouchableOpacity>
 
           <TouchableOpacity style={[styles.menuItem, isActive('settings') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./settings'); }}>
             <Ionicons name="settings" size={24} color="#333" />
             <Text style={styles.menuText}>الإعدادات</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.menuItem, isActive('favorites') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./favorites' as any); }}>
-            <Ionicons name="heart" size={24} color="#333" />
-            <Text style={styles.menuText}>المفضلة</Text>
-          </TouchableOpacity>
 
           <TouchableOpacity style={[styles.menuItem, isActive('profile') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./profile' as any); }}>
             <Ionicons name="person" size={24} color="#333" />
@@ -163,23 +168,14 @@ const TrashPin = () => {
             renderItem={({ item }) => (
               <View style={styles.noteContainer}>
                   <View style={styles.note}>
-                    <TouchableOpacity
-                    style={styles.noteTouchable}
-                    onPress={() => {
-                      router.push(`/Notes/${item.id}`);
-                    }}
-                  >
                     <Text style={styles.noteTitle}>{item.title}</Text>
                     <Text style={styles.noteContent} numberOfLines={1}>{item.content}</Text>
-                  </TouchableOpacity>
                   <View style={styles.noteActions}>
-                    <TouchableOpacity style={styles.restoreButton} onPress={() => restoreNote(item.id)}>
-                      <Ionicons name="refresh" size={20} color="#fff" />
-                      <Text style={styles.restoreText}>استعادة</Text>
-                    </TouchableOpacity>
                     <TouchableOpacity style={styles.deleteButton} onPress={() => deletePermanently(item.id)}>
                       <Ionicons name="trash" size={20} color="#fff" />
-                      <Text style={styles.deleteText}>حذف نهائي</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.restoreButton} onPress={() => restoreNote(item.id)}>
+                      <Ionicons name="refresh" size={20} color="#fff" />
                     </TouchableOpacity>
                   </View>
                 </View>

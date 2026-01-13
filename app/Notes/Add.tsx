@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { router } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Ionicons } from '@expo/vector-icons'
 const Add = () => {
   const titleRef = useRef<TextInput>(null)
   const [title, setTitle] = useState<string>('')
@@ -37,17 +38,12 @@ const Add = () => {
       console.log(error)
     }
   }
-
-  
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar style="auto" backgroundColor="#F3F3F3" />
         <View style={styles.header}>
           <TouchableOpacity style={styles.SaveCon} onPress={handleSave}>
-            <Image
-              source={require("@/assets/images/save.png")}
-              style={{ width: 20, height: 20 }}
-            />
+            <Ionicons name="save" size={20} color="#fff" />
             <Text style={styles.Save}>حفظ</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.BackCon} onPress={() => router.back()}>
@@ -106,7 +102,7 @@ const styles = StyleSheet.create({
     gap: 5,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#3B82F6",
+    backgroundColor: "#28A745",
     borderRadius: 10,
     paddingHorizontal: 10,
     paddingVertical: 10,

@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList, Animated, Dimensions } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList, Animated, Dimensions, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { router, useSegments } from "expo-router";
@@ -22,8 +22,28 @@ export default function Index() {
 
   const [notes, setNotes] = useState<Note[]>([]);
   const [search, setSearch] = useState<string>('');
+  // حالة الملاحظات المفضلة لتحديث الأيقونة
+  const [favorites, setFavorites] = useState<Note[]>([]);
 
   const filteredNotes = notes.filter((note) => note.title.toLowerCase().includes(search.toLowerCase()) || note.content.toLowerCase().includes(search.toLowerCase()));
+
+  const getRelativeTime = (dateString: string): string => {
+    const now = new Date();
+    const date = new Date(dateString);
+    const diffMs = now.getTime() - date.getTime();
+    const diffSec = Math.floor(diffMs / 1000);
+    const diffMin = Math.floor(diffSec / 60);
+    const diffHour = Math.floor(diffMin / 60);
+    const diffDay = Math.floor(diffHour / 24);
+
+    if (diffSec < 60) return 'منذ ثواني';
+    if (diffMin === 1) return 'منذ دقيقة واحدة';
+    if (diffMin < 60) return `منذ ${diffMin} دقائق`;
+    if (diffHour === 1) return 'منذ ساعة واحدة';
+    if (diffHour < 24) return `منذ ${diffHour} ساعة`;
+    if (diffDay === 1) return 'منذ يوم واحد';
+    return `منذ ${diffDay} يوم`;
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -31,7 +51,17 @@ export default function Index() {
         const stored = await AsyncStorage.getItem("notes");
         if (stored) {
           const parsed = JSON.parse(stored);
-          setNotes(parsed);
+          // إزالة isFavorite إذا كان موجوداً للتوافق
+          const cleanedNotes = parsed.map((note: any) => {
+            const { isFavorite, ...rest } = note;
+            return rest;
+          });
+          setNotes(cleanedNotes);
+        }
+        const storedFavorites = await AsyncStorage.getItem("favoriteNotes");
+        if (storedFavorites) {
+          const parsedFavorites = JSON.parse(storedFavorites);
+          setFavorites(parsedFavorites);
         }
       };
       loadNotes()
@@ -79,16 +109,17 @@ export default function Index() {
             <Ionicons name="trash" size={24} color="#333" />
             <Text style={styles.menuText}>سلة المحذوفات</Text>
           </TouchableOpacity>
+          
+          <TouchableOpacity style={[styles.menuItem, isActive('favorites') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./favorites' as any); }}>
+            <Ionicons name="heart" size={24} color="#333" />
+            <Text style={styles.menuText}>المفضلة</Text>
+          </TouchableOpacity>
 
           <TouchableOpacity style={[styles.menuItem, isActive('settings') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./settings'); }}>
             <Ionicons name="settings" size={24} color="#333" />
             <Text style={styles.menuText}>الإعدادات</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.menuItem, isActive('favorites') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./favorites' as any); }}>
-            <Ionicons name="heart" size={24} color="#333" />
-            <Text style={styles.menuText}>المفضلة</Text>
-          </TouchableOpacity>
 
           <TouchableOpacity style={[styles.menuItem, isActive('profile') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./profile' as any); }}>
             <Ionicons name="person" size={24} color="#333" />
@@ -106,9 +137,7 @@ export default function Index() {
       <SafeAreaView edges={["top"]} style={styles.container}>
       <StatusBar style={drawerOpen ? "light" : "auto"} backgroundColor={drawerOpen ? "#000" : "#A7C7FF"} />
       <View style={styles.header}>
-            <TouchableOpacity style={styles.Add} onPress={Add}>
-          <Text style={styles.AddText}> إضافة +</Text>
-        </TouchableOpacity>
+          
         <Text style={styles.headerTitle}>ملاحظاتي </Text>
         <TouchableOpacity onPress={toggleDrawer} style={styles.menuButton}>
           <Ionicons name="menu" size={24} color="black" />
@@ -143,9 +172,38 @@ export default function Index() {
                     router.push(`/Notes/${item.id}`);
                   }}
                 >
+                  <TouchableOpacity
+                    onPress={async () => {
+                      const storedFavorites = await AsyncStorage.getItem('favoriteNotes');
+                      let favoritesList = storedFavorites ? JSON.parse(storedFavorites) : [];
+                      const isAlreadyFavorite = favoritesList.some((n: any) => n.id === item.id);
+                      
+                      if (isAlreadyFavorite) {
+                        // إزالة من المفضلة
+                        favoritesList = favoritesList.filter((n: any) => n.id !== item.id);
+                      } else {
+                        // إضافة إلى المفضلة
+                        favoritesList.push(item);
+                      }
+                      
+                      // حفظ في AsyncStorage - ده ينشئ المخزن لو مش موجود
+                      await AsyncStorage.setItem('favoriteNotes', JSON.stringify(favoritesList));
+                      setFavorites(favoritesList);
+                    }}
+                    style={{ position: 'absolute', top: 10, left: 10, zIndex: 1 }}
+                  >
+                    {/* أيقونة القلب لإضافة/إزالة من المفضلة */}
+                    {favorites.some((n) => n.id === item.id) ? (
+                      <Ionicons name="heart" size={24} color="red" />
+                    ) : (
+                      <Ionicons name="heart-outline" size={24} color="red" />
+                    )}
+                  </TouchableOpacity>
                   <Text style={styles.noteTitle}>{item.title}</Text>
                   <Text style={styles.noteContent} numberOfLines={1}>{item.content}</Text>
+                  <Text style={styles.noteDate}>{getRelativeTime(item.createdAt)}</Text>
                 </TouchableOpacity>
+                
                 
                 
               </View>
@@ -164,6 +222,9 @@ export default function Index() {
             }}
             
           />
+          <TouchableOpacity style={styles.Add} onPress={Add}>
+            <Image source={require('@/assets/images/add.png')} tintColor={'white'} style={{ width: 30, height: 30, resizeMode: 'contain' }} />
+          </TouchableOpacity>
         </View>
         {/*======= END SHOW NOTES =======*/}
       </SafeAreaView>
@@ -207,12 +268,14 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   Add: {
-    justifyContent: "center",
-    alignItems: "center",
+    position: 'absolute',
+    bottom: 30,
+    left: 30,
     backgroundColor: "#3B82F6",
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 5
+    borderRadius: 30,
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+    elevation: 5,
   },
   AddText: {
     fontSize: 12,
@@ -253,7 +316,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     elevation: 2,
     height: 150,
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
   },
   noteTitle: {
     fontSize: 16,
@@ -265,6 +328,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: "right",
     color: 'gray',
+  },
+  noteDate: {
+    fontSize: 12,
+    textAlign: "right",
+    color: '#666',
+    marginTop: 10,
   },
   noNotes: {
     fontSize: 16,

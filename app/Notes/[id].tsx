@@ -4,6 +4,7 @@ import { useLocalSearchParams, router } from 'expo-router'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import { Ionicons } from '@expo/vector-icons';
 const Details = () => {
     type Note = {
         id: string;
@@ -45,6 +46,9 @@ const Details = () => {
                         const noteToDelete = notes.find((n) => n.id === id);
                         if (noteToDelete) {
                             // إضافة الملاحظة إلى سلة المهملات
+                            // "deletedNotes" ده مخزن منفصل في AsyncStorage
+                            // عند الحذف، بننقل الملاحظة من "notes" إلى "deletedNotes"
+                            // AsyncStorage ينشئ المخزن تلقائياً عند setItem لو مش موجود
                             const deletedStored = await AsyncStorage.getItem("deletedNotes");
                             const deletedNotes: Note[] = deletedStored ? JSON.parse(deletedStored) : [];
                             deletedNotes.push(noteToDelete);
@@ -74,10 +78,12 @@ const Details = () => {
           <View style={styles.header}>
               <View style={{flexDirection: "row", gap: 10}}>
                 <TouchableOpacity style={styles.delete}>
-                    <Text onPress={deleteNote} style={styles.deleteText}>حذف 🗑️</Text>
+                    <Ionicons name="trash" size={24} color="#fff" style={{marginRight: 5}} />
+                    <Text onPress={deleteNote} style={styles.deleteText}>حذف</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.edit} onPress={() => router.push(`/Notes/Edit/${id}`)}>
-                    <Text style={styles.editText}>تعديل ✏️</Text>
+                  <TouchableOpacity style={styles.edit} onPress={() => router.push(`/Notes/Edit/${id}`)}>
+                    <Ionicons name="pencil" size={24} color="#fff" style={{marginRight: 5}} />
+                    <Text style={styles.editText}>تعديل</Text>
                 </TouchableOpacity>
               </View>
               <View>
@@ -120,6 +126,7 @@ const styles = StyleSheet.create({
 
     },
     delete: {
+        flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#DC2720",
@@ -133,6 +140,7 @@ const styles = StyleSheet.create({
         color: "#fff"
     },
     edit: {
+        flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#3B82F6",
