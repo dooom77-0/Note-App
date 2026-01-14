@@ -4,7 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View, TextInput } from 'react-nativ
 import {useState, useRef, useEffect} from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { router } from 'expo-router'
-import { StatusBar } from 'expo-status-bar'
+// import { StatusBar } from 'expo-status-bar'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Ionicons } from '@expo/vector-icons'
 import { useThemeStore } from '../store/useThemeStore'
@@ -14,7 +14,7 @@ const Add = () => {
   const titleRef = useRef<TextInput>(null)
   const [title, setTitle] = useState<string>('')
   const [content, setContent] = useState<string>('')
-  const { isDarkMode, headerBackground } = useThemeStore()
+  const { isDarkMode } = useThemeStore()
   const theme = isDarkMode ? Colors.dark : Colors.light
 
   useEffect(() => {
@@ -45,8 +45,7 @@ const Add = () => {
   }
     return (
       <SafeAreaView style={styles.container}>
-        <StatusBar style={theme.StatusBar} backgroundColor={headerBackground} />
-        <View style={[ styles.header, {backgroundColor: headerBackground}]}>
+        <View style={styles.header}>
           <TouchableOpacity style={styles.SaveCon} onPress={handleSave}>
             <Ionicons name="save" size={20} color="#fff" />
             <Text style={styles.Save}>حفظ</Text>

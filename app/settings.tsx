@@ -1,6 +1,6 @@
 import { Text, View, StyleSheet, TouchableOpacity, Animated, Dimensions, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StatusBar } from "expo-status-bar";
+// import { StatusBar } from "expo-status-bar";
 import { router, useSegments } from "expo-router";
 import { useRef, useState } from 'react';
 import { Ionicons } from "@expo/vector-icons";
@@ -14,7 +14,7 @@ export default function Settings() {
   // toggleDarkMode: دالة لتبديل الوضع الليلي (تغير isDarkMode من true إلى false والعكس)
   // mainColor: اللون الرئيسي المختار (مثل الأزرق)
   // colorKey: مفتاح اللون (مثل 'blue')
-  const { isDarkMode, toggleDarkMode, mainColor, headerBackground } = useThemeStore();
+  const { isDarkMode, toggleDarkMode, setMainColor } = useThemeStore();
 
   // الحصول على ألوان الثيم الحالي (فاتح أو داكن)
   // إذا isDarkMode = true، يستخدم Colors.dark، وإلا Colors.light
@@ -42,6 +42,13 @@ export default function Settings() {
     inputRange: [0, 1],
     outputRange: [width * 0.75, 0], // يبدأ من خارج الشاشة على اليمين وينزلق إلى الداخل
   });
+
+  const colorsOptions = [
+    { id: 'blue', hex: '#3B82F6', name: 'أزرق' },
+    { id: 'purple', hex: '#8B5CF6', name: 'أرجواني' },
+    { id: 'green', hex: '#10B981', name: 'أخضر' },
+    { id: 'yellow', hex: '#F59E0B', name: 'أصفر' },
+  ]
 
   const Drawer = () => {
     const isActive = (tab: string) => currentTab === tab;
@@ -82,8 +89,7 @@ export default function Settings() {
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
       <SafeAreaView edges={["top"]} style={styles.container}>
-        <StatusBar style={theme.StatusBar} backgroundColor={headerBackground} />
-        <View style={[styles.header, { backgroundColor: headerBackground }]}>
+        <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={24} color={theme.primary} />
           </TouchableOpacity>
@@ -92,7 +98,6 @@ export default function Settings() {
             <Ionicons name="menu" size={24} color={theme.primary} />
           </TouchableOpacity>
         </View>
-
         <View style={[styles.content, { backgroundColor: theme.background }]}>
           {/* قسم الصورة الشخصية */}
           <View style={[styles.profileImage, { backgroundColor: theme.card, borderColor: theme.borders }]}>
@@ -110,7 +115,7 @@ export default function Settings() {
           <View style={styles.appearanceSection}>
             <Text style={[styles.sectionTitle, { color: theme.primary }]}>مظهر التطبيق</Text>
             {/* إعدادات المظهر مثل اختيار اللون والوضع الداكن */}
-            <View style={styles.optionsContainer}>
+            <View style={[ styles.optionsContainer, { borderColor: theme.borders, backgroundColor: theme.card }]}>
                <View style={[styles.options, { backgroundColor: theme.card, borderColor: theme.borders }]}>
               {/* خيار الوضع الداكن */}
               <Text style={[styles.optionText, { color: theme.primary }]}>الوضع الداكن</Text>
@@ -121,7 +126,23 @@ export default function Settings() {
               />
               </View>
               <View style={[styles.options, { backgroundColor: theme.card, borderColor: theme.borders }]}>
-              {/* اختيار اللون الرئيسي - يمكن إضافة أزرار للألوان هنا */}
+                {/* اختيار اللون الرئيسي - يمكن إضافة أزرار للألوان هنا */}
+                <Text style={[styles.optionText, { color: theme.primary }]}>لون التطبيق الرئيسي</Text>
+                <View style={styles.colorsRow}>
+                  {colorsOptions.map((color) => (
+                    <TouchableOpacity
+                      key={color.id}
+                      style={[styles.colorCircle, { backgroundColor: color.hex }]}
+                      onPress={() => setMainColor(color.id as any)}
+                    >
+                      <Ionicons name="checkmark" size={20} color="white" />
+                    </TouchableOpacity>
+                  ))}
+                </View>
+
+              </View>
+              <View>
+                {/* اختيار اللغة للتطبيق  */}
               </View>
             </View>
             
@@ -185,11 +206,9 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   optionsContainer: {
-    backgroundColor: '#f9f9f9',
     paddingHorizontal: 10,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#eee',
   },
   options: {
     flexDirection: 'row-reverse',
@@ -197,13 +216,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
     paddingVertical: 10,
   },
   optionText: {
     fontSize: 16,
-    color: '#333',
-
+  },
+  colorsRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  colorCircle: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
   },
   switch: {
     transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }]

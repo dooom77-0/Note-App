@@ -1,7 +1,7 @@
 import { Text, View, StyleSheet, TouchableOpacity, FlatList, Animated, Dimensions, TextInput   } from 'react-native'
 // import { useState, useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { StatusBar } from 'expo-status-bar'
+// import { StatusBar } from 'expo-status-bar'
 import Ionicons from '@expo/vector-icons/build/Ionicons'
 import { router, useSegments } from 'expo-router'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -26,7 +26,7 @@ const TrashPin = () => {
   const currentTab = segments[1] || 'TrashPin';
 
   // جلب الثيم
-  const { isDarkMode, mainColor, headerBackground } = useThemeStore();
+  const { isDarkMode } = useThemeStore();
   const theme = isDarkMode ? Colors.dark : Colors.light;
 
   const [notes, setNotes] = useState<Note[]>([]);
@@ -135,15 +135,12 @@ const TrashPin = () => {
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
       <SafeAreaView edges={['top']} style={styles.container}>
-        <StatusBar style={theme.StatusBar} backgroundColor={headerBackground} />
-        <View style={[styles.header, { backgroundColor: headerBackground }]}>
-        
+        <View style={styles.header}>
           <Text style={[styles.headerTitle, { color: theme.primary }]}>سلة المحذوفات</Text>
 
           <TouchableOpacity onPress={toggleDrawer} style={styles.menuButton}>
             <Ionicons name="menu" size={28} color={theme.primary} />
           </TouchableOpacity>
-
         </View>
 
         {/* HEADER END */}
@@ -220,7 +217,6 @@ const styles = StyleSheet.create({
     height: 70,
     justifyContent: 'space-between',  
     alignItems: 'center',
-    backgroundColor: '#A7C7FF',
     position: 'relative',
   },
   menuButton: {
@@ -229,12 +225,13 @@ const styles = StyleSheet.create({
     top: 22,
   },
   headerTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
     position: 'absolute',
-    left: 0,
     right: 0,
+    left: 0,
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+    paddingTop: 22,
   },
   DELALL: {
     position: 'absolute',

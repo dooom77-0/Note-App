@@ -1,6 +1,6 @@
 import { Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList, Animated, Dimensions, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StatusBar } from "expo-status-bar";
+// import { StatusBar } from "expo-status-bar";
 import { router, useSegments } from "expo-router";
 import { useState, useCallback, useRef } from "react";
 import { useFocusEffect } from "@react-navigation/native";
@@ -16,7 +16,7 @@ dayjs.extend(relativeTime);
 dayjs.locale('ar');
 export default function Index() {
   // جلب الثيم من الـ store
-  const { isDarkMode, headerBackground } = useThemeStore();
+  const { isDarkMode } = useThemeStore();
   const theme = isDarkMode ? Colors.dark : Colors.light;
   type Note = {
     id: string;
@@ -24,6 +24,8 @@ export default function Index() {
     content: string;
     createdAt: string;
   }
+
+  const mainColor = useThemeStore((state) => state.mainColor);
 
   const { width } = Dimensions.get('window');
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -128,21 +130,18 @@ export default function Index() {
     <View style={{ flex: 1, backgroundColor: theme.background }}>
       {/*====== HEADER =======*/}
       <SafeAreaView edges={["top"]} style={styles.container}>
-      <StatusBar style={theme.StatusBar} backgroundColor={headerBackground} />
-      <View style={[styles.header, { backgroundColor: headerBackground }]}>
-          
-        <Text style={[styles.headerTitle, { color: theme.primary }]}>ملاحظاتي </Text>
-        <TouchableOpacity onPress={toggleDrawer} style={styles.menuButton}>
-          <Ionicons name="menu" size={24} color={theme.primary} />
-        </TouchableOpacity>
-        
+        <View style={styles.header}>
+          <Text style={[styles.headerTitle, { color: theme.primary }]}>ملاحظاتي </Text>
+          <TouchableOpacity onPress={toggleDrawer} style={styles.menuButton}>
+            <Ionicons name="menu" size={24} color={theme.primary} />
+          </TouchableOpacity>
         </View>
         {/* ======= END HEADER ===== */}
 
 
         {/*======= SHOW NOTES =======*/}
       <View style={[styles.showNotes, { backgroundColor: theme.background }]}>
-          <View style={[styles.searchbar, { backgroundColor: theme.card, borderColor: theme.borders }]}>
+          <View style={[styles.searchbar, { backgroundColor: theme.card, borderColor: mainColor, borderWidth: 0.5 }]}>
             <Ionicons name="search" size={20} color={theme.secondary} style={{ marginLeft: 8 }} />
             <TextInput 
             value={search}
@@ -162,13 +161,14 @@ export default function Index() {
               <View style={styles.noteContainer}>
                   <TouchableOpacity
                   activeOpacity={0.7}
-                  style={[styles.note, { backgroundColor: theme.card, borderColor: theme.borders }]}
+                  style={[styles.note, { backgroundColor: theme.card, elevation: 5, borderColor: mainColor }]}
                   onPress={() => {
                     router.push(`/Notes/${item.id}`);
                   }}
                   onLongPress={() => handleCopy(`${item.title}\n${item.content}`)}
                 >
                   <TouchableOpacity
+                    
                     onPress={async () => {
                       const storedFavorites = await AsyncStorage.getItem('favoriteNotes');
                       let favoritesList = storedFavorites ? JSON.parse(storedFavorites) : [];
@@ -186,7 +186,7 @@ export default function Index() {
                       await AsyncStorage.setItem('favoriteNotes', JSON.stringify(favoritesList));
                       setFavorites(favoritesList);
                     }}
-                    style={{ position: 'absolute', top: 10, left: 10, zIndex: 1 }}
+                    style={{ position: 'absolute', bottom: 10, left: 10, zIndex: 1 }}
                   >
                     {/* أيقونة القلب لإضافة/إزالة من المفضلة */}
                     {favorites.some((n) => n.id === item.id) ? (
@@ -305,8 +305,7 @@ const styles = StyleSheet.create({
   },
   note: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: "#A7C7FF",
+    borderWidth: 0.5,
     borderRadius: 15,
     padding: 15,
     backgroundColor: "#fff",

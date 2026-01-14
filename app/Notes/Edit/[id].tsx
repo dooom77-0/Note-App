@@ -6,7 +6,7 @@ import { useState , useEffect} from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { router, useLocalSearchParams } from 'expo-router'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StatusBar } from 'expo-status-bar';
+// import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 const EditPage = () => {
     const { id } = useLocalSearchParams();
@@ -44,7 +44,6 @@ const EditPage = () => {
     }
   return (
       <SafeAreaView style={styles.container}>
-          <StatusBar style="auto" backgroundColor='#f7f7f7' />
           <View style={styles.header}>
             <TouchableOpacity style={styles.save} onPress={handleSave}>
                 <Ionicons name="save" size={20} color="#fff" style={{marginRight: 5}} />

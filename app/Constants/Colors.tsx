@@ -3,10 +3,9 @@ import { StatusBarStyle } from 'expo-status-bar';
 export const Colors = {
     light: {
         background: '#F9FAFB',
-        card: '#ffffff',
+        card: '#f9f9f9',
         primary: '#111827',
         secondary: '#6B7280',
-        headerBackground: '#A7C7FF',  // Changed to a color string
         borders: '#E5E7EB',
         StatusBar: 'dark' as StatusBarStyle,  // Typed as StatusBarStyle
     },

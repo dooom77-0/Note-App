@@ -1,7 +1,7 @@
 import { Text, View, StyleSheet, TouchableOpacity, FlatList, Animated, Dimensions, TextInput   } from 'react-native'
 // import { useState, useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { StatusBar } from 'expo-status-bar'
+// import { StatusBar } from 'expo-status-bar'
 import Ionicons from '@expo/vector-icons/build/Ionicons'
 import { router, useSegments } from 'expo-router'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -31,7 +31,7 @@ const Favorites = () => {
   const currentTab = segments[1] || 'favorites';
 
   // جلب الثيم
-  const { isDarkMode, mainColor, headerBackground } = useThemeStore();
+  const { isDarkMode } = useThemeStore();
   const theme = isDarkMode ? Colors.dark : Colors.light;
 
   // حالة الملاحظات المفضلة
@@ -140,17 +140,12 @@ const Favorites = () => {
     <View style={{ flex: 1, backgroundColor: theme.background }}>
       {/* المنطقة الآمنة للشاشة */}
       <SafeAreaView edges={['top']} style={styles.container}>
-        {/* شريط الحالة */}
-        <StatusBar style={theme.StatusBar} backgroundColor={headerBackground} />
-        {/* رأس الصفحة */}
-        <View style={[styles.header, { backgroundColor: headerBackground }]}>
-          {/* زر فتح الـ Drawer */}
+        <View style={styles.header}>
           <TouchableOpacity onPress={toggleDrawer} style={styles.menuButton}>
             <Ionicons name="menu" size={24} color={theme.primary} />
           </TouchableOpacity>
         
           <Text style={[styles.headerTitle, { color: theme.primary }]}>المفضلة</Text>
-
         </View>
 
         {/* محتوى الصفحة */}

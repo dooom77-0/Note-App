@@ -37,7 +37,8 @@ export const useThemeStore = create<ThemeState>()(
       setMainColor: (key) => 
         set({ 
           colorKey: key, 
-          mainColor: themeColors[key] 
+          mainColor: themeColors[key],
+          headerBackground: `${themeColors[key]}1A`, // تحديث خلفية الهيدر مع الشفافية
         }),
 
       // تبديل الوضع الليلي
