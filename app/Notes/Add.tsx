@@ -7,10 +7,15 @@ import { router } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Ionicons } from '@expo/vector-icons'
+import { useThemeStore } from '../store/useThemeStore'
+import { Colors } from '../Constants/Colors'
+
 const Add = () => {
   const titleRef = useRef<TextInput>(null)
   const [title, setTitle] = useState<string>('')
   const [content, setContent] = useState<string>('')
+  const { isDarkMode, headerBackground } = useThemeStore()
+  const theme = isDarkMode ? Colors.dark : Colors.light
 
   useEffect(() => {
     setTimeout(() => {
@@ -40,8 +45,8 @@ const Add = () => {
   }
     return (
       <SafeAreaView style={styles.container}>
-        <StatusBar style="auto" backgroundColor="#F3F3F3" />
-        <View style={styles.header}>
+        <StatusBar style={theme.StatusBar} backgroundColor={headerBackground} />
+        <View style={[ styles.header, {backgroundColor: headerBackground}]}>
           <TouchableOpacity style={styles.SaveCon} onPress={handleSave}>
             <Ionicons name="save" size={20} color="#fff" />
             <Text style={styles.Save}>حفظ</Text>
@@ -56,7 +61,7 @@ const Add = () => {
         {/* END HEADER */}
 
         {/* START BODY  */}
-        <View style={styles.Add}>
+        <View style={[styles.Add, {backgroundColor: theme.background}]}>
           <TextInput
             ref={titleRef}
             value={title}
@@ -92,8 +97,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 22,
-    backgroundColor: "#F3F3F3",
-    elevation: 5,
 
   },
   SaveCon: {

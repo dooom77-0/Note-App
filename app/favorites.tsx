@@ -7,6 +7,8 @@ import { router, useSegments } from 'expo-router'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useState, useRef, useCallback } from 'react'
 import { useFocusEffect } from "@react-navigation/native";
+import { useThemeStore } from "./store/useThemeStore";
+import { Colors } from "./Constants/Colors";
 
 // تعريف نوع الملاحظة
 type Note = {
@@ -27,6 +29,10 @@ const Favorites = () => {
   // الحصول على المسار الحالي
   const segments = useSegments();
   const currentTab = segments[1] || 'favorites';
+
+  // جلب الثيم
+  const { isDarkMode, mainColor, headerBackground } = useThemeStore();
+  const theme = isDarkMode ? Colors.dark : Colors.light;
 
   // حالة الملاحظات المفضلة
   const [notes, setNotes] = useState<Note[]>([]);
@@ -90,37 +96,37 @@ const Favorites = () => {
     // دالة للتحقق من التبويب النشط
     const isActive = (tab: string) => currentTab === tab;
     return (
-      <Animated.View style={[styles.drawer, { transform: [{ translateX }] }]}>
+      <Animated.View style={[styles.drawer, { transform: [{ translateX }], backgroundColor: theme.card }]}>
         <View style={styles.drawerHeader}>
           <TouchableOpacity style={styles.closeButton} onPress={toggleDrawer}>
-            <Ionicons name="close" size={28} color="#333" />
+            <Ionicons name="close" size={28} color={theme.primary} />
           </TouchableOpacity>
-          <Text style={styles.drawerTitle}>القائمة</Text>
+          <Text style={[styles.drawerTitle, { color: theme.primary }]}>القائمة</Text>
         </View>
         
         <View style={styles.drawerContent}>
           {/* عنصر القائمة للملاحظات */}
           <TouchableOpacity style={[styles.menuItem, isActive('index') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('/'); }}>
-            <Ionicons name="document-text" size={24} color="#333" />
-            <Text style={styles.menuText}>ملاحظاتي</Text>
+            <Ionicons name="document-text" size={24} color={theme.primary} />
+            <Text style={[styles.menuText, { color: theme.primary }]}>ملاحظاتي</Text>
           </TouchableOpacity>
 
           {/* عنصر القائمة لسلة المحذوفات */}
           <TouchableOpacity style={[styles.menuItem, isActive('TrashPin') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./TrashPin' as any); }}>
-            <Ionicons name="trash" size={24} color="#333" />
-            <Text style={styles.menuText}>سلة المحذوفات</Text>
+            <Ionicons name="trash" size={24} color={theme.primary} />
+            <Text style={[styles.menuText, { color: theme.primary }]}>سلة المحذوفات</Text>
           </TouchableOpacity>
           
           {/* عنصر القائمة للمفضلة */}
           <TouchableOpacity style={[styles.menuItem, isActive('favorites') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./favorites' as any); }}>
-            <Ionicons name="heart" size={24} color="#333" />
-            <Text style={styles.menuText}>المفضلة</Text>
+            <Ionicons name="heart" size={24} color={theme.primary} />
+            <Text style={[styles.menuText, { color: theme.primary }]}>المفضلة</Text>
           </TouchableOpacity>
 
           {/* عنصر القائمة للإعدادات */}
           <TouchableOpacity style={[styles.menuItem, isActive('settings') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./settings'); }}>
-            <Ionicons name="settings" size={24} color="#333" />
-            <Text style={styles.menuText}>الإعدادات</Text>
+            <Ionicons name="settings" size={24} color={theme.primary} />
+            <Text style={[styles.menuText, { color: theme.primary }]}>الإعدادات</Text>
           </TouchableOpacity>
 
 
@@ -131,33 +137,34 @@ const Favorites = () => {
 
   // الواجهة الرئيسية للصفحة
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: theme.background }}>
       {/* المنطقة الآمنة للشاشة */}
       <SafeAreaView edges={['top']} style={styles.container}>
         {/* شريط الحالة */}
-        <StatusBar style={drawerOpen ? "light" : "auto"} backgroundColor={drawerOpen ? "#000" : "#A7C7FF"} />
+        <StatusBar style={theme.StatusBar} backgroundColor={headerBackground} />
         {/* رأس الصفحة */}
-        <View style={styles.header}>
+        <View style={[styles.header, { backgroundColor: headerBackground }]}>
           {/* زر فتح الـ Drawer */}
           <TouchableOpacity onPress={toggleDrawer} style={styles.menuButton}>
-            <Ionicons name="menu" size={24} color="black" />
+            <Ionicons name="menu" size={24} color={theme.primary} />
           </TouchableOpacity>
         
-          <Text style={styles.headerTitle}>المفضلة</Text>
+          <Text style={[styles.headerTitle, { color: theme.primary }]}>المفضلة</Text>
 
         </View>
 
         {/* محتوى الصفحة */}
-        <View style={styles.showNotes}>
+        <View style={[styles.showNotes, { backgroundColor: theme.background }]}>
           {/* شريط البحث */}
-          <View style={styles.searchbar}>
-            <Ionicons name="search" size={20} color="#999" style={{ marginLeft: 8 }} />
+          <View style={[styles.searchbar, { backgroundColor: theme.card, borderColor: theme.borders }]}>
+            <Ionicons name="search" size={20} color={theme.secondary} style={{ marginLeft: 8 }} />
             <TextInput 
             value={search}
             onChangeText={(text) => setSearch(text)}
             placeholder="البحث عن ملاحظة ..."
-            style={styles.search}
+            style={[styles.search, { color: theme.primary }]}
             textAlign="right"
+            placeholderTextColor={theme.secondary}
             
             />
           </View>
@@ -170,9 +177,9 @@ const Favorites = () => {
               <View style={styles.noteContainer}>
                   <View style={styles.note}>
                     {/* عنوان الملاحظة */}
-                    <Text style={styles.noteTitle}>{item.title}</Text>
+                    <Text style={[styles.noteTitle, { color: theme.primary }]}>{item.title}</Text>
                     {/* محتوى الملاحظة */}
-                    <Text style={styles.noteContent} numberOfLines={1}>{item.content}</Text>
+                    <Text style={[styles.noteContent, { color: theme.secondary }]} numberOfLines={1}>{item.content}</Text>
                     {/* أزرار الإجراءات */}
                   <View style={styles.noteActions}>
                     {/* زر إزالة من المفضلة */}
@@ -223,7 +230,6 @@ const styles = StyleSheet.create({
     height: 70,
     justifyContent: 'center',  
     alignItems: 'center',
-    backgroundColor: '#A7C7FF',
     position: 'relative',
   },
   menuButton: {

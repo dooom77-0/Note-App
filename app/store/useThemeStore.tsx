@@ -2,34 +2,45 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// 1. تعريف مصفوفة الألوان كأنواع ثابتة
+// 1. تعريف أنواع الألوان المتاحة
 export type ColorKey = 'blue' | 'purple' | 'green' | 'yellow';
 
-const themeColors: Record<ColorKey, string> = {
+// 2. تعريف الألوان الثابتة (نفس الدرجات التي اخترناها سابقاً)
+export const themeColors: Record<ColorKey, string> = {
   blue: '#3B82F6',
   purple: '#8B5CF6',
   green: '#10B981',
   yellow: '#F59E0B',
 };
 
-// 2. تعريف شكل البيانات داخل الـ Store (TypeScript Interface)
+// 3. تعريف واجهة البيانات (Interface)
 interface ThemeState {
-  mainColor: string;
+  headerBackground: string; // يحفظ لون خلفية الهيدر
+  mainColor: string;      // يحفظ كود الـ Hex للون المختار
+  colorKey: ColorKey;     // يحفظ اسم اللون (لتمهيد الاختيار في الإعدادات)
   isDarkMode: boolean;
-  setMainColor: (colorName: ColorKey) => void;
+  setMainColor: (key: ColorKey) => void;
   toggleDarkMode: () => void;
 }
 
-// 3. إنشاء الـ Store مع ربط الأنواع
+// 4. إنشاء الـ Store
 export const useThemeStore = create<ThemeState>()(
   persist(
     (set) => ({
+      // القيم الافتراضية
+      headerBackground: `${themeColors.blue}1A`, // نفس اللون مع شفافية 10%
       mainColor: themeColors.blue,
+      colorKey: 'blue',
       isDarkMode: false,
 
-      setMainColor: (colorName) => 
-        set({ mainColor: themeColors[colorName] }),
+      // تغيير لون الهوية
+      setMainColor: (key) => 
+        set({ 
+          colorKey: key, 
+          mainColor: themeColors[key] 
+        }),
 
+      // تبديل الوضع الليلي
       toggleDarkMode: () => 
         set((state) => ({ isDarkMode: !state.isDarkMode })),
     }),

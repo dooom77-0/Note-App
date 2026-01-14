@@ -10,9 +10,14 @@ import 'dayjs/locale/ar';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import * as Clipboard from 'expo-clipboard';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useThemeStore } from "./store/useThemeStore";
+import { Colors } from "./Constants/Colors";
 dayjs.extend(relativeTime);
 dayjs.locale('ar');
 export default function Index() {
+  // جلب الثيم من الـ store
+  const { isDarkMode, headerBackground } = useThemeStore();
+  const theme = isDarkMode ? Colors.dark : Colors.light;
   type Note = {
     id: string;
     title: string;
@@ -84,33 +89,33 @@ export default function Index() {
   const Drawer = () => {
     const isActive = (tab: string) => currentTab === tab;
     return (
-      <Animated.View style={[styles.drawer, { transform: [{ translateX }] }]}>
+      <Animated.View style={[styles.drawer, { transform: [{ translateX }], backgroundColor: theme.card }]}>
         <View style={styles.drawerHeader}>
           <TouchableOpacity style={styles.closeButton} onPress={toggleDrawer}>
-            <Ionicons name="close" size={28} color="#333" />
+            <Ionicons name="close" size={28} color={theme.primary} />
           </TouchableOpacity>
-          <Text style={styles.drawerTitle}>القائمة</Text>
+          <Text style={[styles.drawerTitle, { color: theme.primary }]}>القائمة</Text>
         </View>
         
         <View style={styles.drawerContent}>
           <TouchableOpacity style={[styles.menuItem, isActive('index') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('/'); }}>
-            <Ionicons name="document-text" size={24} color="#333" />
-            <Text style={styles.menuText}>ملاحظاتي</Text>
+            <Ionicons name="document-text" size={24} color={theme.primary} />
+            <Text style={[styles.menuText, { color: theme.primary }]}>ملاحظاتي</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.menuItem, isActive('TrashPin') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./TrashPin' as any); }}>
-            <Ionicons name="trash" size={24} color="#333" />
-            <Text style={styles.menuText}>سلة المحذوفات</Text>
+            <Ionicons name="trash" size={24} color={theme.primary} />
+            <Text style={[styles.menuText, { color: theme.primary }]}>سلة المحذوفات</Text>
           </TouchableOpacity>
           
           <TouchableOpacity style={[styles.menuItem, isActive('favorites') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./favorites' as any); }}>
-            <Ionicons name="heart" size={24} color="#333" />
-            <Text style={styles.menuText}>المفضلة</Text>
+            <Ionicons name="heart" size={24} color={theme.primary} />
+            <Text style={[styles.menuText, { color: theme.primary }]}>المفضلة</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.menuItem, isActive('settings') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./settings'); }}>
-            <Ionicons name="settings" size={24} color="#333" />
-            <Text style={styles.menuText}>الإعدادات</Text>
+            <Ionicons name="settings" size={24} color={theme.primary} />
+            <Text style={[styles.menuText, { color: theme.primary }]}>الإعدادات</Text>
           </TouchableOpacity>
 
 
@@ -120,15 +125,15 @@ export default function Index() {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: theme.background }}>
       {/*====== HEADER =======*/}
       <SafeAreaView edges={["top"]} style={styles.container}>
-      <StatusBar style={drawerOpen ? "light" : "auto"} backgroundColor={drawerOpen ? "#000" : "#A7C7FF"} />
-      <View style={styles.header}>
+      <StatusBar style={theme.StatusBar} backgroundColor={headerBackground} />
+      <View style={[styles.header, { backgroundColor: headerBackground }]}>
           
-        <Text style={styles.headerTitle}>ملاحظاتي </Text>
+        <Text style={[styles.headerTitle, { color: theme.primary }]}>ملاحظاتي </Text>
         <TouchableOpacity onPress={toggleDrawer} style={styles.menuButton}>
-          <Ionicons name="menu" size={24} color="black" />
+          <Ionicons name="menu" size={24} color={theme.primary} />
         </TouchableOpacity>
         
         </View>
@@ -136,15 +141,16 @@ export default function Index() {
 
 
         {/*======= SHOW NOTES =======*/}
-      <View style={styles.showNotes}>
-          <View style={styles.searchbar}>
-            <Ionicons name="search" size={20} color="#999" style={{ marginLeft: 8 }} />
+      <View style={[styles.showNotes, { backgroundColor: theme.background }]}>
+          <View style={[styles.searchbar, { backgroundColor: theme.card, borderColor: theme.borders }]}>
+            <Ionicons name="search" size={20} color={theme.secondary} style={{ marginLeft: 8 }} />
             <TextInput 
             value={search}
             onChangeText={(text) => setSearch(text)}
             placeholder="البحث عن ملاحظة ..."
-            style={styles.search}
+            style={[styles.search, { color: theme.primary }]}
             textAlign="right"
+            placeholderTextColor={theme.secondary}
             
             />
           </View>
@@ -156,7 +162,7 @@ export default function Index() {
               <View style={styles.noteContainer}>
                   <TouchableOpacity
                   activeOpacity={0.7}
-                  style={styles.note}
+                  style={[styles.note, { backgroundColor: theme.card, borderColor: theme.borders }]}
                   onPress={() => {
                     router.push(`/Notes/${item.id}`);
                   }}
@@ -189,9 +195,9 @@ export default function Index() {
                       <Ionicons name="heart-outline" size={24} color="red" />
                     )}
                   </TouchableOpacity>
-                  <Text style={styles.noteTitle}>{item.title}</Text>
-                  <Text style={styles.noteContent} numberOfLines={1}>{item.content}</Text>
-                  <Text style={styles.noteDate}>
+                  <Text style={[styles.noteTitle, { color: theme.primary }]}>{item.title}</Text>
+                  <Text style={[styles.noteContent, { color: theme.secondary }]} numberOfLines={1}>{item.content}</Text>
+                  <Text style={[styles.noteDate, { color: theme.secondary }]}>
                     {dayjs(item.createdAt).fromNow()}
                   </Text>
                 </TouchableOpacity>
@@ -237,8 +243,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 22,
-    backgroundColor: "#A7C7FF",
-    elevation: 10,
 
   },
   headerTitle: {

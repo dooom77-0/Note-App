@@ -1,17 +1,32 @@
-import { Text, View, StyleSheet, TouchableOpacity, Animated, Dimensions } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Animated, Dimensions, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { router, useSegments } from "expo-router";
-import { useState, useRef } from "react";
+import { useRef, useState } from 'react';
 import { Ionicons } from "@expo/vector-icons";
+import { Switch } from "react-native-paper";
+import { useThemeStore } from "./store/useThemeStore";
+import { Colors } from "./Constants/Colors";
 
 export default function Settings() {
+  // جلب البيانات من الـ store: الوضع الليلي، تبديله، اللون الرئيسي، إلخ
+  // isDarkMode: قيمة منطقية تحدد إذا كان الوضع داكن أم لا
+  // toggleDarkMode: دالة لتبديل الوضع الليلي (تغير isDarkMode من true إلى false والعكس)
+  // mainColor: اللون الرئيسي المختار (مثل الأزرق)
+  // colorKey: مفتاح اللون (مثل 'blue')
+  const { isDarkMode, toggleDarkMode, mainColor, headerBackground } = useThemeStore();
+
+  // الحصول على ألوان الثيم الحالي (فاتح أو داكن)
+  // إذا isDarkMode = true، يستخدم Colors.dark، وإلا Colors.light
+  const theme = isDarkMode ? Colors.dark : Colors.light;
+  
   const { width } = Dimensions.get('window');
   const [drawerOpen, setDrawerOpen] = useState(false);
   const animatedValue = useRef(new Animated.Value(0)).current;
   const segments = useSegments();
   const currentTab = segments[1] || 'settings';
 
+  // دالة لفتح وإغلاق الـ drawer
   const toggleDrawer = () => {
     const toValue = drawerOpen ? 0 : 1;
     setDrawerOpen(!drawerOpen);
@@ -22,41 +37,42 @@ export default function Settings() {
     }).start();
   };
 
+  // حساب التحريك للـ drawer (من اليمين إلى اليسار، ينزلق من خارج الشاشة إلى الداخل)
   const translateX = animatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [width, 0],
+    outputRange: [width * 0.75, 0], // يبدأ من خارج الشاشة على اليمين وينزلق إلى الداخل
   });
 
   const Drawer = () => {
     const isActive = (tab: string) => currentTab === tab;
     return (
-      <Animated.View style={[styles.drawer, { transform: [{ translateX }] }]}>
+      <Animated.View style={[styles.drawer, { transform: [{ translateX }], backgroundColor: theme.card }]}>
         <View style={styles.drawerHeader}>
           <TouchableOpacity style={styles.closeButton} onPress={toggleDrawer}>
-            <Ionicons name="close" size={28} color="#333" />
+            <Ionicons name="close" size={28} color={theme.primary} />
           </TouchableOpacity>
-          <Text style={styles.drawerTitle}>القائمة</Text>
+          <Text style={[styles.drawerTitle, { color: theme.primary }]}>القائمة</Text>
         </View>
 
         <View style={styles.drawerContent}>
           <TouchableOpacity style={[styles.menuItem, isActive('index') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('/'); }}>
-            <Ionicons name="document-text" size={24} color="#333" />
-            <Text style={styles.menuText}>ملاحظاتي</Text>
+            <Ionicons name="document-text" size={24} color={theme.primary} />
+            <Text style={[styles.menuText, { color: theme.primary }]}>ملاحظاتي</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.menuItem, isActive('TrashPin') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./TrashPin' as any); }}>
-            <Ionicons name="trash" size={24} color="#333" />
-            <Text style={styles.menuText}>سلة المحذوفات</Text>
+            <Ionicons name="trash" size={24} color={theme.primary} />
+            <Text style={[styles.menuText, { color: theme.primary }]}>سلة المحذوفات</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.menuItem, isActive('favorites') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./favorites' as any); }}>
-            <Ionicons name="heart" size={24} color="#333" />
-            <Text style={styles.menuText}>المفضلة</Text>
+            <Ionicons name="heart" size={24} color={theme.primary} />
+            <Text style={[styles.menuText, { color: theme.primary }]}>المفضلة</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.menuItem, isActive('settings') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./settings'); }}>
-            <Ionicons name="settings" size={24} color="#333" />
-            <Text style={styles.menuText}>الإعدادات</Text>
+            <Ionicons name="settings" size={24} color={theme.primary} />
+            <Text style={[styles.menuText, { color: theme.primary }]}>الإعدادات</Text>
           </TouchableOpacity>
         </View>
       </Animated.View>
@@ -64,19 +80,54 @@ export default function Settings() {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: theme.background }}>
       <SafeAreaView edges={["top"]} style={styles.container}>
-        <StatusBar style={drawerOpen ? "light" : "auto"} backgroundColor={drawerOpen ? "#000" : "#A7C7FF"} />
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>الإعدادات</Text>
+        <StatusBar style={theme.StatusBar} backgroundColor={headerBackground} />
+        <View style={[styles.header, { backgroundColor: headerBackground }]}>
+          <TouchableOpacity onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={24} color={theme.primary} />
+          </TouchableOpacity>
+          <Text style={[styles.headerTitle, { color: theme.primary }]}>الإعدادات</Text>
           <TouchableOpacity onPress={toggleDrawer} style={styles.menuButton}>
-            <Ionicons name="menu" size={24} color="black" />
+            <Ionicons name="menu" size={24} color={theme.primary} />
           </TouchableOpacity>
         </View>
 
-        <View style={styles.content}>
-          <Text style={styles.title}>الإعدادات</Text>
-          {/* Add your settings content here */}
+        <View style={[styles.content, { backgroundColor: theme.background }]}>
+          {/* قسم الصورة الشخصية */}
+          <View style={[styles.profileImage, { backgroundColor: theme.card, borderColor: theme.borders }]}>
+            <Image
+            source={require('@/assets/images/shadow.png')}
+            style={styles.Image}
+            />
+            <View style={styles.profileInfo}>
+              <Text style={{ fontSize: 16, fontWeight: 'bold', color: theme.primary }}>اسم المستخدم</Text>
+              <Text style={{ color: theme.secondary }}>example@gmail.com</Text>
+            </View>
+          </View>
+
+          {/* قسم مظهر التطبيق */}
+          <View style={styles.appearanceSection}>
+            <Text style={[styles.sectionTitle, { color: theme.primary }]}>مظهر التطبيق</Text>
+            {/* إعدادات المظهر مثل اختيار اللون والوضع الداكن */}
+            <View style={styles.optionsContainer}>
+               <View style={[styles.options, { backgroundColor: theme.card, borderColor: theme.borders }]}>
+              {/* خيار الوضع الداكن */}
+              <Text style={[styles.optionText, { color: theme.primary }]}>الوضع الداكن</Text>
+              <Switch
+                style={styles.switch}
+                value={isDarkMode}
+                onValueChange={toggleDarkMode} // عند الضغط، يغير الوضع الليلي في الـ store
+              />
+              </View>
+              <View style={[styles.options, { backgroundColor: theme.card, borderColor: theme.borders }]}>
+              {/* اختيار اللون الرئيسي - يمكن إضافة أزرار للألوان هنا */}
+              </View>
+            </View>
+            
+          </View>
+          
+
         </View>
       </SafeAreaView>
       {drawerOpen && <TouchableOpacity style={styles.overlay} onPress={toggleDrawer} />}
@@ -95,8 +146,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 22,
-    backgroundColor: "#A7C7FF",
-    elevation: 10,
   },
   headerTitle: {
     fontSize: 16,
@@ -105,10 +154,62 @@ const styles = StyleSheet.create({
   menuButton: {
     padding: 5,
   },
+  profileImage: {
+    flexDirection: 'row',
+    marginBottom: 30,
+  },
+  Image: {
+    width: 80,
+    height: 80,
+    marginBottom: 20,
+    borderRadius: 50,
+    marginTop: 30,
+    marginHorizontal: 20,
+    borderWidth: 2,
+    borderColor: '#ccc',
+  },
+  profileInfo: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    marginTop: 10,
+  },
+  appearanceSection: {
+    marginBottom: 30,
+    paddingHorizontal: 20,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    color: '#999',
+    textAlign: 'right',
+  },
+  optionsContainer: {
+    backgroundColor: '#f9f9f9',
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#eee',
+  },
+  options: {
+    flexDirection: 'row-reverse',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    paddingVertical: 10,
+  },
+  optionText: {
+    fontSize: 16,
+    color: '#333',
+
+  },
+  switch: {
+    transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }]
+  },
   content: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#fff',
   },
   title: {

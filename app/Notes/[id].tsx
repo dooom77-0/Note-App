@@ -8,6 +8,8 @@ import { Ionicons } from '@expo/vector-icons';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ar';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { useThemeStore } from '../store/useThemeStore';
+import { Colors } from '../Constants/Colors';
 
 dayjs.extend(relativeTime);
 dayjs.locale('ar');
@@ -20,6 +22,8 @@ const Details = () => {
     }
     const { id } = useLocalSearchParams();
     const [note, setNote] = useState< Note | null>(null);
+    const { isDarkMode, headerBackground } = useThemeStore();
+    const theme = isDarkMode ? Colors.dark : Colors.light;
 
     useEffect(() => {
         const loadNote = async () => {
@@ -80,8 +84,8 @@ const Details = () => {
      
   return (
       <SafeAreaView edges={["top"]} style={styles.container}>
-          <StatusBar style="auto" backgroundColor="#f7f7f7" />
-          <View style={styles.header}>
+          <StatusBar style={theme.StatusBar} backgroundColor={headerBackground} />
+          <View style={[styles.header, {backgroundColor: headerBackground}] }>
               <View style={{flexDirection: "row", gap: 10}}>
                 <TouchableOpacity style={styles.delete}>
                     <Ionicons name="trash" size={24} color="#fff" style={{marginRight: 5}} />
@@ -129,8 +133,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 19,
     paddingVertical: 22,
-    backgroundColor: "#f7f7f7",
-    elevation: 10,
 
     },
     delete: {
