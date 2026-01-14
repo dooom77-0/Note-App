@@ -124,12 +124,6 @@ const Favorites = () => {
           </TouchableOpacity>
 
 
-          {/* عنصر القائمة للملف الشخصي */}
-          <TouchableOpacity style={[styles.menuItem, isActive('profile') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./profile' as any); }}>
-            <Ionicons name="person" size={24} color="#333" />
-            <Text style={styles.menuText}>الملف الشخصي</Text>
-          </TouchableOpacity>
-
         </View>
       </Animated.View>
     );
