@@ -10,7 +10,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import { useThemeStore } from '../../store/useThemeStore';
 import { Colors } from '../../Constants/Colors';
+import { useTranslation } from 'react-i18next';
 const EditPage = () => {
+  const { t } = useTranslation();
     const { id } = useLocalSearchParams();
     const [title, setTitle] = useState<string>('');
     const [content, setContent] = useState<string>('');
@@ -53,10 +55,10 @@ const EditPage = () => {
           <View style={[styles.header, {backgroundColor: theme.background}]}>
             <TouchableOpacity style={styles.save} onPress={handleSave}>
                 <Ionicons name="save" size={20} color="#fff" style={{marginRight: 5}} />
-                <Text style={styles.saveText}>حفظ</Text>
+                <Text style={styles.saveText}>{t('save')}</Text>
             </TouchableOpacity>   
               <TouchableOpacity onPress={() => router.back()} style={styles.back}>
-                  <Text style={[styles.backText, {color: theme.primary}]}>رجوع</Text>
+                  <Text style={[styles.backText, {color: theme.primary}]}>{t('back')}</Text>
                   <Image
                       source={require('@/assets/images/back.png')}
                       style={{ width: 30, height: 30, marginRight: 10 }}
@@ -68,14 +70,16 @@ const EditPage = () => {
           <View style={{paddingHorizontal: 20}}>
              <TextInput
             style={{ padding: 20, fontSize: 20, fontWeight: 'bold', color: theme.primary }}
-            placeholder="عنوان الملاحظة"
+            placeholder={t('title1')}
+            placeholderTextColor={theme.secondary}
             value={title}
             onChangeText={setTitle}
           />
           <View style={{ height: 1, backgroundColor: '#ccc' }} />
           <TextInput
             style={{ padding: 20, fontSize: 16, color: theme.primary, textAlignVertical: 'top' }}
-            placeholder="محتوى الملاحظة"
+            placeholder={t('content')}
+            placeholderTextColor={theme.secondary}
             value={content}
             onChangeText={setContent}
             multiline

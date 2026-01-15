@@ -10,11 +10,13 @@ import 'dayjs/locale/ar';
 import { useThemeStore } from '../store/useThemeStore';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { Colors } from '../Constants/Colors';
+import { useTranslation } from 'react-i18next';
 
 
 dayjs.extend(relativeTime);
 dayjs.locale('ar');
 const Details = () => {
+    const { t } = useTranslation();
     type Note = {
         id: string;
         title: string;
@@ -93,16 +95,16 @@ const Details = () => {
               <View style={{flexDirection: "row", gap: 10}}>
                 <TouchableOpacity style={styles.delete}>
                     <Ionicons name="trash" size={24} color="#fff" style={{marginRight: 5}} />
-                    <Text onPress={deleteNote} style={styles.deleteText}>حذف</Text>
+                    <Text onPress={deleteNote} style={styles.deleteText}>{t("del")}</Text>
                 </TouchableOpacity>
                   <TouchableOpacity style={styles.edit} onPress={() => router.push(`/Notes/Edit/${id}`)}>
                     <Ionicons name="pencil" size={24} color="#fff" style={{marginRight: 5}} />
-                    <Text style={styles.editText}>تعديل</Text>
+                    <Text style={styles.editText}>{t("edit")}</Text>
                 </TouchableOpacity>
               </View>
               <View>
                   <TouchableOpacity style={styles.back} onPress={() => router.back()}>
-                      <Text style={{fontSize: 14, fontWeight: "bold", color: theme.primary}}>رجوع</Text>
+                      <Text style={{fontSize: 14, fontWeight: "bold", color: theme.primary}}>{t("back")}</Text>
                       <Ionicons name="arrow-forward" size={20} color={theme.primary}
                         style={{paddingLeft: 5}}
                     />

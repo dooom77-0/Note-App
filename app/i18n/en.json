@@ -1,6 +1,12 @@
 {
     "title": "My Notes",
     "myNotes": "My Notes",
+    "back": "Back",
+    "del": "Delete",
+    "edit": "Edit",
+    "save": "Save",
+    "title1": "Title...",
+    "content": "Note content...",
     "search": "Search for a note...",
     "trash": "Trash",
     "favorites": "Favorites",

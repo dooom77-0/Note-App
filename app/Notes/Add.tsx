@@ -9,8 +9,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Ionicons } from '@expo/vector-icons'
 import { useThemeStore } from '../store/useThemeStore'
 import { Colors } from '../Constants/Colors'
+import { useTranslation } from 'react-i18next';
 
 const Add = () => {
+  const { t } = useTranslation();
   const titleRef = useRef<TextInput>(null)
   const [title, setTitle] = useState<string>('')
   const [content, setContent] = useState<string>('')
@@ -48,10 +50,10 @@ const Add = () => {
         <View style={[styles.header, {backgroundColor: theme.background}]}>
           <TouchableOpacity style={styles.SaveCon} onPress={handleSave}>
             <Ionicons name="save" size={20} color="#fff" />
-            <Text style={styles.Save}>حفظ</Text>
+            <Text style={styles.Save}>{t('save')}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.BackCon} onPress={() => router.back()}>
-            <Text style={[styles.Back, {color: theme.primary}]}>رجوع</Text>
+            <Text style={[styles.Back, {color: theme.primary}]}>{t('back')}</Text>
             <Ionicons name="arrow-forward" size={20} color={theme.primary}
               style={{paddingLeft: 5}}
              />
@@ -66,7 +68,7 @@ const Add = () => {
             value={title}
             onChangeText={setTitle}
             placeholderTextColor={'gray'}
-            placeholder="العنوان..."
+            placeholder={t('title1')}
             style={[styles.inputTitle, {color: theme.primary}]}
           />
           <View style={styles.line} />
@@ -74,7 +76,7 @@ const Add = () => {
             value={content}
             onChangeText={setContent}
             placeholderTextColor={'gray'}
-            placeholder="محتوى الملاحظة"
+            placeholder={t('content')}
             multiline
             style={[styles.inputContent, {color: theme.primary}]}
           />

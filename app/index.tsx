@@ -397,7 +397,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   activeMenuItem: {
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#',
     borderRadius: 8,
     paddingHorizontal: 10,
   }

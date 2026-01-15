@@ -190,6 +190,11 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 16,
     fontWeight: "bold",
+    textAlign: "center",
+    position: "absolute",
+    right: 0,
+    left: 0,
+    top: 20,
   },
   Line: {
     height: 2,
@@ -197,6 +202,9 @@ const styles = StyleSheet.create({
   },
   menuButton: {
     padding: 5,
+    position: "absolute",
+    right: 20,
+    top: 20,
   },
   profileImage: {
     flexDirection: 'row',
