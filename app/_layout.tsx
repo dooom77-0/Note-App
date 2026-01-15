@@ -1,3 +1,4 @@
+import './i18n/i18n'
 import { Slot, router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";

@@ -1,25 +1,20 @@
 import { Text, View, StyleSheet, TouchableOpacity, Animated, Dimensions, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-// import { StatusBar } from "expo-status-bar";
 import { router, useSegments } from "expo-router";
 import { useRef, useState } from 'react';
 import { Ionicons } from "@expo/vector-icons";
 import { Switch } from "react-native-paper";
 import { useThemeStore } from "./store/useThemeStore";
 import { Colors } from "./Constants/Colors";
+import { useTranslation } from "react-i18next";
+
 
 export default function Settings() {
-  // جلب البيانات من الـ store: الوضع الليلي، تبديله، اللون الرئيسي، إلخ
-  // isDarkMode: قيمة منطقية تحدد إذا كان الوضع داكن أم لا
-  // toggleDarkMode: دالة لتبديل الوضع الليلي (تغير isDarkMode من true إلى false والعكس)
-  // mainColor: اللون الرئيسي المختار (مثل الأزرق)
-  // colorKey: مفتاح اللون (مثل 'blue')
+  const { t, i18n } = useTranslation();
   const { isDarkMode, toggleDarkMode, setMainColor } = useThemeStore();
     const mainColor = useThemeStore((state) => state.mainColor);
-
-  // الحصول على ألوان الثيم الحالي (فاتح أو داكن)
-  // إذا isDarkMode = true، يستخدم Colors.dark، وإلا Colors.light
   const theme = isDarkMode ? Colors.dark : Colors.light;
+
   
   const { width } = Dimensions.get('window');
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -38,10 +33,9 @@ export default function Settings() {
     }).start();
   };
 
-  // حساب التحريك للـ drawer (من اليمين إلى اليسار، ينزلق من خارج الشاشة إلى الداخل)
   const translateX = animatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [width * 0.75, 0], // يبدأ من خارج الشاشة على اليمين وينزلق إلى الداخل
+    outputRange: [width * 0.75, 0],
   });
 
   const colorsOptions = [
@@ -59,28 +53,28 @@ export default function Settings() {
           <TouchableOpacity style={styles.closeButton} onPress={toggleDrawer}>
             <Ionicons name="close" size={28} color={theme.primary} />
           </TouchableOpacity>
-          <Text style={[styles.drawerTitle, { color: theme.primary }]}>القائمة</Text>
+          <Text style={[styles.drawerTitle, { color: theme.primary }]}>{t('title')}</Text>
         </View>
 
         <View style={styles.drawerContent}>
           <TouchableOpacity style={[styles.menuItem, isActive('index') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('/'); }}>
             <Ionicons name="document-text" size={24} color={theme.primary} />
-            <Text style={[styles.menuText, { color: theme.primary }]}>ملاحظاتي</Text>
+            <Text style={[styles.menuText, { color: theme.primary }]}>{t('myNotes')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.menuItem, isActive('TrashPin') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./TrashPin' as any); }}>
             <Ionicons name="trash" size={24} color={theme.primary} />
-            <Text style={[styles.menuText, { color: theme.primary }]}>سلة المحذوفات</Text>
+            <Text style={[styles.menuText, { color: theme.primary }]}>{t('trash')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.menuItem, isActive('favorites') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./favorites' as any); }}>
             <Ionicons name="heart" size={24} color={theme.primary} />
-            <Text style={[styles.menuText, { color: theme.primary }]}>المفضلة</Text>
+            <Text style={[styles.menuText, { color: theme.primary }]}>{t('favorites')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.menuItem, isActive('settings') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./settings'); }}>
             <Ionicons name="settings" size={24} color={theme.primary} />
-            <Text style={[styles.menuText, { color: theme.primary }]}>الإعدادات</Text>
+            <Text style={[styles.menuText, { color: theme.primary }]}>{t('settings')}</Text>
           </TouchableOpacity>
         </View>
       </Animated.View>
@@ -91,32 +85,28 @@ export default function Settings() {
     <View style={{ flex: 1, backgroundColor: theme.background }}>
       <SafeAreaView edges={["top"]} style={styles.container}>
         <View style={styles.header}>
-          <Text style={[styles.headerTitle, { color: theme.primary }]}>الإعدادات</Text>
+          <Text style={[styles.headerTitle, { color: theme.primary }]}>{t("settings")}</Text>
           <TouchableOpacity onPress={toggleDrawer} style={styles.menuButton}>
             <Ionicons name="menu" size={24} color={theme.primary} />
           </TouchableOpacity>
         </View>
         <View style={[styles.content, { backgroundColor: theme.background }]}>
-          {/* قسم الصورة الشخصية */}
           <View style={[styles.profileImage, { backgroundColor: theme.background }]}>
             <Image
             source={require('@/assets/images/shadow.png')}
             style={[styles.Image, { borderColor: mainColor }]}
             />
             <View style={styles.profileInfo}>
-              <Text style={{ fontSize: 16, fontWeight: 'bold', color: theme.primary }}>اسم المستخدم</Text>
+              <Text style={{ fontSize: 16, fontWeight: 'bold', color: theme.primary }}>{t("username")}</Text>
               <Text style={{ color: theme.secondary }}>example@gmail.com</Text>
             </View>
           </View>
 
-          {/* قسم مظهر التطبيق */}
           <View style={styles.appearanceSection}>
-            <Text style={[styles.sectionTitle, { color: theme.secondary }]}>مظهر التطبيق</Text>
-            {/* إعدادات المظهر مثل اختيار اللون والوضع الداكن */}
+            <Text style={[styles.sectionTitle, { color: theme.secondary }]}>{t("appearance")}</Text>
             <View style={[ styles.optionsContainer, { borderColor: theme.borders, backgroundColor: theme.card }]}>
                <View style={[styles.options, { backgroundColor: theme.card, borderColor: theme.borders }]}>
-                {/* خيار الوضع الداكن */}
-                <Text style={[styles.optionText, { color: theme.primary }]}>المظهر</Text>
+                <Text style={[styles.optionText, { color: theme.primary }]}>{t("theme")}</Text>
               <Switch
                 style={styles.switch}
                 trackColor={{ false: '#767577', true: theme.primary }}
@@ -127,8 +117,7 @@ export default function Settings() {
               </View>
               <View style={[styles.Line, { backgroundColor: theme.borders }]} />
               <View style={[styles.options, { backgroundColor: theme.card, borderColor: theme.borders }]}>
-                {/* اختيار اللون الرئيسي - يمكن إضافة أزرار للألوان هنا */}
-                <Text style={[styles.optionText, { color: theme.primary }]}>لون التطبيق الرئيسي</Text>
+                <Text style={[styles.optionText, { color: theme.primary }]}>{t("appColor")}</Text>
                 <View style={styles.colorsRow}>
                   {colorsOptions.map((color) => {
                     const isSelected = mainColor === color.hex;
@@ -150,23 +139,31 @@ export default function Settings() {
               </View>
               <View style={[styles.Line, { backgroundColor: theme.borders }]} />
               <View style={[styles.options, { backgroundColor: theme.card, borderColor: theme.borders }]}>
-                {/* اختيار اللغة للتطبيق  */}
-                <Text style={[styles.optionText, { color: theme.primary }]}>لغة التطبيق</Text>
+                <Text style={[styles.optionText, { color: theme.primary }]}>{t("language")}</Text>
                 <View style={styles.languageRow}>
-                  <TouchableOpacity style={[styles.Lang, { borderColor: theme.borders }]}>
+                  <TouchableOpacity style={[styles.Lang, i18n.language === 'ar' ? { borderColor: mainColor } : { borderColor: theme.borders }]}
+                  onPress={() => {
+                    useThemeStore.getState().setLanguage('ar');
+                    i18n.changeLanguage('ar');
+                  }}
+                  >
                     <Text style={[styles.optionText, { color: theme.primary, fontWeight: 'bold'}]}>ع</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={[styles.Lang, { borderColor: theme.borders }]}>
-                    <Text style={[styles.optionText, { color: theme.primary, fontWeight: 'bold' }]}>En</Text>
+                  <TouchableOpacity style={[styles.Lang, i18n.language === 'en' ? { borderColor: mainColor } : { borderColor: theme.borders }]}
+                  onPress={() => {
+                    useThemeStore.getState().setLanguage('en');
+                    i18n.changeLanguage('en');
+                  }}
+                  >
+                    <Text style={[styles.optionText,{ color: theme.primary, fontWeight: 'bold' }]}>En</Text>
                   </TouchableOpacity>
                 </View>
               </View>
             </View>
             
           </View>
-          <View> {/* قسم اذارة البيانات  */}
-            <Text style={[styles.sectionTitle, { color: theme.secondary, marginRight: 20 }]}>إدارة البيانات</Text>
-            {/* يمكن إضافة خيارات لإدارة البيانات هنا مثل النسخ الاحتياطي والاستعادة */}
+          <View> 
+            <Text style={[styles.sectionTitle, { color: theme.secondary, marginRight: 20 }]}>{t("dataManagement")}</Text>
 
           </View>
           

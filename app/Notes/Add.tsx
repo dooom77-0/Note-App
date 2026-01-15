@@ -67,7 +67,7 @@ const Add = () => {
             onChangeText={setTitle}
             placeholderTextColor={'gray'}
             placeholder="العنوان..."
-            style={styles.inputTitle}
+            style={[styles.inputTitle, {color: theme.primary}]}
           />
           <View style={styles.line} />
           <TextInput
@@ -76,7 +76,7 @@ const Add = () => {
             placeholderTextColor={'gray'}
             placeholder="محتوى الملاحظة"
             multiline
-            style={styles.inputContent}
+            style={[styles.inputContent, {color: theme.primary}]}
           />
         </View>
       </SafeAreaView>
@@ -131,13 +131,11 @@ const styles = StyleSheet.create({
   Add: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#F3F3F3"
   },
   inputTitle: {
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
-    textAlign: "right",
   },
   line: {
     height: 1,

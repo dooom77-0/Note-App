@@ -1,0 +1,20 @@
+{
+    "title": "My Notes",
+    "myNotes": "My Notes",
+    "search": "Search for a note...",
+    "trash": "Trash",
+    "favorites": "Favorites",
+    "settings": "Settings",
+    "noNotes": "No notes yet. Start creating a new note! 📝",
+    "noFoundNotes": "No matching notes 📝",
+    "noFavorites": "No favorite notes yet. Add some notes to favorites! 💝",
+    "noFavoritesFound": "No matching favorite notes 📝",
+    "noTrash": "No notes in the trash. Delete some notes! 🗑️",
+    "noTrashFound": "No matching deleted notes 🗑️",
+    "username": "Username",
+    "appearance": "Appearance",
+    "theme": "Theme",
+    "language": "Language",
+    "appColor": "App Color",
+    "dataManagement": "Data Management"
+}

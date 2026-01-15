@@ -9,6 +9,7 @@ import { useState, useRef, useCallback } from 'react'
 import { useFocusEffect } from "@react-navigation/native";
 import { useThemeStore } from "./store/useThemeStore";
 import { Colors } from "./Constants/Colors";
+import { useTranslation } from 'react-i18next';
 
 
 type Note = {
@@ -19,6 +20,7 @@ type Note = {
 }
 
 const TrashPin = () => {
+  const { t } = useTranslation();
   const { width } = Dimensions.get('window');
   const [drawerOpen, setDrawerOpen] = useState(false);
   const animatedValue = useRef(new Animated.Value(0)).current;
@@ -102,28 +104,28 @@ const TrashPin = () => {
           <TouchableOpacity style={styles.closeButton} onPress={toggleDrawer}>
             <Ionicons name="close" size={28} color={theme.primary} />
           </TouchableOpacity>
-          <Text style={[styles.drawerTitle, { color: theme.primary }]}>القائمة</Text>
+          <Text style={[styles.drawerTitle, { color: theme.primary }]}>{t('title')}</Text>
         </View>
         
         <View style={styles.drawerContent}>
           <TouchableOpacity style={[styles.menuItem, isActive('index') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('/'); }}>
             <Ionicons name="document-text" size={24} color={theme.primary} />
-            <Text style={[styles.menuText, { color: theme.primary }]}>ملاحظاتي</Text>
+            <Text style={[styles.menuText, { color: theme.primary }]}>{t('myNotes')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.menuItem, isActive('TrashPin') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./TrashPin' as any); }}>
             <Ionicons name="trash" size={24} color={theme.primary} />
-            <Text style={[styles.menuText, { color: theme.primary }]}>سلة المحذوفات</Text>
+            <Text style={[styles.menuText, { color: theme.primary }]}>{t('trash')}</Text>
           </TouchableOpacity>
           
           <TouchableOpacity style={[styles.menuItem, isActive('favorites') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./favorites' as any); }}>
             <Ionicons name="heart" size={24} color={theme.primary} />
-            <Text style={[styles.menuText, { color: theme.primary }]}>المفضلة</Text>
+            <Text style={[styles.menuText, { color: theme.primary }]}>{t('favorites')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.menuItem, isActive('settings') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./settings'); }}>
             <Ionicons name="settings" size={24} color={theme.primary} />
-            <Text style={[styles.menuText, { color: theme.primary }]}>الإعدادات</Text>
+            <Text style={[styles.menuText, { color: theme.primary }]}>{t('settings')}</Text>
           </TouchableOpacity>
 
 
@@ -138,7 +140,7 @@ const TrashPin = () => {
     <View style={{ flex: 1, backgroundColor: theme.background }}>
       <SafeAreaView edges={['top']} style={styles.container}>
         <View style={styles.header}>
-          <Text style={[styles.headerTitle, { color: theme.primary }]}>سلة المحذوفات</Text>
+          <Text style={[styles.headerTitle, { color: theme.primary }]}>{t("trash")}</Text>
 
           <TouchableOpacity onPress={toggleDrawer} style={styles.menuButton}>
             <Ionicons name="menu" size={28} color={theme.primary} />
@@ -155,7 +157,8 @@ const TrashPin = () => {
             <TextInput 
             value={search}
             onChangeText={(text) => setSearch(text)}
-            placeholder="البحث عن ملاحظة ..."
+            placeholder={t("search")}
+            // placeholder="البحث عن ملاحظة ..."
             style={[styles.search, { color: theme.primary}]}
             textAlign="right"
             placeholderTextColor={theme.secondary}
@@ -188,10 +191,10 @@ const TrashPin = () => {
               return (
                 <View>
                   {search.length > 0 ? (
-                    <Text style={[styles.noNotes, { color: theme.primary }]}>لا توجد ملاحظات مطابقة 📝</Text>
+                    <Text style={[styles.noNotes, { color: theme.primary }]}>{t("noTrashFound")}</Text>
 
                   ) :
-                    (<Text style={[styles.noNotes, { color: theme.primary }]}>لا توجد ملاحظات محذوفة 📝</Text>)
+                    (<Text style={[styles.noNotes, { color: theme.primary }]}>{t("noTrash")}</Text>)
                   }
                 </View>
               )

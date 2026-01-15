@@ -9,6 +9,7 @@ import { useState, useRef, useCallback } from 'react'
 import { useFocusEffect } from "@react-navigation/native";
 import { useThemeStore } from "./store/useThemeStore";
 import { Colors } from "./Constants/Colors";
+import { useTranslation } from 'react-i18next';
 
 // تعريف نوع الملاحظة
 type Note = {
@@ -22,6 +23,8 @@ type Note = {
 
 // مكون صفحة المفضلة، مبني بنفس طريقة سلة المحذوفات
 const Favorites = () => {
+
+  const { t } = useTranslation();
   // الحصول على عرض الشاشة للـ Drawer
   const { width } = Dimensions.get('window');
   // حالة فتح/إغلاق الـ Drawer
@@ -105,32 +108,32 @@ const Favorites = () => {
           <TouchableOpacity style={styles.closeButton} onPress={toggleDrawer}>
             <Ionicons name="close" size={28} color={theme.primary} />
           </TouchableOpacity>
-          <Text style={[styles.drawerTitle, { color: theme.primary }]}>القائمة</Text>
+          <Text style={[styles.drawerTitle, { color: theme.primary }]}>{t('title')}</Text>
         </View>
         
         <View style={styles.drawerContent}>
           {/* عنصر القائمة للملاحظات */}
           <TouchableOpacity style={[styles.menuItem, isActive('index') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('/'); }}>
             <Ionicons name="document-text" size={24} color={theme.primary} />
-            <Text style={[styles.menuText, { color: theme.primary }]}>ملاحظاتي</Text>
+            <Text style={[styles.menuText, { color: theme.primary }]}>{t('myNotes')}</Text>
           </TouchableOpacity>
 
           {/* عنصر القائمة لسلة المحذوفات */}
           <TouchableOpacity style={[styles.menuItem, isActive('TrashPin') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./TrashPin' as any); }}>
             <Ionicons name="trash" size={24} color={theme.primary} />
-            <Text style={[styles.menuText, { color: theme.primary }]}>سلة المحذوفات</Text>
+            <Text style={[styles.menuText, { color: theme.primary }]}>{t('trash')}</Text>
           </TouchableOpacity>
           
           {/* عنصر القائمة للمفضلة */}
           <TouchableOpacity style={[styles.menuItem, isActive('favorites') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./favorites' as any); }}>
             <Ionicons name="heart" size={24} color={theme.primary} />
-            <Text style={[styles.menuText, { color: theme.primary }]}>المفضلة</Text>
+            <Text style={[styles.menuText, { color: theme.primary }]}>{t('favorites')}</Text>
           </TouchableOpacity>
 
           {/* عنصر القائمة للإعدادات */}
           <TouchableOpacity style={[styles.menuItem, isActive('settings') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./settings'); }}>
             <Ionicons name="settings" size={24} color={theme.primary} />
-            <Text style={[styles.menuText, { color: theme.primary }]}>الإعدادات</Text>
+            <Text style={[styles.menuText, { color: theme.primary }]}>{t('settings')}</Text>
           </TouchableOpacity>
 
 
@@ -148,8 +151,8 @@ const Favorites = () => {
           <TouchableOpacity onPress={toggleDrawer} style={styles.menuButton}>
             <Ionicons name="menu" size={24} color={theme.primary} />
           </TouchableOpacity>
-        
-          <Text style={[styles.headerTitle, { color: theme.primary }]}>المفضلة</Text>
+
+          <Text style={[styles.headerTitle, { color: theme.primary }]}>{t("favorites")}</Text>
         </View>
 
         {/* محتوى الصفحة */}
@@ -160,7 +163,7 @@ const Favorites = () => {
             <TextInput 
             value={search}
             onChangeText={(text) => setSearch(text)}
-            placeholder="البحث عن ملاحظة ..."
+            placeholder={t("search")}
             style={[styles.search, { color: theme.primary }]}
             textAlign="right"
             placeholderTextColor={theme.secondary}
@@ -196,10 +199,10 @@ const Favorites = () => {
               return (
                 <View>
                   {search.length > 0 ? (
-                    <Text style={[styles.noNotes, { color: theme.primary }]}>لا توجد ملاحظات مطابقة 📝</Text>
+                    <Text style={[styles.noNotes, { color: theme.primary }]}>{t("noFavoritesFound")}</Text>
 
                   ) :
-                    (<Text style={[styles.noNotes, { color: theme.primary }]}>لا توجد ملاحظات مفضلة ❤️</Text>)
+                    (<Text style={[styles.noNotes, { color: theme.primary }]}>{t("noFavorites")}</Text>)
                   }
                 </View>
               )

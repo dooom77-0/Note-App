@@ -4,7 +4,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // 1. تعريف أنواع الألوان المتاحة
 export type ColorKey = 'blue' | 'purple' | 'green' | 'yellow';
-
 // 2. تعريف الألوان الثابتة (نفس الدرجات التي اخترناها سابقاً)
 export const themeColors: Record<ColorKey, string> = {
   blue: '#3B82F6',
@@ -20,7 +19,10 @@ interface ThemeState {
   isDarkMode: boolean;
   setMainColor: (key: ColorKey) => void;
   toggleDarkMode: () => void;
+  Language: 'ar' | 'en';
+  setLanguage: (lang: 'ar' | 'en') => void;
 }
+
 
 // 4. إنشاء الـ Store
 export const useThemeStore = create<ThemeState>()(
@@ -30,6 +32,12 @@ export const useThemeStore = create<ThemeState>()(
       mainColor: themeColors.blue,
       colorKey: 'blue',
       isDarkMode: false,
+      Language: 'ar',
+      // تغيير اللغة
+      setLanguage: (lang) => 
+        set({ 
+          Language: lang, 
+        }),
 
       // تغيير لون الهوية
       setMainColor: (key) => 

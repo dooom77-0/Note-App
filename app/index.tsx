@@ -12,6 +12,7 @@ import * as Clipboard from 'expo-clipboard';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useThemeStore } from "./store/useThemeStore";
 import { Colors } from "./Constants/Colors";
+import { useTranslation } from "react-i18next";
 dayjs.extend(relativeTime);
 dayjs.locale('ar');
 export default function Index() {
@@ -88,6 +89,7 @@ export default function Index() {
     Alert.alert("تم النسخ", " تم نسخ المحتوى الى الحافظة", [{ text: "حسنا" }]);
   }
 
+  const { t } = useTranslation();
   const Drawer = () => {
     const isActive = (tab: string) => currentTab === tab;
     return (
@@ -96,28 +98,28 @@ export default function Index() {
           <TouchableOpacity style={styles.closeButton} onPress={toggleDrawer}>
             <Ionicons name="close" size={28} color={theme.primary} />
           </TouchableOpacity>
-          <Text style={[styles.drawerTitle, { color: theme.primary }]}>القائمة</Text>
+          <Text style={[styles.drawerTitle, { color: theme.primary }]}>{t('title')}</Text>
         </View>
         
         <View style={styles.drawerContent}>
           <TouchableOpacity style={[styles.menuItem, isActive('index') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('/'); }}>
             <Ionicons name="document-text" size={24} color={theme.primary} />
-            <Text style={[styles.menuText, { color: theme.primary }]}>ملاحظاتي</Text>
+            <Text style={[styles.menuText, { color: theme.primary }]}>{t('myNotes')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.menuItem, isActive('TrashPin') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./TrashPin' as any); }}>
             <Ionicons name="trash" size={24} color={theme.primary} />
-            <Text style={[styles.menuText, { color: theme.primary }]}>سلة المحذوفات</Text>
+            <Text style={[styles.menuText, { color: theme.primary }]}>{t('trash')}</Text>
           </TouchableOpacity>
           
           <TouchableOpacity style={[styles.menuItem, isActive('favorites') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./favorites' as any); }}>
             <Ionicons name="heart" size={24} color={theme.primary} />
-            <Text style={[styles.menuText, { color: theme.primary }]}>المفضلة</Text>
+            <Text style={[styles.menuText, { color: theme.primary }]}>{t('favorites')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.menuItem, isActive('settings') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./settings'); }}>
             <Ionicons name="settings" size={24} color={theme.primary} />
-            <Text style={[styles.menuText, { color: theme.primary }]}>الإعدادات</Text>
+            <Text style={[styles.menuText, { color: theme.primary }]}>{t('settings')}</Text>
           </TouchableOpacity>
 
 
@@ -128,10 +130,9 @@ export default function Index() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
-      {/*====== HEADER =======*/}
       <SafeAreaView edges={["top"]} style={styles.container}>
         <View style={styles.header}>
-          <Text style={[styles.headerTitle, { color: theme.primary }]}>ملاحظاتي </Text>
+          <Text style={[styles.headerTitle, { color: theme.primary }]}>{t("myNotes")} </Text>
           <TouchableOpacity onPress={toggleDrawer} style={styles.menuButton}>
             <Ionicons name="menu" size={24} color={theme.primary} />
           </TouchableOpacity>
@@ -146,7 +147,7 @@ export default function Index() {
             <TextInput 
             value={search}
             onChangeText={(text) => setSearch(text)}
-            placeholder="البحث عن ملاحظة ..."
+            placeholder={t("search")}
             style={[styles.search, { color: theme.primary }]}
             textAlign="right"
             placeholderTextColor={theme.secondary}
@@ -175,14 +176,11 @@ export default function Index() {
                       const isAlreadyFavorite = favoritesList.some((n: any) => n.id === item.id);
                       
                       if (isAlreadyFavorite) {
-                        // إزالة من المفضلة
                         favoritesList = favoritesList.filter((n: any) => n.id !== item.id);
                       } else {
-                        // إضافة إلى المفضلة
                         favoritesList.push(item);
                       }
                       
-                      // حفظ في AsyncStorage - ده ينشئ المخزن لو مش موجود
                       await AsyncStorage.setItem('favoriteNotes', JSON.stringify(favoritesList));
                       setFavorites(favoritesList);
                     }}
@@ -210,10 +208,10 @@ export default function Index() {
               return (
                 <View>
                   {search.length > 0 ? (
-                    <Text style={styles.noNotes}>لا توجد ملاحظات مطابقة 📝</Text>
+                    <Text style={[styles.noNotes, { color: theme.primary }]}>{t("noFoundNotes")}</Text>
 
                   ) :
-                    (<Text style={styles.noNotes}>لا توجد ملاحظات 📝</Text>)
+                    (<Text style={[styles.noNotes, { color: theme.primary }]}>{t("noNotes")}</Text>)
                   }
                 </View>
               )
@@ -224,7 +222,6 @@ export default function Index() {
             <Ionicons name="add" size={32} color="#fff" />
           </TouchableOpacity>
         </View>
-        {/*======= END SHOW NOTES =======*/}
       </SafeAreaView>
       {drawerOpen && <TouchableOpacity style={styles.overlay} onPress={toggleDrawer} />}
       <Drawer />
