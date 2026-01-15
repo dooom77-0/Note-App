@@ -131,6 +131,8 @@ const TrashPin = () => {
       </Animated.View>
     );
   };
+  const mainColor = useThemeStore((state) => state.mainColor);
+
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
@@ -148,13 +150,13 @@ const TrashPin = () => {
         {/* CONTENT START */}
 
         <View style={[styles.showNotes, { backgroundColor: theme.background }]}>
-          <View style={[styles.searchbar, { backgroundColor: theme.card, borderColor: theme.borders }]}>
+          <View style={[styles.searchbar, { backgroundColor: theme.card, borderColor: mainColor }]}>
             <Ionicons name="search" size={20} color={theme.secondary} style={{ marginLeft: 8 }} />
             <TextInput 
             value={search}
             onChangeText={(text) => setSearch(text)}
             placeholder="البحث عن ملاحظة ..."
-            style={[styles.search, { color: theme.primary }]}
+            style={[styles.search, { color: theme.primary}]}
             textAlign="right"
             placeholderTextColor={theme.secondary}
             
@@ -166,7 +168,7 @@ const TrashPin = () => {
             numColumns={2}
             renderItem={({ item }) => (
               <View style={styles.noteContainer}>
-                  <View style={[styles.note, { backgroundColor: theme.card, borderColor: theme.borders }]}>
+                  <View style={[styles.note, { backgroundColor: theme.card, borderColor: mainColor }]}>
                     <Text style={[styles.noteTitle, { color: theme.primary }]}>{item.title}</Text>
                     <Text style={[styles.noteContent, { color: theme.secondary }]} numberOfLines={1}>{item.content}</Text>
                   <View style={styles.noteActions}>
@@ -317,6 +319,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     marginBottom: 15,
     elevation: 2,
+    borderWidth: 1,
   },
   search:{
       flex: 1,

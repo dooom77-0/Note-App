@@ -155,7 +155,7 @@ const Favorites = () => {
         {/* محتوى الصفحة */}
         <View style={[styles.showNotes, { backgroundColor: theme.background }]}>
           {/* شريط البحث */}
-          <View style={[styles.searchbar, { backgroundColor: theme.card, borderColor: theme.borders }]}>
+          <View style={[styles.searchbar, { backgroundColor: theme.card, borderColor: mainColor }]}>
             <Ionicons name="search" size={20} color={theme.secondary} style={{ marginLeft: 8 }} />
             <TextInput 
             value={search}
@@ -319,6 +319,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     marginBottom: 15,
     elevation: 2,
+    borderWidth: 1,
   },
   search:{
       flex: 1,

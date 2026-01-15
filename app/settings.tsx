@@ -116,7 +116,7 @@ export default function Settings() {
             <View style={[ styles.optionsContainer, { borderColor: theme.borders, backgroundColor: theme.card }]}>
                <View style={[styles.options, { backgroundColor: theme.card, borderColor: theme.borders }]}>
                 {/* خيار الوضع الداكن */}
-                <Text style={[styles.optionText, { color: theme.primary }]}>الوضع الداكن</Text>
+                <Text style={[styles.optionText, { color: theme.primary }]}>المظهر</Text>
               <Switch
                 style={styles.switch}
                 trackColor={{ false: '#767577', true: theme.primary }}
@@ -130,15 +130,21 @@ export default function Settings() {
                 {/* اختيار اللون الرئيسي - يمكن إضافة أزرار للألوان هنا */}
                 <Text style={[styles.optionText, { color: theme.primary }]}>لون التطبيق الرئيسي</Text>
                 <View style={styles.colorsRow}>
-                  {colorsOptions.map((color) => (
-                    <TouchableOpacity
-                      key={color.id}
-                      style={[styles.colorCircle, { backgroundColor: color.hex }]}
-                      onPress={() => setMainColor(color.id as any)}
-                    >
-                      <Ionicons name="checkmark" size={20} color="#fff" />
-                    </TouchableOpacity>
-                  ))}
+                  {colorsOptions.map((color) => {
+                    const isSelected = mainColor === color.hex;
+                    return (
+                      <TouchableOpacity
+                        key={color.id}
+                        style={[
+                          styles.colorCircle,
+                          { backgroundColor: color.hex },,
+                        ]}
+                        onPress={() => setMainColor(color.id as any)}
+                      >
+                        {isSelected && <Ionicons name="checkmark" size={20} color="#fff" />}
+                      </TouchableOpacity>
+                    );
+                  })} 
                 </View>
 
               </View>
@@ -157,6 +163,11 @@ export default function Settings() {
               </View>
             </View>
             
+          </View>
+          <View> {/* قسم اذارة البيانات  */}
+            <Text style={[styles.sectionTitle, { color: theme.secondary, marginRight: 20 }]}>إدارة البيانات</Text>
+            {/* يمكن إضافة خيارات لإدارة البيانات هنا مثل النسخ الاحتياطي والاستعادة */}
+
           </View>
           
 
