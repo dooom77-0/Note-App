@@ -190,9 +190,9 @@ export default function Index() {
                   >
                     {/* أيقونة القلب لإضافة/إزالة من المفضلة */}
                     {favorites.some((n) => n.id === item.id) ? (
-                      <Ionicons name="heart" size={24} color="red" />
+                      <Ionicons name="heart" size={24} color= {mainColor} />
                     ) : (
-                      <Ionicons name="heart-outline" size={24} color="red" />
+                      <Ionicons name="heart-outline" size={24} color={mainColor} />
                     )}
                   </TouchableOpacity>
                   <Text style={[styles.noteTitle, { color: theme.primary }]}>{item.title}</Text>
@@ -220,7 +220,7 @@ export default function Index() {
             }}
             
           />
-          <TouchableOpacity style={styles.Add} onPress={Add}>
+          <TouchableOpacity style={[styles.Add, { backgroundColor: mainColor }]} onPress={Add}>
             <Ionicons name="add" size={32} color="#fff" />
           </TouchableOpacity>
         </View>
@@ -267,7 +267,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 30,
     left: 30,
-    backgroundColor: "#3B82F6",
     borderRadius: 30,
     paddingHorizontal: 15,
     paddingVertical: 15,

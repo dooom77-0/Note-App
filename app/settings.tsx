@@ -15,6 +15,7 @@ export default function Settings() {
   // mainColor: اللون الرئيسي المختار (مثل الأزرق)
   // colorKey: مفتاح اللون (مثل 'blue')
   const { isDarkMode, toggleDarkMode, setMainColor } = useThemeStore();
+    const mainColor = useThemeStore((state) => state.mainColor);
 
   // الحصول على ألوان الثيم الحالي (فاتح أو داكن)
   // إذا isDarkMode = true، يستخدم Colors.dark، وإلا Colors.light
@@ -90,9 +91,6 @@ export default function Settings() {
     <View style={{ flex: 1, backgroundColor: theme.background }}>
       <SafeAreaView edges={["top"]} style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color={theme.primary} />
-          </TouchableOpacity>
           <Text style={[styles.headerTitle, { color: theme.primary }]}>الإعدادات</Text>
           <TouchableOpacity onPress={toggleDrawer} style={styles.menuButton}>
             <Ionicons name="menu" size={24} color={theme.primary} />
@@ -100,10 +98,10 @@ export default function Settings() {
         </View>
         <View style={[styles.content, { backgroundColor: theme.background }]}>
           {/* قسم الصورة الشخصية */}
-          <View style={[styles.profileImage, { backgroundColor: theme.card, borderColor: theme.borders }]}>
+          <View style={[styles.profileImage, { backgroundColor: theme.background }]}>
             <Image
             source={require('@/assets/images/shadow.png')}
-            style={styles.Image}
+            style={[styles.Image, { borderColor: mainColor }]}
             />
             <View style={styles.profileInfo}>
               <Text style={{ fontSize: 16, fontWeight: 'bold', color: theme.primary }}>اسم المستخدم</Text>
@@ -113,18 +111,21 @@ export default function Settings() {
 
           {/* قسم مظهر التطبيق */}
           <View style={styles.appearanceSection}>
-            <Text style={[styles.sectionTitle, { color: theme.primary }]}>مظهر التطبيق</Text>
+            <Text style={[styles.sectionTitle, { color: theme.secondary }]}>مظهر التطبيق</Text>
             {/* إعدادات المظهر مثل اختيار اللون والوضع الداكن */}
             <View style={[ styles.optionsContainer, { borderColor: theme.borders, backgroundColor: theme.card }]}>
                <View style={[styles.options, { backgroundColor: theme.card, borderColor: theme.borders }]}>
-              {/* خيار الوضع الداكن */}
-              <Text style={[styles.optionText, { color: theme.primary }]}>الوضع الداكن</Text>
+                {/* خيار الوضع الداكن */}
+                <Text style={[styles.optionText, { color: theme.primary }]}>الوضع الداكن</Text>
               <Switch
                 style={styles.switch}
+                trackColor={{ false: '#767577', true: theme.primary }}
+                thumbColor={isDarkMode ? theme.primary : '#f4f3f4'}
                 value={isDarkMode}
                 onValueChange={toggleDarkMode} // عند الضغط، يغير الوضع الليلي في الـ store
               />
               </View>
+              <View style={[styles.Line, { backgroundColor: theme.borders }]} />
               <View style={[styles.options, { backgroundColor: theme.card, borderColor: theme.borders }]}>
                 {/* اختيار اللون الرئيسي - يمكن إضافة أزرار للألوان هنا */}
                 <Text style={[styles.optionText, { color: theme.primary }]}>لون التطبيق الرئيسي</Text>
@@ -135,14 +136,24 @@ export default function Settings() {
                       style={[styles.colorCircle, { backgroundColor: color.hex }]}
                       onPress={() => setMainColor(color.id as any)}
                     >
-                      <Ionicons name="checkmark" size={20} color="white" />
+                      <Ionicons name="checkmark" size={20} color="#fff" />
                     </TouchableOpacity>
                   ))}
                 </View>
 
               </View>
-              <View>
+              <View style={[styles.Line, { backgroundColor: theme.borders }]} />
+              <View style={[styles.options, { backgroundColor: theme.card, borderColor: theme.borders }]}>
                 {/* اختيار اللغة للتطبيق  */}
+                <Text style={[styles.optionText, { color: theme.primary }]}>لغة التطبيق</Text>
+                <View style={styles.languageRow}>
+                  <TouchableOpacity style={[styles.Lang, { borderColor: theme.borders }]}>
+                    <Text style={[styles.optionText, { color: theme.primary, fontWeight: 'bold'}]}>ع</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={[styles.Lang, { borderColor: theme.borders }]}>
+                    <Text style={[styles.optionText, { color: theme.primary, fontWeight: 'bold' }]}>En</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
             
@@ -172,6 +183,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
+  Line: {
+    height: 2,
+    marginBottom: 10,
+  },
   menuButton: {
     padding: 5,
   },
@@ -187,7 +202,6 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginHorizontal: 20,
     borderWidth: 2,
-    borderColor: '#ccc',
   },
   profileInfo: {
     flexDirection: 'column',
@@ -215,7 +229,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 15,
-    borderBottomWidth: 1,
     paddingVertical: 10,
   },
   optionText: {
@@ -229,6 +242,15 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderRadius: 10,
+  },
+  languageRow: {
+    flexDirection: 'row',
+    gap: 20,
+  },
+  Lang: {
+    padding: 10,
+    borderRadius: 5,
+    borderWidth: 2,
   },
   switch: {
     transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }]

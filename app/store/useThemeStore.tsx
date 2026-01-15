@@ -15,7 +15,6 @@ export const themeColors: Record<ColorKey, string> = {
 
 // 3. تعريف واجهة البيانات (Interface)
 interface ThemeState {
-  headerBackground: string; // يحفظ لون خلفية الهيدر
   mainColor: string;      // يحفظ كود الـ Hex للون المختار
   colorKey: ColorKey;     // يحفظ اسم اللون (لتمهيد الاختيار في الإعدادات)
   isDarkMode: boolean;
@@ -28,7 +27,6 @@ export const useThemeStore = create<ThemeState>()(
   persist(
     (set) => ({
       // القيم الافتراضية
-      headerBackground: `${themeColors.blue}1A`, // نفس اللون مع شفافية 10%
       mainColor: themeColors.blue,
       colorKey: 'blue',
       isDarkMode: false,
@@ -38,7 +36,6 @@ export const useThemeStore = create<ThemeState>()(
         set({ 
           colorKey: key, 
           mainColor: themeColors[key],
-          headerBackground: `${themeColors[key]}1A`, // تحديث خلفية الهيدر مع الشفافية
         }),
 
       // تبديل الوضع الليلي

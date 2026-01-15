@@ -8,11 +8,17 @@ import { router, useLocalSearchParams } from 'expo-router'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
+import { useThemeStore } from '../../store/useThemeStore';
+import { Colors } from '../../Constants/Colors';
 const EditPage = () => {
     const { id } = useLocalSearchParams();
     const [title, setTitle] = useState<string>('');
     const [content, setContent] = useState<string>('');
     
+    const { isDarkMode } = useThemeStore();
+    const theme = isDarkMode ? Colors.dark : Colors.light;
+  
+
     useEffect(() => {
       const loadNote = async () => {
         try {
@@ -43,32 +49,32 @@ const EditPage = () => {
         router.back();
     }
   return (
-      <SafeAreaView style={styles.container}>
-          <View style={styles.header}>
+      <SafeAreaView style={[styles.container, {backgroundColor: theme.background}]}>
+          <View style={[styles.header, {backgroundColor: theme.background}]}>
             <TouchableOpacity style={styles.save} onPress={handleSave}>
                 <Ionicons name="save" size={20} color="#fff" style={{marginRight: 5}} />
                 <Text style={styles.saveText}>حفظ</Text>
             </TouchableOpacity>   
               <TouchableOpacity onPress={() => router.back()} style={styles.back}>
-                  <Text style={styles.backText}>رجوع</Text>
+                  <Text style={[styles.backText, {color: theme.primary}]}>رجوع</Text>
                   <Image
                       source={require('@/assets/images/back.png')}
                       style={{ width: 30, height: 30, marginRight: 10 }}
                       resizeMode="contain"
-                      tintColor={'black'}
+                      tintColor={theme.primary}
                   />
               </TouchableOpacity>          
           </View>
           <View style={{paddingHorizontal: 20}}>
              <TextInput
-            style={{ padding: 20, fontSize: 20, fontWeight: 'bold' }}
+            style={{ padding: 20, fontSize: 20, fontWeight: 'bold', color: theme.primary }}
             placeholder="عنوان الملاحظة"
             value={title}
             onChangeText={setTitle}
           />
           <View style={{ height: 1, backgroundColor: '#ccc' }} />
           <TextInput
-            style={{ padding: 20, fontSize: 16 }}
+            style={{ padding: 20, fontSize: 16, color: theme.primary, textAlignVertical: 'top' }}
             placeholder="محتوى الملاحظة"
             value={content}
             onChangeText={setContent}

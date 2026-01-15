@@ -186,10 +186,10 @@ const TrashPin = () => {
               return (
                 <View>
                   {search.length > 0 ? (
-                    <Text style={styles.noNotes}>لا توجد ملاحظات مطابقة 📝</Text>
+                    <Text style={[styles.noNotes, { color: theme.primary }]}>لا توجد ملاحظات مطابقة 📝</Text>
 
                   ) :
-                    (<Text style={styles.noNotes}>لا توجد ملاحظات محذوفة 📝</Text>)
+                    (<Text style={[styles.noNotes, { color: theme.primary }]}>لا توجد ملاحظات محذوفة 📝</Text>)
                   }
                 </View>
               )

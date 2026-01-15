@@ -18,6 +18,8 @@ type Note = {
   createdAt: string;
 }
 
+
+
 // مكون صفحة المفضلة، مبني بنفس طريقة سلة المحذوفات
 const Favorites = () => {
   // الحصول على عرض الشاشة للـ Drawer
@@ -33,6 +35,8 @@ const Favorites = () => {
   // جلب الثيم
   const { isDarkMode } = useThemeStore();
   const theme = isDarkMode ? Colors.dark : Colors.light;
+
+    const mainColor = useThemeStore((state) => state.mainColor);
 
   // حالة الملاحظات المفضلة
   const [notes, setNotes] = useState<Note[]>([]);
@@ -170,7 +174,7 @@ const Favorites = () => {
             numColumns={2}
             renderItem={({ item }) => (
               <View style={styles.noteContainer}>
-                  <View style={styles.note}>
+                  <View style={[styles.note, { borderColor: mainColor, backgroundColor: theme.card }]}>
                     {/* عنوان الملاحظة */}
                     <Text style={[styles.noteTitle, { color: theme.primary }]}>{item.title}</Text>
                     {/* محتوى الملاحظة */}
@@ -178,8 +182,8 @@ const Favorites = () => {
                     {/* أزرار الإجراءات */}
                   <View style={styles.noteActions}>
                     {/* زر إزالة من المفضلة */}
-                    <TouchableOpacity style={styles.removeButton} onPress={() => removeFromFavorites(item.id)}>
-                      <Ionicons name="heart-dislike" size={20} color="#fff" />
+                    <TouchableOpacity style={[styles.removeButton, { backgroundColor: mainColor }]} onPress={() => removeFromFavorites(item.id)}>
+                      <Ionicons name="heart-dislike" size={20} color='#fff' />
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -192,10 +196,10 @@ const Favorites = () => {
               return (
                 <View>
                   {search.length > 0 ? (
-                    <Text style={styles.noNotes}>لا توجد ملاحظات مطابقة 📝</Text>
+                    <Text style={[styles.noNotes, { color: theme.primary }]}>لا توجد ملاحظات مطابقة 📝</Text>
 
                   ) :
-                    (<Text style={styles.noNotes}>لا توجد ملاحظات مفضلة ❤️</Text>)
+                    (<Text style={[styles.noNotes, { color: theme.primary }]}>لا توجد ملاحظات مفضلة ❤️</Text>)
                   }
                 </View>
               )
@@ -354,7 +358,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   removeButton: {
-    backgroundColor: '#DC2626',
     borderRadius: 10,
     paddingHorizontal: 10,
     paddingVertical: 5,

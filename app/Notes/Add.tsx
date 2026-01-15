@@ -44,15 +44,15 @@ const Add = () => {
     }
   }
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.header}>
+      <SafeAreaView style={[styles.container, {backgroundColor: theme.background}]}>
+        <View style={[styles.header, {backgroundColor: theme.background}]}>
           <TouchableOpacity style={styles.SaveCon} onPress={handleSave}>
             <Ionicons name="save" size={20} color="#fff" />
             <Text style={styles.Save}>حفظ</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.BackCon} onPress={() => router.back()}>
-            <Text style={styles.Back}>رجوع</Text>
-            <Ionicons name="arrow-forward" size={20} color="#000"
+            <Text style={[styles.Back, {color: theme.primary}]}>رجوع</Text>
+            <Ionicons name="arrow-forward" size={20} color={theme.primary}
               style={{paddingLeft: 5}}
              />
           </TouchableOpacity>

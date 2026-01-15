@@ -7,7 +7,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ar';
+import { useThemeStore } from '../store/useThemeStore';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { Colors } from '../Constants/Colors';
 
 
 dayjs.extend(relativeTime);
@@ -19,6 +21,12 @@ const Details = () => {
         content: string;
         createdAt: string;
     }
+
+    const { isDarkMode } = useThemeStore();
+    const theme = isDarkMode ? Colors.dark : Colors.light;
+
+
+    
     const { id } = useLocalSearchParams();
     const [note, setNote] = useState< Note | null>(null);
 
@@ -80,8 +88,8 @@ const Details = () => {
 
      
   return (
-      <SafeAreaView edges={["top"]} style={styles.container}>
-          <View style={styles.header}>
+      <SafeAreaView edges={["top"]} style={[styles.container, {backgroundColor: theme.background}]}>
+          <View style={[styles.header, {backgroundColor: theme.background}]}>
               <View style={{flexDirection: "row", gap: 10}}>
                 <TouchableOpacity style={styles.delete}>
                     <Ionicons name="trash" size={24} color="#fff" style={{marginRight: 5}} />
@@ -94,22 +102,22 @@ const Details = () => {
               </View>
               <View>
                   <TouchableOpacity style={styles.back} onPress={() => router.back()}>
-                      <Text style={{fontSize: 14, fontWeight: "bold"}}>رجوع</Text>
-                      <Ionicons name="arrow-forward" size={20} color="#000"
+                      <Text style={{fontSize: 14, fontWeight: "bold", color: theme.primary}}>رجوع</Text>
+                      <Ionicons name="arrow-forward" size={20} color={theme.primary}
                         style={{paddingLeft: 5}}
                     />
                   </TouchableOpacity>
               </View>
           </View>
           
-          <View style={styles.content}>
-              <Text style={styles.title}>{note?.title}</Text>
+          <View style={[styles.content, {backgroundColor: theme.background}]}>
+              <Text style={[styles.title, {color: theme.primary}]}>{note?.title}</Text>
               <View style={styles.line} />
-              <Text style={styles.date}>
+              <Text style={[styles.date, {color: theme.primary}]}>
                 {dayjs().diff(dayjs(note?.createdAt), 'day') > 7 
                 ? dayjs(note?.createdAt).format('DD MMMM YYYY') 
                 : dayjs(note?.createdAt).fromNow()}</Text>
-              <Text style={styles.contentText}>{note?.content}</Text>
+              <Text style={[styles.contentText, {color: theme.primary}]}>{note?.content}</Text>
           </View>
         
     </SafeAreaView>
