@@ -10,6 +10,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useThemeStore } from "./store/useThemeStore";
 import { Colors } from "./Constants/Colors";
 import { useTranslation } from 'react-i18next';
+import i18n from './i18n/i18n'
 
 // تعريف نوع الملاحظة
 type Note = {
@@ -23,6 +24,8 @@ type Note = {
 
 // مكون صفحة المفضلة، مبني بنفس طريقة سلة المحذوفات
 const Favorites = () => {
+
+  const isRTL = i18n.language === 'ar';
 
   const { t } = useTranslation();
   // الحصول على عرض الشاشة للـ Drawer
@@ -95,7 +98,7 @@ const Favorites = () => {
   // تحويل القيمة المتحركة إلى إزاحة أفقية
   const translateX = animatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [width, 0],
+    outputRange: isRTL ? [width, 0] : [-width, 0],
   });
 
   // مكون الـ Drawer
@@ -103,12 +106,13 @@ const Favorites = () => {
     // دالة للتحقق من التبويب النشط
     const isActive = (tab: string) => currentTab === tab;
     return (
-      <Animated.View style={[styles.drawer, { transform: [{ translateX }], backgroundColor: theme.card }]}>
+      <Animated.View style={[styles.drawer, { transform: [{ translateX }], backgroundColor: theme.card,
+      right: isRTL ? 0 : undefined, left: isRTL ? undefined : 0 }]}>
         <View style={styles.drawerHeader}>
           <TouchableOpacity style={styles.closeButton} onPress={toggleDrawer}>
             <Ionicons name="close" size={28} color={theme.primary} />
           </TouchableOpacity>
-          <Text style={[styles.drawerTitle, { color: theme.primary }]}>{t('title')}</Text>
+          <Text style={[styles.drawerTitle,{ color: theme.primary }]}>{t('title')}</Text>
         </View>
         
         <View style={styles.drawerContent}>
@@ -119,7 +123,7 @@ const Favorites = () => {
           </TouchableOpacity>
 
           {/* عنصر القائمة لسلة المحذوفات */}
-          <TouchableOpacity style={[styles.menuItem, isActive('TrashPin') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./TrashPin' as any); }}>
+          <TouchableOpacity style={[styles.menuItem,isActive('TrashPin') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./TrashPin' as any); }}>
             <Ionicons name="trash" size={24} color={theme.primary} />
             <Text style={[styles.menuText, { color: theme.primary }]}>{t('trash')}</Text>
           </TouchableOpacity>
@@ -179,7 +183,7 @@ const Favorites = () => {
               <View style={styles.noteContainer}>
                   <View style={[styles.note, { borderColor: mainColor, backgroundColor: theme.card }]}>
                     {/* عنوان الملاحظة */}
-                    <Text style={[styles.noteTitle, { color: theme.primary }]}>{item.title}</Text>
+                    <Text style={[styles.noteTitle, { color: theme.primary }]} numberOfLines={1}>{item.title}</Text>
                     {/* محتوى الملاحظة */}
                     <Text style={[styles.noteContent, { color: theme.secondary }]} numberOfLines={1}>{item.content}</Text>
                     {/* أزرار الإجراءات */}

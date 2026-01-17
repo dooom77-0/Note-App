@@ -10,8 +10,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useThemeStore } from "./store/useThemeStore";
 import { Colors } from "./Constants/Colors";
 import { useTranslation } from 'react-i18next';
-
-
+import i18n from './i18n/i18n'
 type Note = {
   id: string;
   title: string;
@@ -20,6 +19,7 @@ type Note = {
 }
 
 const TrashPin = () => {
+  const isRTL = i18n.language === 'ar';
   const { t } = useTranslation();
   const { width } = Dimensions.get('window');
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -94,12 +94,13 @@ const TrashPin = () => {
 
   const translateX = animatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [width, 0],
+    outputRange: isRTL ? [width, 0] : [-width, 0],
   });
   const Drawer = () => {
     const isActive = (tab: string) => currentTab === tab;
     return (
-      <Animated.View style={[styles.drawer, { transform: [{ translateX }], backgroundColor: theme.card }]}>
+      <Animated.View style={[styles.drawer, { transform: [{ translateX }], backgroundColor: theme.card,
+      right: isRTL ? 0 : undefined, left: isRTL ? undefined : 0 }]}>
         <View style={styles.drawerHeader}>
           <TouchableOpacity style={styles.closeButton} onPress={toggleDrawer}>
             <Ionicons name="close" size={28} color={theme.primary} />
@@ -172,7 +173,7 @@ const TrashPin = () => {
             renderItem={({ item }) => (
               <View style={styles.noteContainer}>
                   <View style={[styles.note, { backgroundColor: theme.card, borderColor: mainColor }]}>
-                    <Text style={[styles.noteTitle, { color: theme.primary }]}>{item.title}</Text>
+                    <Text style={[styles.noteTitle, { color: theme.primary }]} numberOfLines={1}>{item.title}</Text>
                     <Text style={[styles.noteContent, { color: theme.secondary }]} numberOfLines={1}>{item.content}</Text>
                   <View style={styles.noteActions}>
                     <TouchableOpacity style={styles.deleteButton} onPress={() => deletePermanently(item.id)}>

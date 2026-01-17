@@ -5,6 +5,8 @@ import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 export default function RootLayout() {
 
+  
+
   useEffect(() => {
     const check = async () => {
       const done = await AsyncStorage.getItem("onboarding");

@@ -9,12 +9,14 @@ import { Colors } from "./Constants/Colors";
 import { useTranslation } from "react-i18next";
 
 
+
 export default function Settings() {
   const { t, i18n } = useTranslation();
   const { isDarkMode, toggleDarkMode, setMainColor } = useThemeStore();
-    const mainColor = useThemeStore((state) => state.mainColor);
+  const mainColor = useThemeStore((state) => state.mainColor);
   const theme = isDarkMode ? Colors.dark : Colors.light;
-
+  const isRTL = i18n.language === 'ar';
+  
   
   const { width } = Dimensions.get('window');
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -35,7 +37,7 @@ export default function Settings() {
 
   const translateX = animatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [width * 0.75, 0],
+    outputRange:isRTL ? [width, 0] : [-width, 0],
   });
 
   const colorsOptions = [
@@ -48,7 +50,8 @@ export default function Settings() {
   const Drawer = () => {
     const isActive = (tab: string) => currentTab === tab;
     return (
-      <Animated.View style={[styles.drawer, { transform: [{ translateX }], backgroundColor: theme.card }]}>
+      <Animated.View style={[styles.drawer,{ transform: [{ translateX }], backgroundColor: theme.card,
+      right: isRTL ? 0 : undefined, left: isRTL ? undefined : 0 }]}>
         <View style={styles.drawerHeader}>
           <TouchableOpacity style={styles.closeButton} onPress={toggleDrawer}>
             <Ionicons name="close" size={28} color={theme.primary} />
@@ -57,22 +60,22 @@ export default function Settings() {
         </View>
 
         <View style={styles.drawerContent}>
-          <TouchableOpacity style={[styles.menuItem, isActive('index') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('/'); }}>
+          <TouchableOpacity style={[styles.menuItem, {flexDirection: isRTL ? 'row-reverse' : 'row'}, isActive('index') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('/'); }}>
             <Ionicons name="document-text" size={24} color={theme.primary} />
             <Text style={[styles.menuText, { color: theme.primary }]}>{t('myNotes')}</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.menuItem, isActive('TrashPin') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./TrashPin' as any); }}>
+          <TouchableOpacity style={[styles.menuItem, {flexDirection: isRTL ? 'row-reverse' : 'row'}, isActive('TrashPin') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./TrashPin' as any); }}>
             <Ionicons name="trash" size={24} color={theme.primary} />
             <Text style={[styles.menuText, { color: theme.primary }]}>{t('trash')}</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.menuItem, isActive('favorites') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./favorites' as any); }}>
+          <TouchableOpacity style={[styles.menuItem, {flexDirection: isRTL ? 'row-reverse' : 'row'}, isActive('favorites') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./favorites' as any); }}>
             <Ionicons name="heart" size={24} color={theme.primary} />
             <Text style={[styles.menuText, { color: theme.primary }]}>{t('favorites')}</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.menuItem, isActive('settings') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./settings'); }}>
+          <TouchableOpacity style={[styles.menuItem, {flexDirection: isRTL ? 'row-reverse' : 'row'}, isActive('settings') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./settings'); }}>
             <Ionicons name="settings" size={24} color={theme.primary} />
             <Text style={[styles.menuText, { color: theme.primary }]}>{t('settings')}</Text>
           </TouchableOpacity>
@@ -105,7 +108,7 @@ export default function Settings() {
           <View style={styles.appearanceSection}>
             <Text style={[styles.sectionTitle, { color: theme.secondary }]}>{t("appearance")}</Text>
             <View style={[ styles.optionsContainer, { borderColor: theme.borders, backgroundColor: theme.card }]}>
-               <View style={[styles.options, { backgroundColor: theme.card, borderColor: theme.borders }]}>
+               <View style={[styles.options, {flexDirection : isRTL ? 'row-reverse' : 'row'}, { backgroundColor: theme.card, borderColor: theme.borders }]}>
                 <Text style={[styles.optionText, { color: theme.primary }]}>{t("theme")}</Text>
               <Switch
                 style={styles.switch}
@@ -116,7 +119,7 @@ export default function Settings() {
               />
               </View>
               <View style={[styles.Line, { backgroundColor: theme.borders }]} />
-              <View style={[styles.options, { backgroundColor: theme.card, borderColor: theme.borders }]}>
+              <View style={[styles.options, {flexDirection : isRTL ? 'row-reverse' : 'row'}, { backgroundColor: theme.card, borderColor: theme.borders }]}>
                 <Text style={[styles.optionText, { color: theme.primary }]}>{t("appColor")}</Text>
                 <View style={styles.colorsRow}>
                   {colorsOptions.map((color) => {
@@ -138,7 +141,7 @@ export default function Settings() {
 
               </View>
               <View style={[styles.Line, { backgroundColor: theme.borders }]} />
-              <View style={[styles.options, { backgroundColor: theme.card, borderColor: theme.borders }]}>
+              <View style={[styles.options, {flexDirection : isRTL ? 'row-reverse' : 'row'}, { backgroundColor: theme.card, borderColor: theme.borders }]}>
                 <Text style={[styles.optionText, { color: theme.primary }]}>{t("language")}</Text>
                 <View style={styles.languageRow}>
                   <TouchableOpacity style={[styles.Lang, i18n.language === 'ar' ? { borderColor: mainColor } : { borderColor: theme.borders }]}

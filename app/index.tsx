@@ -5,6 +5,7 @@ import { router, useSegments } from "expo-router";
 import { useState, useCallback, useRef } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import i18n from "./i18n/i18n";
 import dayjs from "dayjs";
 import 'dayjs/locale/ar';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -15,7 +16,10 @@ import { Colors } from "./Constants/Colors";
 import { useTranslation } from "react-i18next";
 dayjs.extend(relativeTime);
 dayjs.locale('ar');
+
 export default function Index() {
+  const isRTL = i18n.language === 'ar';
+
   // جلب الثيم من الـ store
   const { isDarkMode } = useThemeStore();
   const theme = isDarkMode ? Colors.dark : Colors.light;
@@ -81,7 +85,7 @@ export default function Index() {
 
   const translateX = animatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [width, 0],
+    outputRange: isRTL ? [width, 0] : [-width, 0],
   });
 
   const handleCopy = async (text: string) => {
@@ -93,8 +97,9 @@ export default function Index() {
   const Drawer = () => {
     const isActive = (tab: string) => currentTab === tab;
     return (
-      <Animated.View style={[styles.drawer, { transform: [{ translateX }], backgroundColor: theme.card }]}>
-        <View style={styles.drawerHeader}>
+      <Animated.View style={[styles.drawer, { transform: [{ translateX }], backgroundColor: theme.card,
+      right: isRTL ? 0 : undefined, left: isRTL ? undefined : 0 }]}>
+        <View style={[styles.drawerHeader]}>
           <TouchableOpacity style={styles.closeButton} onPress={toggleDrawer}>
             <Ionicons name="close" size={28} color={theme.primary} />
           </TouchableOpacity>
@@ -193,7 +198,7 @@ export default function Index() {
                       <Ionicons name="heart-outline" size={24} color={mainColor} />
                     )}
                   </TouchableOpacity>
-                  <Text style={[styles.noteTitle, { color: theme.primary }]}>{item.title}</Text>
+                  <Text style={[styles.noteTitle, { color: theme.primary }]} numberOfLines={1}>{item.title}</Text>
                   <Text style={[styles.noteContent, { color: theme.secondary }]} numberOfLines={1}>{item.content}</Text>
                   <Text style={[styles.noteDate, { color: theme.secondary }]}>
                     {dayjs(item.createdAt).fromNow()}
@@ -310,13 +315,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   noteTitle: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "bold",
     marginBottom: 15,
     textAlign: "right"
   },
   noteContent: {
-    fontSize: 14,
+    fontSize: 12,
     textAlign: "right",
     color: 'gray',
   },
