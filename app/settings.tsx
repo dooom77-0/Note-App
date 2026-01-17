@@ -45,7 +45,8 @@ export default function Settings() {
     { id: 'purple', hex: '#8B5CF6', name: 'أرجواني' },
     { id: 'green', hex: '#10B981', name: 'أخضر' },
     { id: 'yellow', hex: '#F59E0B', name: 'أصفر' },
-  ]
+    { id: 'rose', hex: '#F43F5E', name: 'وردي' },
+  ];
 
   const Drawer = () => {
     const isActive = (tab: string) => currentTab === tab;
@@ -165,7 +166,7 @@ export default function Settings() {
             </View>
             
           </View>
-          <View> 
+          <View style={styles.dataManagementSection}> 
             <Text style={[styles.sectionTitle, { color: theme.secondary, marginRight: 20 }]}>{t("dataManagement")}</Text>
 
           </View>
@@ -231,6 +232,14 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     paddingHorizontal: 20,
   },
+  dataManagementSection: {
+    marginBottom: 30,
+    paddingHorizontal: 20,
+  },
+  deleteAllButton: {
+    position: 'absolute',
+    right: 20,
+  },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -244,7 +253,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   options: {
-    flexDirection: 'row-reverse',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 15,

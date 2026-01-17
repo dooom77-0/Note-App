@@ -2,7 +2,7 @@ import { Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList, Animated
 import { SafeAreaView } from "react-native-safe-area-context";
 // import { StatusBar } from "expo-status-bar";
 import { router, useSegments } from "expo-router";
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import i18n from "./i18n/i18n";
@@ -14,10 +14,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useThemeStore } from "./store/useThemeStore";
 import { Colors } from "./Constants/Colors";
 import { useTranslation } from "react-i18next";
-dayjs.extend(relativeTime);
-dayjs.locale('ar');
+
 
 export default function Index() {
+  useEffect(() => {
+    const arabic = i18n.language === 'ar';
+    dayjs.locale(arabic ? 'ar' : 'en');
+    dayjs.extend(relativeTime);
+  }, []);
   const isRTL = i18n.language === 'ar';
 
   // جلب الثيم من الـ store
@@ -148,7 +152,7 @@ export default function Index() {
         {/*======= SHOW NOTES =======*/}
       <View style={[styles.showNotes, { backgroundColor: theme.background }]}>
           <View style={[styles.searchbar, { backgroundColor: theme.card, borderColor: mainColor, borderWidth: 0.5 }]}>
-            <Ionicons name="search" size={20} color={theme.secondary} style={{ marginLeft: 8 }} />
+            <Ionicons name="search" size={20} color={mainColor} style={{ marginLeft: 8 }} />
             <TextInput 
             value={search}
             onChangeText={(text) => setSearch(text)}
