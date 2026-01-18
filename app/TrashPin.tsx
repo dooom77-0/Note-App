@@ -1,7 +1,5 @@
-import { Text, View, StyleSheet, TouchableOpacity, FlatList, Animated, Dimensions, TextInput   } from 'react-native'
-// import { useState, useEffect } from 'react'
+import { Text, View, StyleSheet, TouchableOpacity, FlatList, Animated, Dimensions, TextInput, Modal  } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-// import { StatusBar } from 'expo-status-bar'
 import Ionicons from '@expo/vector-icons/build/Ionicons'
 import { router, useSegments } from 'expo-router'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -19,6 +17,7 @@ type Note = {
 }
 
 const TrashPin = () => {
+  const [showModal, setShowModal] = useState(false);
   const isRTL = i18n.language === 'ar';
   const { t } = useTranslation();
   const { width } = Dimensions.get('window');
@@ -150,11 +149,13 @@ const TrashPin = () => {
 
         {/* HEADER END */}
 
+        
+
         {/* CONTENT START */}
 
         <View style={[styles.showNotes, { backgroundColor: theme.background }]}>
           <View style={[styles.searchbar, { backgroundColor: theme.card, borderColor: mainColor }]}>
-            <Ionicons name="search" size={20} color={theme.secondary} style={{ marginLeft: 8 }} />
+            <Ionicons name="search" size={20} color={mainColor} style={{ marginLeft: 8 }} />
             <TextInput 
             value={search}
             onChangeText={(text) => setSearch(text)}
@@ -176,7 +177,7 @@ const TrashPin = () => {
                     <Text style={[styles.noteTitle, { color: theme.primary }]} numberOfLines={1}>{item.title}</Text>
                     <Text style={[styles.noteContent, { color: theme.secondary }]} numberOfLines={1}>{item.content}</Text>
                   <View style={styles.noteActions}>
-                    <TouchableOpacity style={styles.deleteButton} onPress={() => deletePermanently(item.id)}>
+                    <TouchableOpacity style={styles.deleteButton} onPress={() => setShowModal(true)}>
                       <Ionicons name="trash" size={20} color="#fff" />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.restoreButton} onPress={() => restoreNote(item.id)}>
@@ -184,6 +185,36 @@ const TrashPin = () => {
                     </TouchableOpacity>
                   </View>
                 </View>
+                {/* START MODAL FRO DELETE PERMANENTLY */}
+                <Modal 
+                visible={showModal} 
+                animationType="fade" 
+                transparent={true} 
+                onRequestClose={() => setShowModal(false)}
+                >
+                  <View style={styles.overlay2}>
+                    <View style={[styles.MessageContainer, { backgroundColor: theme.card, borderColor: theme.borders }]}>
+                      <Text style={[styles.MessageTitle, { color: theme.primary }]}>
+                        {t("ofcorse?")}
+                      </Text>
+                      <Text style={[styles.MessageText, { color: theme.primary }]}>
+                        {t("ofcorseText?")}
+                      </Text>
+                      <View style={styles.buttonContainer}>
+                        <TouchableOpacity onPress={() => deletePermanently(item.id)} style={styles.DELBtn}>
+                          <Text style={styles.DELBtnText}>{t("DEL")}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => setShowModal(false)} style={styles.CANBtn}>
+                          <Text style={styles.CANBtnText}>{t("CAN")}</Text>
+                        </TouchableOpacity>
+                      </View>
+          
+                    </View>
+                  </View>
+          
+                </Modal>
+          
+                {/* END MODAL */}
                 
                 
               </View>
@@ -193,10 +224,10 @@ const TrashPin = () => {
                 <View>
                   {search.length > 0 ? (
                     <Text style={[styles.noNotes, { color: theme.primary }]}>{t("noTrashFound")}</Text>
-
+                    
                   ) :
-                    (<Text style={[styles.noNotes, { color: theme.primary }]}>{t("noTrash")}</Text>)
-                  }
+                  (<Text style={[styles.noNotes, { color: theme.primary }]}>{t("noTrash")}</Text>)
+                }
                 </View>
               )
             }}
@@ -397,5 +428,60 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 20,
     color: "#333"
+  },
+  overlay2: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  MessageContainer:{
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    borderRadius: 20,
+    borderWidth: 2
+  },
+  MessageTitle:{
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+    textAlign: "center"
+  },
+  MessageText:{
+    fontSize: 18,
+    marginBottom: 10,
+    fontWeight: "heavy",
+    textAlign: "center"
+  },
+  buttonContainer:{
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20,
+    gap: 20
+  },
+  DELBtn:{
+    backgroundColor: "red",
+    padding: 15,
+    justifyContent: "center",
+    borderRadius: 10
+  },
+  DELBtnText:{
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#fff"
+  },
+  CANBtn:{
+    backgroundColor: "#3B82F6",
+    padding: 15,
+    justifyContent: "center",
+    borderRadius: 10
+  },
+  CANBtnText:{
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#fff"
   }
+
 });

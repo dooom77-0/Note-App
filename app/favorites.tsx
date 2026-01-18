@@ -163,7 +163,7 @@ const Favorites = () => {
         <View style={[styles.showNotes, { backgroundColor: theme.background }]}>
           {/* شريط البحث */}
           <View style={[styles.searchbar, { backgroundColor: theme.card, borderColor: mainColor }]}>
-            <Ionicons name="search" size={20} color={theme.secondary} style={{ marginLeft: 8 }} />
+            <Ionicons name="search" size={20} color={mainColor} style={{ marginLeft: 8 }} />
             <TextInput 
             value={search}
             onChangeText={(text) => setSearch(text)}

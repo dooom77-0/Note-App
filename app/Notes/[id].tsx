@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Alert, Modal } from 'react-native'
 import {useState, useEffect} from 'react'
 import { useLocalSearchParams, router } from 'expo-router'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -31,12 +31,13 @@ const Details = () => {
     
     const { id } = useLocalSearchParams();
     const [note, setNote] = useState< Note | null>(null);
+    const [showModal, setShowModal] = useState(false);
+
 
     useEffect(() => {
         const loadNote = async () => {
             const stored = await AsyncStorage.getItem("notes");
             const notes: Note[] = stored ? JSON.parse(stored) : [];
-            
 
             const found = notes.find((n) => n.id === id);
             if (found) {
@@ -50,40 +51,24 @@ const Details = () => {
     }, [id, note])
 
     const deleteNote = async () => {
-        Alert.alert(
-            "حذف",
-            "هل أنت متأكد من حذف هذا الملاحظة؟",
-            [
-                {
-                    text: "نعم",
-                    style: "destructive",
-                    onPress: async () => {
-                        const stored = await AsyncStorage.getItem("notes");
-                        const notes: Note[] = stored ? JSON.parse(stored) : [];
-                        const noteToDelete = notes.find((n) => n.id === id);
-                        if (noteToDelete) {
-                            // إضافة الملاحظة إلى سلة المهملات
-                            // "deletedNotes" ده مخزن منفصل في AsyncStorage
-                            // عند الحذف، بننقل الملاحظة من "notes" إلى "deletedNotes"
-                            // AsyncStorage ينشئ المخزن تلقائياً عند setItem لو مش موجود
-                            const deletedStored = await AsyncStorage.getItem("deletedNotes");
-                            const deletedNotes: Note[] = deletedStored ? JSON.parse(deletedStored) : [];
-                            deletedNotes.push(noteToDelete);
-                            await AsyncStorage.setItem("deletedNotes", JSON.stringify(deletedNotes));
+        const stored = await AsyncStorage.getItem("notes");
+        const notes: Note[] = stored ? JSON.parse(stored) : [];
+        const noteToDelete = notes.find((n) => n.id === id);
+        if (noteToDelete) {
+        // إضافة الملاحظة إلى سلة المهملات
+        // "deletedNotes" ده مخزن منفصل في AsyncStorage
+        // عند الحذف، بننقل الملاحظة من "notes" إلى "deletedNotes"
+        // AsyncStorage ينشئ المخزن تلقائياً عند setItem لو مش موجود
+        const deletedStored = await AsyncStorage.getItem("deletedNotes");
+        const deletedNotes: Note[] = deletedStored ? JSON.parse(deletedStored) : [];
+        deletedNotes.push(noteToDelete);
+        await AsyncStorage.setItem("deletedNotes", JSON.stringify(deletedNotes));
                             
-                            // حذف الملاحظة من الملاحظات العادية
-                            const updatedNotes = notes.filter((n) => n.id !== id);
-                            await AsyncStorage.setItem("notes", JSON.stringify(updatedNotes));
-                        }
-                        router.back();
-                    },
-                },
-                {
-                    text: "لا",
-                    style: "cancel",
-                },
-            ]
-        )
+        // حذف الملاحظة من الملاحظات العادية
+        const updatedNotes = notes.filter((n) => n.id !== id);
+        await AsyncStorage.setItem("notes", JSON.stringify(updatedNotes));
+    }
+    router.back();
 
         
     }
@@ -93,15 +78,47 @@ const Details = () => {
       <SafeAreaView edges={["top"]} style={[styles.container, {backgroundColor: theme.background}]}>
           <View style={[styles.header, {backgroundColor: theme.background}]}>
               <View style={{flexDirection: "row", gap: 10}}>
-                <TouchableOpacity style={styles.delete}>
+                <TouchableOpacity style={styles.delete} onPress={() => setShowModal(true)}>
                     <Ionicons name="trash" size={24} color="#fff" style={{marginRight: 5}} />
-                    <Text onPress={deleteNote} style={styles.deleteText}>{t("del")}</Text>
+                    <Text style={styles.deleteText}>{t("del")}</Text>
                 </TouchableOpacity>
                   <TouchableOpacity style={styles.edit} onPress={() => router.push(`/Notes/Edit/${id}`)}>
                     <Ionicons name="pencil" size={24} color="#fff" style={{marginRight: 5}} />
                     <Text style={styles.editText}>{t("edit")}</Text>
                 </TouchableOpacity>
               </View>
+              {/* START MODAL */}
+                <Modal
+                statusBarTranslucent
+                style={styles.modal}
+                animationType="fade"
+                transparent={true}
+                visible={showModal}
+                onRequestClose={() => {
+                    setShowModal(!showModal);
+                }}
+                >
+                    <View style={styles.overlay}>
+                       <View style={[styles.centeredView, {backgroundColor: theme.background, borderColor: theme.borders}]}>
+                        <Text style={[styles.modalTitle, {color: theme.primary}]}>
+                           {t("Are you sure?")}
+                        </Text>
+                        <Text style={[styles.modalText, {color: theme.primary}]}>
+                            {t("Do you want to delete this note?")}
+                        </Text>
+                        <View style={styles.buttons}>
+                            <TouchableOpacity style={styles.delButton} onPress={deleteNote}>
+                                <Text style={styles.delText}>{t("DEL")}</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.cancelButton} onPress={() => setShowModal(false)}>
+                                <Text style={styles.cancelText}>{t("CAN")}</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>   
+                    </View>
+                    
+                </Modal>
+                {/* ==== END MODAL ==== */}
               <View>
                   <TouchableOpacity style={styles.back} onPress={() => router.back()}>
                       <Text style={{fontSize: 14, fontWeight: "bold", color: theme.primary}}>{t("back")}</Text>
@@ -201,5 +218,69 @@ const styles = StyleSheet.create({
     contentText: {
         fontSize: 16,
         textAlign: "right"
-    }
+    },
+    modal:{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        height: "40%",
+        width:"40%",
+    },
+    overlay: {
+        flex: 1,
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        justifyContent: "center",
+        alignItems: "center",
+      },
+      centeredView:{
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 25,
+        borderRadius: 20,
+        borderWidth: 1
+      },
+      modalTitle:{
+        fontSize: 18,
+        fontWeight: "bold",
+        marginBottom: 10,
+        textAlign: "center"
+      },
+      modalText:{
+        fontSize: 18,
+        marginBottom: 10,
+        fontWeight: "heavy",
+        textAlign: "center"
+      },
+      buttons:{
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 20,
+        gap: 15
+      },
+      delButton:{
+        backgroundColor: "#DC2720",
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        paddingVertical: 10
+      },
+      delText:{
+        fontSize: 14,
+        fontWeight: "bold",
+        color: "#fff"
+      },
+      cancelButton:{
+        backgroundColor: "#3B82F6",
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        paddingVertical: 10
+      },
+      cancelText:{
+        fontSize: 14,
+        fontWeight: "bold",
+        color: "#fff"
+      }
+
+
+
 })
