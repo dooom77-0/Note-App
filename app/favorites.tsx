@@ -117,25 +117,25 @@ const Favorites = () => {
         
         <View style={styles.drawerContent}>
           {/* عنصر القائمة للملاحظات */}
-          <TouchableOpacity style={[styles.menuItem, isActive('index') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('/'); }}>
+          <TouchableOpacity style={[styles.menuItem, { flexDirection: isRTL ? 'row-reverse' : 'row', gap: 10 }, isActive('index') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('/'); }}>
             <Ionicons name="document-text" size={24} color={theme.primary} />
             <Text style={[styles.menuText, { color: theme.primary }]}>{t('myNotes')}</Text>
           </TouchableOpacity>
 
           {/* عنصر القائمة لسلة المحذوفات */}
-          <TouchableOpacity style={[styles.menuItem,isActive('TrashPin') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./TrashPin' as any); }}>
+          <TouchableOpacity style={[styles.menuItem, { flexDirection: isRTL ? 'row-reverse' : 'row', gap: 10 }, isActive('TrashPin') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./TrashPin' as any); }}>
             <Ionicons name="trash" size={24} color={theme.primary} />
             <Text style={[styles.menuText, { color: theme.primary }]}>{t('trash')}</Text>
           </TouchableOpacity>
           
           {/* عنصر القائمة للمفضلة */}
-          <TouchableOpacity style={[styles.menuItem, isActive('favorites') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./favorites' as any); }}>
+          <TouchableOpacity style={[styles.menuItem, { flexDirection: isRTL ? 'row-reverse' : 'row', gap: 10 }, isActive('favorites') && styles.activeMenuItem, { backgroundColor: mainColor + '20' }]} onPress={() => { toggleDrawer(); router.push('./favorites' as any); }}>
             <Ionicons name="heart" size={24} color={theme.primary} />
             <Text style={[styles.menuText, { color: theme.primary }]}>{t('favorites')}</Text>
           </TouchableOpacity>
 
           {/* عنصر القائمة للإعدادات */}
-          <TouchableOpacity style={[styles.menuItem, isActive('settings') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./settings'); }}>
+          <TouchableOpacity style={[styles.menuItem, { flexDirection: isRTL ? 'row-reverse' : 'row', gap: 10 }, isActive('settings') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./settings'); }}>
             <Ionicons name="settings" size={24} color={theme.primary} />
             <Text style={[styles.menuText, { color: theme.primary }]}>{t('settings')}</Text>
           </TouchableOpacity>
@@ -298,9 +298,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row-reverse',
     alignItems: 'center',
     paddingVertical: 15,
-    borderBottomWidth: 1,
     paddingHorizontal: 10,
-    borderBottomColor: '#eee',
   },
   menuText: {
     fontSize: 18,

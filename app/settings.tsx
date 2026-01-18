@@ -76,7 +76,7 @@ export default function Settings() {
             <Text style={[styles.menuText, { color: theme.primary }]}>{t('favorites')}</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.menuItem, {flexDirection: isRTL ? 'row-reverse' : 'row'}, isActive('settings') && styles.activeMenuItem]} onPress={() => { toggleDrawer(); router.push('./settings'); }}>
+          <TouchableOpacity style={[styles.menuItem, {flexDirection: isRTL ? 'row-reverse' : 'row'}, isActive('settings') && styles.activeMenuItem, { backgroundColor: mainColor + '20' }]} onPress={() => { toggleDrawer(); router.push('./settings'); }}>
             <Ionicons name="settings" size={24} color={theme.primary} />
             <Text style={[styles.menuText, { color: theme.primary }]}>{t('settings')}</Text>
           </TouchableOpacity>
@@ -122,7 +122,7 @@ export default function Settings() {
               <View style={[styles.Line, { backgroundColor: theme.borders }]} />
               <View style={[styles.options, {flexDirection : isRTL ? 'row-reverse' : 'row'}, { backgroundColor: theme.card, borderColor: theme.borders }]}>
                 <Text style={[styles.optionText, { color: theme.primary }]}>{t("appColor")}</Text>
-                <View style={styles.colorsRow}>
+                <View style={[styles.colorsRow, {flexDirection : isRTL ? 'row' : 'row-reverse'}]}>
                   {colorsOptions.map((color) => {
                     const isSelected = mainColor === color.hex;
                     return (
@@ -134,7 +134,7 @@ export default function Settings() {
                         ]}
                         onPress={() => setMainColor(color.id as any)}
                       >
-                        {isSelected && <Ionicons name="checkmark" size={20} color="#fff" />}
+                        {isSelected && <Ionicons name="checkmark" size={24} color={theme.primary} style={{ position: 'absolute', top: 0, right: 0 }} />}
                       </TouchableOpacity>
                     );
                   })} 
@@ -266,9 +266,9 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   colorCircle: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    width: 25,
+    height: 25,
+    borderRadius: 50,
   },
   languageRow: {
     flexDirection: 'row',
@@ -334,9 +334,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row-reverse',
     alignItems: 'center',
     paddingVertical: 15,
-    borderBottomWidth: 1,
     paddingHorizontal: 10,
-    borderBottomColor: '#eee',
   },
   activeMenuItem: {
     backgroundColor: '#e0e0e0',
