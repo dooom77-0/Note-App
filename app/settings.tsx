@@ -41,7 +41,7 @@ export default function Settings() {
   });
 
   const colorsOptions = [
-    { id: 'blue', hex: '#3B82F6', name: 'أزرق' },
+    { id: 'teal', hex: '#007A8C', name: 'أزرق مخضر' },
     { id: 'purple', hex: '#8B5CF6', name: 'أرجواني' },
     { id: 'green', hex: '#10B981', name: 'أخضر' },
     { id: 'yellow', hex: '#F59E0B', name: 'أصفر' },

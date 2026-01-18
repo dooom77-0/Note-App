@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, Alert, Modal } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native'
 import {useState, useEffect} from 'react'
 import { useLocalSearchParams, router } from 'expo-router'
 import AsyncStorage from '@react-native-async-storage/async-storage';

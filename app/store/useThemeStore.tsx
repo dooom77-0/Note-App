@@ -3,10 +3,10 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // 1. تعريف أنواع الألوان المتاحة
-export type ColorKey = 'blue' | 'purple' | 'green' | 'yellow' | 'rose';
+export type ColorKey = 'teal' | 'purple' | 'green' | 'yellow' | 'rose';
 // 2. تعريف الألوان الثابتة (نفس الدرجات التي اخترناها سابقاً)
 export const themeColors: Record<ColorKey, string> = {
-  blue: '#3B82F6',
+  teal: '#007A8C',
   purple: '#8B5CF6',
   green: '#10B981',
   yellow: '#F59E0B',
