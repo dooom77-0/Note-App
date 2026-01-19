@@ -28,5 +28,12 @@
     "theme": "Theme",
     "language": "Language",
     "appColor": "App Color",
-    "dataManagement": "Data Management"
+    "dataManagement": "Data Management",
+    "ResetApp": "Reset App",
+    "DELALLNotes": "Delete All Notes",
+    "DELALLFavorites": "Delete All Favorites",
+    "DELALLTrash": "Delete All Trash",
+    "Logout": "Logout",
+    "aboutApp": "About the app",
+    "version": "Version"
 }

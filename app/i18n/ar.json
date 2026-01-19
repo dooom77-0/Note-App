@@ -29,6 +29,13 @@
     "theme":"السمة",
     "language":"لغة التطبيق",
     "appColor":"لون التطبيق",
-    "dataManagement":"إدارة البيانات"
+    "dataManagement":"إدارة البيانات",
+    "ResetApp":" الاعدادت الافتراضية",
+    "DELALLNotes":"حذف كل الملاحظات",
+    "DELALLFavorites":"حذف كل المفضلات",
+    "DELALLTrash":"حذف كل سلة المحذوفات",
+    "Logout":"تسجيل الخروج",
+    "aboutApp": "حول التطبيق",
+    "version":"النسخة"
 
 }

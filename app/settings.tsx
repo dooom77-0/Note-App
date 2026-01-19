@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, TouchableOpacity, Animated, Dimensions, Image } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Animated, Dimensions, Image, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useSegments } from "expo-router";
 import { useRef, useState } from 'react';
@@ -94,6 +94,7 @@ export default function Settings() {
             <Ionicons name="menu" size={24} color={theme.primary} />
           </TouchableOpacity>
         </View>
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View style={[styles.content, { backgroundColor: theme.background }]}>
           <View style={[styles.profileImage, { backgroundColor: theme.background }]}>
             <Image
@@ -168,12 +169,74 @@ export default function Settings() {
           </View>
           <View style={styles.dataManagementSection}> 
             <Text style={[styles.sectionTitle, { color: theme.secondary, marginRight: 20 }]}>{t("dataManagement")}</Text>
+            <View style={[styles.optionsContainer2, { borderColor: theme.borders, backgroundColor: theme.card }]}>
+              <View style={[styles.options, {flexDirection : isRTL ? 'row-reverse' : 'row'}, { backgroundColor: theme.card, borderColor: theme.borders }]}>
+                <Text style={[styles.optionText, { color: theme.primary }]}>{t("ResetApp")}</Text>
+                <TouchableOpacity 
+                // onPress={handleReset}
+                style={[styles.ResetBtn, { backgroundColor: theme.card, borderColor: theme.borders }]}
+                >
+                  <Ionicons name="refresh" size={24} color={theme.primary} />
+                </TouchableOpacity>
+              </View>
+              <View style={[styles.Line, { backgroundColor: theme.borders }]} />
+              <View style={[styles.options, {flexDirection : isRTL ? 'row-reverse' : 'row'}]}>
+                <Text style={[styles.optionText, { color: theme.primary }]}>{t("DELALLNotes")}</Text>
+                <TouchableOpacity 
+                // onPress={() => setDELModal(true)}
+                style={[styles.DeleteBtn, { backgroundColor: theme.card, borderColor: theme.borders }]}
+                >
+                  <Ionicons name="trash" size={24} color={'#ff0000'} />
+                </TouchableOpacity>
+              </View>
+              <View style={[styles.Line, { backgroundColor: theme.borders }]} />
+              <View style={[styles.options, {flexDirection : isRTL ? 'row-reverse' : 'row'}]}>
+                <Text style={[styles.optionText, { color: theme.primary }]}>{t("DELALLFavorites")}</Text>
+                <TouchableOpacity
+                // onPress={() => setFavModal(true)}
+                style={[styles.DeleteBtn, { backgroundColor: theme.card, borderColor: theme.borders }]}
+                >
+                  <Ionicons name="trash" size={24} color={'#ff0000'} />
+                </TouchableOpacity>
+
+              </View>
+              <View style={[styles.Line, { backgroundColor: theme.borders }]} />
+              <View style={[styles.options, {flexDirection : isRTL ? 'row-reverse' : 'row'}]}>
+                <Text style={[styles.optionText, { color: theme.primary }]}>{t("DELALLTrash")}</Text>
+                <TouchableOpacity
+                // onPress={() => setTrashModal(true)}
+                style={[styles.DeleteBtn, { backgroundColor: theme.card, borderColor: theme.borders }]}
+                >
+                  <Ionicons name="trash" size={24} color={'#ff0000'} />
+                </TouchableOpacity>
+              </View>
+              <View style={[styles.Line, { backgroundColor: theme.borders }]} />
+
+              <View style={[styles.options, {flexDirection : isRTL ? 'row-reverse' : 'row'}]}>
+                <Text style={[styles.optionText, { color: theme.primary }]}>{t("Logout")}</Text>
+                <TouchableOpacity
+                // onPress={() => router.replace('./Auth/Login')}
+                style={[styles.DeleteBtn, { backgroundColor: theme.card, borderColor: theme.borders }]}
+                >
+                  <Ionicons name="log-out-outline" size={24} color={theme.primary} />
+                </TouchableOpacity>
+
+              </View>
+            </View>
+
+          </View>
+
+          <View style={styles.AboutAppSection}>
+            <Text style={[styles.sectionTitle, { color: theme.secondary, marginRight: 20 }]}>{t("aboutApp")}</Text>
+            {/* ABOUT APP CONTENT  */}
 
           </View>
           
 
         </View>
+      </ScrollView>
       </SafeAreaView>
+      
       {drawerOpen && <TouchableOpacity style={styles.overlay} onPress={toggleDrawer} />}
       <Drawer />
     </View>
@@ -236,6 +299,10 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     paddingHorizontal: 20,
   },
+  AboutAppSection: {
+    marginBottom: 30,
+    paddingHorizontal: 20,
+  },
   deleteAllButton: {
     position: 'absolute',
     right: 20,
@@ -252,6 +319,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
   },
+  optionsContainer2:{
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+  },
   options: {
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -260,6 +332,7 @@ const styles = StyleSheet.create({
   },
   optionText: {
     fontSize: 16,
+    paddingHorizontal: 10,
   },
   colorsRow: {
     flexDirection: 'row',
@@ -353,5 +426,23 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  ResetBtn:{
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 5,
+    marginTop: 5,
+    borderRadius: 5,
+    borderWidth: 1,
+    marginHorizontal: 10
+  },
+  DeleteBtn: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 5,
+    marginTop: 5,
+    borderRadius: 5,
+    borderWidth: 1,
+    marginHorizontal: 10
   },
 });
