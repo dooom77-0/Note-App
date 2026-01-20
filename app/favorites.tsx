@@ -4,21 +4,12 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 // import { StatusBar } from 'expo-status-bar'
 import Ionicons from '@expo/vector-icons/build/Ionicons'
 import { router, useSegments } from 'expo-router'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useState, useRef, useCallback } from 'react'
-import { useFocusEffect } from "@react-navigation/native";
+import { useState, useRef } from 'react'
 import { useThemeStore } from "./store/useThemeStore";
 import { Colors } from "./Constants/Colors";
 import { useTranslation } from 'react-i18next';
 import i18n from './i18n/i18n'
-
-// تعريف نوع الملاحظة
-type Note = {
-  id: string;
-  title: string;
-  content: string;
-  createdAt: string;
-}
+import { useNotesStore } from './store/useNotesStore'
 
 
 
@@ -44,45 +35,19 @@ const Favorites = () => {
 
     const mainColor = useThemeStore((state) => state.mainColor);
 
-  // حالة الملاحظات المفضلة
-  const [notes, setNotes] = useState<Note[]>([]);
-  // حالة البحث
+  // حالة الملاحظات المفضلة  // حالة البحث
   const [search, setSearch] = useState<string>('');
 
+  
+    // تحميل الملاحظات المفضلة عند فتح الصفحة
+    const allNotes = useNotesStore((state) => state.notes);
+    const favorites = allNotes.filter((note) => note.favorite);
   // فلترة الملاحظات بناءً على البحث
-  const filteredNotes = notes.filter((note) => note.title.toLowerCase().includes(search.toLowerCase()) || note.content.toLowerCase().includes(search.toLowerCase()));
+  const filteredNotes = 
+  favorites.filter((note) => 
+    note.title.toLowerCase().includes(search.toLowerCase()) || note.content.toLowerCase().includes(search.toLowerCase()));
 
-  // تحميل الملاحظات المفضلة عند فتح الصفحة
-  useFocusEffect(
-    useCallback(() => {
-      const loadNotes = async () => {
-        // قراءة الملاحظات المفضلة من AsyncStorage
-        // نستخدم "favoriteNotes" بدلاً من "notes" عشان المفضلة مجموعة منفصلة
-        // "notes" تحتوي على جميع الملاحظات، "favoriteNotes" تحتوي على المفضلة فقط
-        // ده يسمح بإدارة منفصلة: إزالة من المفضلة دون حذف من الأصل
-        // AsyncStorage ينشئ المخزن تلقائياً عند setItem، ولو مش موجود يرجع null
-        const stored = await AsyncStorage.getItem("favoriteNotes");
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          setNotes(parsed);
-        }
-      };
-      loadNotes()
-    }, [])
-  )
-
-  // دالة لإزالة الملاحظة من المفضلة
-  const removeFromFavorites = async (id: string) => {
-    // قراءة الملاحظات المفضلة الحالية
-    const storedFavorites = await AsyncStorage.getItem("favoriteNotes");
-    const favoriteNotes: Note[] = storedFavorites ? JSON.parse(storedFavorites) : [];
-    // فلترة الملاحظة المراد إزالتها
-    const updatedFavorites = favoriteNotes.filter((n) => n.id !== id);
-    // حفظ التحديث في AsyncStorage
-    await AsyncStorage.setItem("favoriteNotes", JSON.stringify(updatedFavorites));
-    // تحديث الحالة المحلية
-    setNotes(updatedFavorites);
-  };
+  const toggleFavorite = useNotesStore((s) => s.toggleFavorite);
 
   // دالة لفتح/إغلاق الـ Drawer
   const toggleDrawer = () => {
@@ -189,7 +154,7 @@ const Favorites = () => {
                     {/* أزرار الإجراءات */}
                   <View style={styles.noteActions}>
                     {/* زر إزالة من المفضلة */}
-                    <TouchableOpacity style={[styles.removeButton, { backgroundColor: mainColor }]} onPress={() => removeFromFavorites(item.id)}>
+                    <TouchableOpacity style={[styles.removeButton, { backgroundColor: mainColor }]} onPress={() => toggleFavorite(item.id)}>
                       <Ionicons name="heart-dislike" size={20} color='#fff' />
                     </TouchableOpacity>
                   </View>

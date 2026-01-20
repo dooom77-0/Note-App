@@ -193,7 +193,7 @@ export default function Settings() {
               <View style={[styles.options, {flexDirection : isRTL ? 'row-reverse' : 'row'}]}>
                 <Text style={[styles.optionText, { color: theme.primary }]}>{t("DELALLFavorites")}</Text>
                 <TouchableOpacity
-                // onPress={() => setFavModal(true)}
+                // onPress={() => setFavoritesModal(true)}
                 style={[styles.DeleteBtn, { backgroundColor: theme.card, borderColor: theme.borders }]}
                 >
                   <Ionicons name="trash" size={24} color={'#ff0000'} />
@@ -215,7 +215,7 @@ export default function Settings() {
               <View style={[styles.options, {flexDirection : isRTL ? 'row-reverse' : 'row'}]}>
                 <Text style={[styles.optionText, { color: theme.primary }]}>{t("Logout")}</Text>
                 <TouchableOpacity
-                // onPress={() => router.replace('./Auth/Login')}
+                // onPress={() => setLogoutModal(true)}
                 style={[styles.DeleteBtn, { backgroundColor: theme.card, borderColor: theme.borders }]}
                 >
                   <Ionicons name="log-out-outline" size={24} color={theme.primary} />
@@ -226,10 +226,8 @@ export default function Settings() {
 
           </View>
 
-          <View style={styles.AboutAppSection}>
-            <Text style={[styles.sectionTitle, { color: theme.secondary, marginRight: 20 }]}>{t("aboutApp")}</Text>
-            {/* ABOUT APP CONTENT  */}
-
+          <View style={styles.AboutAppSection}> 
+            <Text style={[styles.sectionTitle, { color: theme.secondary, marginRight: 20 }]}>{t("aboutApp")}</Text>             
           </View>
           
 

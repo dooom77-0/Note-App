@@ -1,16 +1,13 @@
 import { Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList, Animated, Dimensions, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-// import { StatusBar } from "expo-status-bar";
 import { router, useSegments } from "expo-router";
-import { useState, useCallback, useRef, useEffect, use } from "react";
-import { useFocusEffect } from "@react-navigation/native";
+import { useState, useRef, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import i18n from "./i18n/i18n";
 import dayjs from "dayjs";
 import 'dayjs/locale/ar';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import * as Clipboard from 'expo-clipboard';
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useThemeStore } from "./store/useThemeStore";
 import { Colors } from "./Constants/Colors";
 import { useTranslation } from "react-i18next";
@@ -28,12 +25,6 @@ export default function Index() {
   // جلب الثيم من الـ store
   const { isDarkMode } = useThemeStore();
   const theme = isDarkMode ? Colors.dark : Colors.light;
-  type Note = {
-    id: string;
-    title: string;
-    content: string;
-    createdAt: string;
-  }
 
   const mainColor = useThemeStore((state) => state.mainColor);
 
@@ -43,27 +34,17 @@ export default function Index() {
   const segments = useSegments();
   const currentTab = segments[1] || 'index';
 
-  const notes = useNotesStore((state) => state.notes);
+  const allNotes = useNotesStore((state) => state.notes);
+  const notes = allNotes.filter((note) => !note.deleted);
   const [search, setSearch] = useState<string>('');
   // حالة الملاحظات المفضلة لتحديث الأيقونة
-  const [favorites, setFavorites] = useState<Note[]>([]);
 
   const filteredNotes = notes.filter((note) => note.title.toLowerCase().includes(search.toLowerCase()) || note.content.toLowerCase().includes(search.toLowerCase()));
+  const toggleFavorite = useNotesStore((s) => s.toggleFavorite);
 
-  useFocusEffect(
-    useCallback(() => {
-      const loadNotes = async () => {
-        const storedFavorites = await AsyncStorage.getItem("favoriteNotes");
-        if (storedFavorites) {
-          const parsedFavorites = JSON.parse(storedFavorites);
-          setFavorites(parsedFavorites);
-        }
-      };
-      loadNotes();
-    }, [])
-  )
-  console.log("NOTES FROM STORE", notes);
-  
+  const handleFavorite = (id : string) => {
+    toggleFavorite(id);
+  }
 
   const Add = () => {
     router.push("/Notes/Add");
@@ -171,28 +152,10 @@ export default function Index() {
                 >
                   <TouchableOpacity
                     
-                    onPress={async () => {
-                      const storedFavorites = await AsyncStorage.getItem('favoriteNotes');
-                      let favoritesList = storedFavorites ? JSON.parse(storedFavorites) : [];
-                      const isAlreadyFavorite = favoritesList.some((n: any) => n.id === item.id);
-                      
-                      if (isAlreadyFavorite) {
-                        favoritesList = favoritesList.filter((n: any) => n.id !== item.id);
-                      } else {
-                        favoritesList.push(item);
-                      }
-                      
-                      await AsyncStorage.setItem('favoriteNotes', JSON.stringify(favoritesList));
-                      setFavorites(favoritesList);
-                    }}
+                    onPress={() => handleFavorite(item.id)}
                     style={{ position: 'absolute', bottom: 10, left: 10, zIndex: 1 }}
                   >
-                    {/* أيقونة القلب لإضافة/إزالة من المفضلة */}
-                    {favorites.some((n) => n.id === item.id) ? (
-                      <Ionicons name="heart" size={24} color= {mainColor} />
-                    ) : (
-                      <Ionicons name="heart-outline" size={24} color={mainColor} />
-                    )}
+                    <Ionicons name={item.favorite ? 'heart' : 'heart-outline'} size={24} color={mainColor} />
                   </TouchableOpacity>
                   <Text style={[styles.noteTitle, { color: theme.primary }]} numberOfLines={1}>{item.title}</Text>
                   <Text style={[styles.noteContent, { color: theme.secondary }]} numberOfLines={1}>{item.content}</Text>

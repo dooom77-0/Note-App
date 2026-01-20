@@ -1,7 +1,6 @@
 import { StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native'
-import {useState, useEffect} from 'react'
+import {useState} from 'react'
 import { useLocalSearchParams, router } from 'expo-router'
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
 // import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
@@ -11,18 +10,13 @@ import { useThemeStore } from '../store/useThemeStore';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { Colors } from '../Constants/Colors';
 import { useTranslation } from 'react-i18next';
+import { useNotesStore } from '../store/useNotesStore';
 
 
 dayjs.extend(relativeTime);
 dayjs.locale('ar');
 const Details = () => {
     const { t } = useTranslation();
-    type Note = {
-        id: string;
-        title: string;
-        content: string;
-        createdAt: string;
-    }
 
     const { isDarkMode } = useThemeStore();
     const theme = isDarkMode ? Colors.dark : Colors.light;
@@ -30,47 +24,18 @@ const Details = () => {
 
     
     const { id } = useLocalSearchParams();
-    const [note, setNote] = useState< Note | null>(null);
+    const noteId = Array.isArray(id) ? id[0] : id
+    const notes = useNotesStore((state) => state.notes);
     const [showModal, setShowModal] = useState(false);
 
 
-    useEffect(() => {
-        const loadNote = async () => {
-            const stored = await AsyncStorage.getItem("notes");
-            const notes: Note[] = stored ? JSON.parse(stored) : [];
+    const delNote = useNotesStore((state) => state.deleteNote);
 
-            const found = notes.find((n) => n.id === id);
-            if (found) {
-                setNote(found);
-            }
-            if (!note) {
-                return null;
-            }
-        }
-        loadNote();
-    }, [id, note])
+    const note = notes.find((n) => n.id === id);
 
     const deleteNote = async () => {
-        const stored = await AsyncStorage.getItem("notes");
-        const notes: Note[] = stored ? JSON.parse(stored) : [];
-        const noteToDelete = notes.find((n) => n.id === id);
-        if (noteToDelete) {
-        // إضافة الملاحظة إلى سلة المهملات
-        // "deletedNotes" ده مخزن منفصل في AsyncStorage
-        // عند الحذف، بننقل الملاحظة من "notes" إلى "deletedNotes"
-        // AsyncStorage ينشئ المخزن تلقائياً عند setItem لو مش موجود
-        const deletedStored = await AsyncStorage.getItem("deletedNotes");
-        const deletedNotes: Note[] = deletedStored ? JSON.parse(deletedStored) : [];
-        deletedNotes.push(noteToDelete);
-        await AsyncStorage.setItem("deletedNotes", JSON.stringify(deletedNotes));
-                            
-        // حذف الملاحظة من الملاحظات العادية
-        const updatedNotes = notes.filter((n) => n.id !== id);
-        await AsyncStorage.setItem("notes", JSON.stringify(updatedNotes));
-    }
-    router.back();
-
-        
+        delNote(noteId);
+        router.back();  
     }
 
      

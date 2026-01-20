@@ -2,21 +2,16 @@ import { Text, View, StyleSheet, TouchableOpacity, FlatList, Animated, Dimension
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Ionicons from '@expo/vector-icons/build/Ionicons'
 import { router, useSegments } from 'expo-router'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useState, useRef, useCallback } from 'react'
-import { useFocusEffect } from "@react-navigation/native";
+import { useState, useRef } from 'react'
 import { useThemeStore } from "./store/useThemeStore";
 import { Colors } from "./Constants/Colors";
 import { useTranslation } from 'react-i18next';
 import i18n from './i18n/i18n'
-type Note = {
-  id: string;
-  title: string;
-  content: string;
-  createdAt: string;
-}
+import { useNotesStore } from "./store/useNotesStore";
 
 const TrashPin = () => {
+  const deletepermanentlyNote = useNotesStore((s) => s.deletepermanentlyNote);
+  const restoreNote = useNotesStore((s) => s.restoreNote);
   const [showModal, setShowModal] = useState(false);
   const isRTL = i18n.language === 'ar';
   const { t } = useTranslation();
@@ -29,58 +24,12 @@ const TrashPin = () => {
   // جلب الثيم
   const { isDarkMode } = useThemeStore();
   const theme = isDarkMode ? Colors.dark : Colors.light;
+  const notes = useNotesStore((s) => s.notes);
+  const trash = notes.filter((note) => note.deleted);
 
-  const [notes, setNotes] = useState<Note[]>([]);
   const [search, setSearch] = useState<string>('');
-
-  const filteredNotes = notes.filter((note) => note.title.toLowerCase().includes(search.toLowerCase()) || note.content.toLowerCase().includes(search.toLowerCase()));
-
-  useFocusEffect(
-    useCallback(() => {
-      const loadNotes = async () => {
-        // قراءة الملاحظات المحذوفة من AsyncStorage
-        // "deletedNotes" ده مخزن منفصل في AsyncStorage
-        // AsyncStorage يخزن البيانات كـ key-value pairs
-        // عندما نحذف ملاحظة، بننقلها من "notes" إلى "deletedNotes"
-        // لو المخزن مش موجود، getItem يرجع null، ونبدأ بمصفوفة فارغة
-        const stored = await AsyncStorage.getItem("deletedNotes");
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          setNotes(parsed);
-        }
-      };
-      loadNotes()
-    }, [])
-  )
-
-  const restoreNote = async (id: string) => {
-    const storedDeleted = await AsyncStorage.getItem("deletedNotes");
-    const deletedNotes: Note[] = storedDeleted ? JSON.parse(storedDeleted) : [];
-    const noteToRestore = deletedNotes.find((n) => n.id === id);
-    if (noteToRestore) {
-      // إضافة إلى الملاحظات العادية
-      const storedNotes = await AsyncStorage.getItem("notes");
-      const notes: Note[] = storedNotes ? JSON.parse(storedNotes) : [];
-      notes.push(noteToRestore);
-      await AsyncStorage.setItem("notes", JSON.stringify(notes));
-      
-      // حذف من المحذوفة
-      const updatedDeleted = deletedNotes.filter((n) => n.id !== id);
-      await AsyncStorage.setItem("deletedNotes", JSON.stringify(updatedDeleted));
-      
-      // تحديث الـ state
-      setNotes(updatedDeleted);
-    }
-  };
-
-  const deletePermanently = async (id: string) => {
-    const storedDeleted = await AsyncStorage.getItem("deletedNotes");
-    const deletedNotes: Note[] = storedDeleted ? JSON.parse(storedDeleted) : [];
-    const updatedDeleted = deletedNotes.filter((n) => n.id !== id);
-    await AsyncStorage.setItem("deletedNotes", JSON.stringify(updatedDeleted));
-    setNotes(updatedDeleted);
-    router.back(); // the important line
-  };
+  const filteredNotes = trash.filter((note) => note.title.toLowerCase().includes(search.toLowerCase()) || note.content.toLowerCase().includes(search.toLowerCase()));
+;
   const toggleDrawer = () => {
     const toValue = drawerOpen ? 0 : 1;
     setDrawerOpen(!drawerOpen);
@@ -180,7 +129,11 @@ const TrashPin = () => {
                     <TouchableOpacity style={styles.deleteButton} onPress={() => setShowModal(true)}>
                       <Ionicons name="trash" size={20} color="#fff" />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.restoreButton} onPress={() => restoreNote(item.id)}>
+                    <TouchableOpacity style={styles.restoreButton}
+                     onPress={() => {
+                      restoreNote(item.id);
+                     }} 
+                     >
                       <Ionicons name="refresh" size={20} color="#fff" />
                     </TouchableOpacity>
                   </View>
@@ -201,7 +154,11 @@ const TrashPin = () => {
                         {t("ofcorseText?")}
                       </Text>
                       <View style={styles.buttonContainer}>
-                        <TouchableOpacity onPress={() => deletePermanently(item.id)} style={styles.DELBtn}>
+                        <TouchableOpacity style={styles.DELBtn}
+                        onPress={() => {
+                          deletepermanentlyNote(item.id);
+                        }} 
+                        >
                           <Text style={styles.DELBtnText}>{t("DEL")}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => setShowModal(false)} style={styles.CANBtn}>

@@ -9,11 +9,21 @@ type Note = {
   createdAt: string;
   favorite: boolean;
   deleted: boolean;
+  // pinned: boolean;
 };
 
 type NotesState = {
   notes: Note[];
   addNote: (data: { title: string; content: string }) => void;
+  deleteNote: (id: string) => void;
+  restoreNote: (id: string) => void;
+  deletepermanentlyNote: (id: string) => void;
+  toggleFavorite: (id: string) => void;
+  // editNote: (id: string, data: { title: string; content: string }) => void;
+  // deleteAllNotes: () => void;
+  // deleteAllFavorites: () => void;
+  // deleteAllDeleted: () => void;
+  // pinNote: (id: string) => void;
 };
 
 export const useNotesStore = create<NotesState>()(
@@ -36,6 +46,35 @@ export const useNotesStore = create<NotesState>()(
             },
           ],
         })),
+
+      // دالة الحذف
+      deleteNote: (id) => {
+        set((state) => ({
+          notes: state.notes.map((note) => (note.id === id ? { ...note, deleted: true } : note)),
+        }));
+      }
+      ,
+      // دالة استعادة
+      restoreNote: (id) => {
+        set((state) => ({
+          notes: state.notes.map((note) => (note.id === id ? { ...note, deleted: false } : note)),
+        }));
+      }
+      ,
+      // دالة الحذف دائم
+      deletepermanentlyNote: (id) => {
+        set((state) => ({
+          notes: state.notes.filter((note) => note.id !== id),
+        }));
+      }
+      // دالة المفضلة 
+      ,
+      toggleFavorite: (id) => {
+        set((state) => ({
+          notes: state.notes.map((note) => (note.id === id ? { ...note, favorite: !note.favorite } : note)),
+        }));
+      }
+      
     }),
     {
       name: "notes-storage", // التخزين التلقائي
