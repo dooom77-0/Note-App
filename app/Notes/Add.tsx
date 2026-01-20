@@ -10,6 +10,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { useThemeStore } from '../store/useThemeStore'
 import { Colors } from '../Constants/Colors'
 import { useTranslation } from 'react-i18next';
+import { useNotesStore } from '../store/useNotesStore'
 
 const Add = () => {
   const { t } = useTranslation();
@@ -24,26 +25,14 @@ const Add = () => {
       titleRef.current?.focus()
     }, 100);
   }, [])
+  const addNote = useNotesStore((s) => s.addNote)
   const handleSave = async () => {
     if (!title || !content) {
       alert('Please fill all the fields')
       return
     }
-    const newNote = {
-      id: Date.now().toString(),
-      title,
-      content,
-      createdAt: new Date().toISOString(),
-    }
-    try {
-      const stored = await AsyncStorage.getItem('notes')
-      const parsed = stored ? JSON.parse(stored) : []
-      const updatedNotes = [...parsed, newNote]
-      await AsyncStorage.setItem('notes', JSON.stringify(updatedNotes))
-      router.back()
-    } catch (error) {
-      console.log(error)
-    }
+    addNote({ title, content })
+    router.back()
   }
     return (
       <SafeAreaView style={[styles.container, {backgroundColor: theme.background}]}>

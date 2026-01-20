@@ -2,7 +2,7 @@ import { Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList, Animated
 import { SafeAreaView } from "react-native-safe-area-context";
 // import { StatusBar } from "expo-status-bar";
 import { router, useSegments } from "expo-router";
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef, useEffect, use } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import i18n from "./i18n/i18n";
@@ -14,6 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useThemeStore } from "./store/useThemeStore";
 import { Colors } from "./Constants/Colors";
 import { useTranslation } from "react-i18next";
+import { useNotesStore } from "./store/useNotesStore";
 
 
 export default function Index() {
@@ -42,7 +43,7 @@ export default function Index() {
   const segments = useSegments();
   const currentTab = segments[1] || 'index';
 
-  const [notes, setNotes] = useState<Note[]>([]);
+  const notes = useNotesStore((state) => state.notes);
   const [search, setSearch] = useState<string>('');
   // حالة الملاحظات المفضلة لتحديث الأيقونة
   const [favorites, setFavorites] = useState<Note[]>([]);
@@ -52,26 +53,17 @@ export default function Index() {
   useFocusEffect(
     useCallback(() => {
       const loadNotes = async () => {
-        const stored = await AsyncStorage.getItem("notes");
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          // إزالة isFavorite إذا كان موجوداً للتوافق
-          const cleanedNotes = parsed.map((note: any) => {
-            const { isFavorite, ...rest } = note;
-            return rest;
-          });
-          setNotes(cleanedNotes);
-        }
         const storedFavorites = await AsyncStorage.getItem("favoriteNotes");
         if (storedFavorites) {
           const parsedFavorites = JSON.parse(storedFavorites);
           setFavorites(parsedFavorites);
         }
       };
-      loadNotes()
+      loadNotes();
     }, [])
   )
-
+  console.log("NOTES FROM STORE", notes);
+  
 
   const Add = () => {
     router.push("/Notes/Add");
