@@ -7,6 +7,7 @@ import { Switch } from "react-native-paper";
 import { useThemeStore } from "./store/useThemeStore";
 import { Colors } from "./Constants/Colors";
 import { useTranslation } from "react-i18next";
+import SharedModal from "./components/sharedModal";
 
 
 
@@ -23,6 +24,13 @@ export default function Settings() {
   const animatedValue = useRef(new Animated.Value(0)).current;
   const segments = useSegments();
   const currentTab = segments[1] || 'settings';
+
+  // Modals
+
+  const [DELModal, setDELModal] = useState(false);
+  const [favoriteModal, setFavoritesModal] = useState(false);
+  const [trashModal, setTrashModal] = useState(false);
+  const [logoutModal, setLogoutModal] = useState(false);
 
   // دالة لفتح وإغلاق الـ drawer
   const toggleDrawer = () => {
@@ -179,11 +187,13 @@ export default function Settings() {
                   <Ionicons name="refresh" size={24} color={theme.primary} />
                 </TouchableOpacity>
               </View>
+              {/* Delete All Favorites Notes Modal */}
+
               <View style={[styles.Line, { backgroundColor: theme.borders }]} />
               <View style={[styles.options, {flexDirection : isRTL ? 'row-reverse' : 'row'}]}>
                 <Text style={[styles.optionText, { color: theme.primary }]}>{t("DELALLNotes")}</Text>
                 <TouchableOpacity 
-                // onPress={() => setDELModal(true)}
+                onPress={() => setDELModal(true)}
                 style={[styles.DeleteBtn, { backgroundColor: theme.card, borderColor: theme.borders }]}
                 >
                   <Ionicons name="trash" size={24} color={'#ff0000'} />
@@ -193,7 +203,7 @@ export default function Settings() {
               <View style={[styles.options, {flexDirection : isRTL ? 'row-reverse' : 'row'}]}>
                 <Text style={[styles.optionText, { color: theme.primary }]}>{t("DELALLFavorites")}</Text>
                 <TouchableOpacity
-                // onPress={() => setFavoritesModal(true)}
+                onPress={() => setFavoritesModal(true)}
                 style={[styles.DeleteBtn, { backgroundColor: theme.card, borderColor: theme.borders }]}
                 >
                   <Ionicons name="trash" size={24} color={'#ff0000'} />
@@ -204,22 +214,76 @@ export default function Settings() {
               <View style={[styles.options, {flexDirection : isRTL ? 'row-reverse' : 'row'}]}>
                 <Text style={[styles.optionText, { color: theme.primary }]}>{t("DELALLTrash")}</Text>
                 <TouchableOpacity
-                // onPress={() => setTrashModal(true)}
+                onPress={() => setTrashModal(true)}
                 style={[styles.DeleteBtn, { backgroundColor: theme.card, borderColor: theme.borders }]}
                 >
                   <Ionicons name="trash" size={24} color={'#ff0000'} />
                 </TouchableOpacity>
               </View>
+              {/* <Delete All Deleted Notes Modal /> */}
+              <SharedModal
+              visible={trashModal}
+              onRequestClose={() => setTrashModal(false)} 
+              >
+                <View style={[styles.modalContainer, { backgroundColor: theme.card }]}>
+                  <Text style={[styles.titleModal, { color: theme.primary }]}>
+                    {t("DELALLTrash")}
+                  </Text>
+                  <Text style={[styles.textModal, { color: theme.primary }]}>
+                    {t("sureDELALLTrash")}
+                  </Text>
+                  <View style={styles.modalButtons}>
+                    <TouchableOpacity style={[styles.DELBtn, { backgroundColor: '#DC2626' }]}>
+                      <Text style={{color: '#ffffff', fontWeight: 'bold'}}>
+                        {t("DEL")}
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.CancelBtn, { backgroundColor: '#3B82F6' }]} onPress={() => setTrashModal(false)}>
+                      <Text style={{color: '#fff', fontWeight: 'bold'}}>
+                        {t("CAN")}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+
+                </View>
+
+              </SharedModal>
               <View style={[styles.Line, { backgroundColor: theme.borders }]} />
 
               <View style={[styles.options, {flexDirection : isRTL ? 'row-reverse' : 'row'}]}>
                 <Text style={[styles.optionText, { color: theme.primary }]}>{t("Logout")}</Text>
                 <TouchableOpacity
-                // onPress={() => setLogoutModal(true)}
+                onPress={() => setLogoutModal(true)}
                 style={[styles.DeleteBtn, { backgroundColor: theme.card, borderColor: theme.borders }]}
                 >
                   <Ionicons name="log-out-outline" size={24} color={theme.primary} />
                 </TouchableOpacity>
+                   {/* <LogoutModal /> */}
+                <SharedModal
+                 visible={logoutModal}
+                 onRequestClose={() => setLogoutModal(false)}
+                 onClose={() => setLogoutModal(false)}
+                 >
+                  <View style={[styles.modalContainer, { backgroundColor: theme.card }]}>
+                    <Text style={[styles.titleModal, { color: theme.primary }]}>
+                    {t("Logout")}
+                  </Text>
+                  <Text style={[styles.textModal, { color: theme.primary }]}>
+                    {t("sureLogout")}
+                  </Text>
+                  <View style={styles.modalButtons}>
+                    <TouchableOpacity style={[styles.LogoutBtn, { backgroundColor: 'red' }]} onPress={() => { router.replace('/Auth/Login'); setLogoutModal(false); }}>
+                      <Text style={{ color: 'white', fontWeight: 'bold' }}>{t("Logout")}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.CancelBtn ,{backgroundColor: '#3B82F6'}]} onPress={() => setLogoutModal(false)}>
+                      <Text style={{ color: 'white', fontWeight: 'bold', }}>{t("CAN")}</Text>
+                    </TouchableOpacity>
+                  </View>
+                  </View>
+                  
+                    
+
+                 </SharedModal>
 
               </View>
             </View>
@@ -443,4 +507,54 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginHorizontal: 10
   },
+  modalContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+    padding: 20
+  },
+  titleModal:{
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    color: '#333',
+    textAlign: 'center'
+  },
+  textModal: {
+    fontSize: 16,
+    marginBottom: 15,
+    color: '#333',
+    textAlign: 'center'
+  },
+  modalButtons:{
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 20
+  },
+  LogoutBtn:{
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    marginTop: 5,
+    borderRadius: 10,
+    marginHorizontal: 10
+  },
+  CancelBtn:{
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 5,
+    borderRadius: 5,
+    marginHorizontal: 10,
+    fontSize: 16,
+    padding: 10
+  },
+  DELBtn:{
+    fontSize: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    marginTop: 5,
+    borderRadius: 5,
+    marginHorizontal: 10
+  }
 });

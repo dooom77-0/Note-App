@@ -34,7 +34,9 @@
     "DELALLNotes":"حذف كل الملاحظات",
     "DELALLFavorites":"حذف كل المفضلات",
     "DELALLTrash":"حذف كل سلة المحذوفات",
+    "sureDELALLTrash": "هل تريد حذف كل سلة المحذوفات نهائيا ؟",
     "Logout":"تسجيل الخروج",
+    "sureLogout":"هل تريد تسجيل الخروج ؟",
     "aboutApp": "حول التطبيق",
     "version":"النسخة"
 

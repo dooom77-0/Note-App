@@ -34,6 +34,7 @@
     "DELALLFavorites": "Delete All Favorites",
     "DELALLTrash": "Delete All Trash",
     "Logout": "Logout",
+    "sureLogout": "Are you sure you want to log out?",
     "aboutApp": "About the app",
     "version": "Version"
 }
