@@ -2,53 +2,39 @@
 
 
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Image } from 'react-native'
-import { useState , useEffect} from 'react'
+import { useEffect, useState} from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { router, useLocalSearchParams } from 'expo-router'
-import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { useThemeStore } from '../../store/useThemeStore';
 import { Colors } from '../../Constants/Colors';
 import { useTranslation } from 'react-i18next';
+import { useNotesStore } from '@/app/store/useNotesStore';
 const EditPage = () => {
   const { t } = useTranslation();
     const { id } = useLocalSearchParams();
-    const [title, setTitle] = useState<string>('');
-    const [content, setContent] = useState<string>('');
+    const noteId = Array.isArray(id) ? id[0] : id
     
     const { isDarkMode } = useThemeStore();
     const theme = isDarkMode ? Colors.dark : Colors.light;
-  
+    
+    const allNotes = useNotesStore((s) => s.notes);
+    const note = allNotes.find((n) => n.id === id);
+    const [title, setTitle] = useState<string>(note?.title || '');
+    const [content, setContent] = useState<string>(note?.content || '');
 
+    const updateNote = useNotesStore((s) => s.updateNote);
     useEffect(() => {
-      const loadNote = async () => {
-        try {
-          const stored = await AsyncStorage.getItem('notes');
-          const notes = stored ? JSON.parse(stored) : [];
-          const note = notes.find((n: any) => n.id === id);
-          if (note) {
-            setTitle(note.title);
-            setContent(note.content);
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      loadNote();
-    }, [id]);
+      if (note) {
+        setTitle(note.title);
+        setContent(note.content);
+      }
+    }, [note]);
 
-    const handleSave = async () => {
-        const storedNotes = await AsyncStorage.getItem('notes');
-        const notes = storedNotes ? JSON.parse(storedNotes) : [];
-        const updatedNotes = notes.map((n: any) => {
-          if (n.id === id) {
-            return { ...n, title, content };
-          }
-          return n;
-        });
-        await AsyncStorage.setItem('notes', JSON.stringify(updatedNotes));
-        router.back();
+
+    const handleSave = () => {
+      updateNote(noteId, { title, content });
+      router.back();
     }
   return (
       <SafeAreaView style={[styles.container, {backgroundColor: theme.background}]}>

@@ -45,7 +45,6 @@ export default function Index() {
   const handleFavorite = (id : string) => {
     toggleFavorite(id);
   }
-
   const Add = () => {
     router.push("/Notes/Add");
   }
