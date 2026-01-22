@@ -19,9 +19,10 @@ type NotesState = {
   deletepermanentlyNote: (id: string) => void;
   toggleFavorite: (id: string) => void;
   updateNote: (id: string, data: { title: string; content: string }) => void;
-  // deleteAllNotes: () => void;
-  // deleteAllFavorites: () => void;
+  deleteAllNotes: () => void;
+  removeAllFavorites: () => void;
   // deleteAllDeleted: () => void;
+  // restoreAllDeleted: () => void;
 };
 
 export const useNotesStore = create<NotesState>()(
@@ -77,6 +78,19 @@ export const useNotesStore = create<NotesState>()(
           notes: state.notes.map((note) => (note.id === id ? { ...note, title, content } : note)),
         }));
       },
+      // دالة حذف الكل
+      
+      deleteAllNotes: () => {
+        set((state) => ({
+          notes: state.notes.map((note) => !note.deleted && !note.favorite ? { ...note, deleted: true } : note),
+        }))
+      },
+      // دالة حذف كل المفضلات
+      removeAllFavorites: () => {
+        set((state) => ({
+          notes: state.notes.map((note) => !note.deleted && note.favorite ? { ...note, favorite: false } : note),
+        }))
+      }
       
     }),
     {

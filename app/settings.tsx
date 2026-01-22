@@ -8,6 +8,7 @@ import { useThemeStore } from "./store/useThemeStore";
 import { Colors } from "./Constants/Colors";
 import { useTranslation } from "react-i18next";
 import SharedModal from "./components/sharedModal";
+import { useNotesStore } from "./store/useNotesStore";
 
 
 
@@ -31,6 +32,12 @@ export default function Settings() {
   const [favoriteModal, setFavoritesModal] = useState(false);
   const [trashModal, setTrashModal] = useState(false);
   const [logoutModal, setLogoutModal] = useState(false);
+
+  // functions of Modals
+
+  const deleteAllNotes = useNotesStore((state) => state.deleteAllNotes);
+  const removeAllFavorites = useNotesStore((state) => state.removeAllFavorites);
+  // const deleteAllTrash = useNotesStore((state) => state.deleteAllTrash);
 
   // دالة لفتح وإغلاق الـ drawer
   const toggleDrawer = () => {
@@ -199,9 +206,40 @@ export default function Settings() {
                   <Ionicons name="trash" size={24} color={'#ff0000'} />
                 </TouchableOpacity>
               </View>
+              <SharedModal
+              visible={DELModal}
+              onRequestClose={() => setDELModal(false)} 
+              >
+                <View style={[styles.modalContainer, { backgroundColor: theme.card }]}>
+                  <Text style={[styles.titleModal, { color: theme.primary }]}>
+                    {t("DELALLNotes")}
+                  </Text>
+                  <Text style={[styles.textModal, { color: theme.primary }]}>
+                    {t("sureDELAllNotes")}
+                  </Text>
+                  <View style={styles.modalButtons} >
+                    <TouchableOpacity style={[styles.DELBtn, { backgroundColor: '#DC2626' }]} onPress={() => {
+                      deleteAllNotes();
+                      setDELModal(false);
+                      router.push('/');
+                    }}>
+                      <Text style={{color: '#ffffff', fontWeight: 'bold'}}>
+                        {t("DEL")}
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.CancelBtn, { backgroundColor: '#3B82F6' }]} onPress={() => setDELModal(false)}>
+                      <Text style={{color: '#fff', fontWeight: 'bold'}}>
+                        {t("CAN")}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+
+                </View>
+
+              </SharedModal>
               <View style={[styles.Line, { backgroundColor: theme.borders }]} />
               <View style={[styles.options, {flexDirection : isRTL ? 'row-reverse' : 'row'}]}>
-                <Text style={[styles.optionText, { color: theme.primary }]}>{t("DELALLFavorites")}</Text>
+                <Text style={[styles.optionText, { color: theme.primary }]}>{t("RMEALLFavorites")}</Text>
                 <TouchableOpacity
                 onPress={() => setFavoritesModal(true)}
                 style={[styles.DeleteBtn, { backgroundColor: theme.card, borderColor: theme.borders }]}
@@ -210,6 +248,37 @@ export default function Settings() {
                 </TouchableOpacity>
 
               </View>
+              <SharedModal
+              visible={favoriteModal}
+              onRequestClose={() => setFavoritesModal(false)}
+              >
+                <View style={[styles.modalContainer, { backgroundColor: theme.card }]}>
+                  <Text style={[styles.titleModal, { color: theme.primary }]}>
+                    {t("RMEALLFavorites")}
+                  </Text>
+                  <Text style={[styles.textModal, { color: theme.primary }]}>
+                    {t("sureRMEALLFavorites")}
+                  </Text>
+                  <View style={styles.modalButtons}>
+                    <TouchableOpacity style={[styles.DELBtn, { backgroundColor: '#DC2626' }]} onPress={() => {
+                      removeAllFavorites();
+                      setFavoritesModal(false);
+                      router.push('/favorites');
+                    }}>
+                      <Text style={{color: '#ffffff', fontWeight: 'bold'}}>
+                        {t("DEL")}
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.CancelBtn, { backgroundColor: '#3B82F6' }]} onPress={() => setFavoritesModal(false)}>
+                      <Text style={{color: '#fff', fontWeight: 'bold'}}>
+                        {t("CAN")}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+
+                </View>
+
+              </SharedModal>
               <View style={[styles.Line, { backgroundColor: theme.borders }]} />
               <View style={[styles.options, {flexDirection : isRTL ? 'row-reverse' : 'row'}]}>
                 <Text style={[styles.optionText, { color: theme.primary }]}>{t("DELALLTrash")}</Text>
