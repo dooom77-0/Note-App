@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, TouchableOpacity, Animated, Dimensions, Image, ScrollView } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Animated, Dimensions, Image, ScrollView, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useSegments } from "expo-router";
 import { useRef, useState } from 'react';
@@ -32,12 +32,14 @@ export default function Settings() {
   const [favoriteModal, setFavoritesModal] = useState(false);
   const [trashModal, setTrashModal] = useState(false);
   const [logoutModal, setLogoutModal] = useState(false);
+  const [restoreModal, setRestoreModal] = useState(false);
 
   // functions of Modals
 
   const deleteAllNotes = useNotesStore((state) => state.deleteAllNotes);
   const removeAllFavorites = useNotesStore((state) => state.removeAllFavorites);
-  // const deleteAllTrash = useNotesStore((state) => state.deleteAllTrash);
+  const deleteAllTrash = useNotesStore((state) => state.deleteAllDeleted);
+  const restoreAllDeleted = useNotesStore((state) => state.restoreAllDeleted);
 
   // دالة لفتح وإغلاق الـ drawer
   const toggleDrawer = () => {
@@ -185,18 +187,6 @@ export default function Settings() {
           <View style={styles.dataManagementSection}> 
             <Text style={[styles.sectionTitle, { color: theme.secondary, marginRight: 20 }]}>{t("dataManagement")}</Text>
             <View style={[styles.optionsContainer2, { borderColor: theme.borders, backgroundColor: theme.card }]}>
-              <View style={[styles.options, {flexDirection : isRTL ? 'row-reverse' : 'row'}, { backgroundColor: theme.card, borderColor: theme.borders }]}>
-                <Text style={[styles.optionText, { color: theme.primary }]}>{t("ResetApp")}</Text>
-                <TouchableOpacity 
-                // onPress={handleReset}
-                style={[styles.ResetBtn, { backgroundColor: theme.card, borderColor: theme.borders }]}
-                >
-                  <Ionicons name="refresh" size={24} color={theme.primary} />
-                </TouchableOpacity>
-              </View>
-              {/* Delete All Favorites Notes Modal */}
-
-              <View style={[styles.Line, { backgroundColor: theme.borders }]} />
               <View style={[styles.options, {flexDirection : isRTL ? 'row-reverse' : 'row'}]}>
                 <Text style={[styles.optionText, { color: theme.primary }]}>{t("DELALLNotes")}</Text>
                 <TouchableOpacity 
@@ -302,12 +292,60 @@ export default function Settings() {
                     {t("sureDELALLTrash")}
                   </Text>
                   <View style={styles.modalButtons}>
-                    <TouchableOpacity style={[styles.DELBtn, { backgroundColor: '#DC2626' }]}>
+                    <TouchableOpacity style={[styles.DELBtn, { backgroundColor: '#DC2626' }]}
+                    onPress={() => {
+                      deleteAllTrash();
+                      setTrashModal(false);
+                      router.push('/TrashPin');
+                    }} 
+                    >
                       <Text style={{color: '#ffffff', fontWeight: 'bold'}}>
                         {t("DEL")}
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.CancelBtn, { backgroundColor: '#3B82F6' }]} onPress={() => setTrashModal(false)}>
+                      <Text style={{color: '#fff', fontWeight: 'bold'}}>
+                        {t("CAN")}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+
+                </View>
+
+              </SharedModal>
+              <View style={[styles.Line, { backgroundColor: theme.borders }]} />
+              <View style={[styles.options, {flexDirection : isRTL ? 'row-reverse' : 'row'}]}>
+                <Text style={[styles.optionText, { color: theme.primary }]}>{t("restoreAllTrash")}</Text>
+                <TouchableOpacity
+                onPress={() => setRestoreModal(true)}
+                style={[styles.refreshBtn, { backgroundColor: '#10B981', borderColor: theme.borders }]}
+                >
+                  <Ionicons name="refresh" size={24} color={'#fff'} />
+                </TouchableOpacity>
+
+              </View>
+              <SharedModal
+              visible={restoreModal}
+              onRequestClose={() => setRestoreModal(false)}
+              >
+                <View style={[styles.modalContainer, { backgroundColor: theme.card }]}>
+                  <Text style={[styles.titleModal, { color: theme.primary }]}>
+                    {t("restoreAllTrash")}
+                  </Text>
+                  <Text style={[styles.textModal, { color: theme.primary }]}>
+                    {t("sureRestoreAllTrash")}
+                  </Text>
+                  <View style={styles.modalButtons}>
+                    <TouchableOpacity style={[styles.ResBtn, { backgroundColor: '#10B981' }]} onPress={() => {
+                      restoreAllDeleted();
+                      setRestoreModal(false);
+                      router.push('/TrashPin');
+                    }}>
+                      <Text style={{color: '#ffffff', fontWeight: 'bold'}}>
+                        {t("Restore")}
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.CancelBtn, { backgroundColor: '#3B82F6' }]} onPress={() => setRestoreModal(false)}>
                       <Text style={{color: '#fff', fontWeight: 'bold'}}>
                         {t("CAN")}
                       </Text>
@@ -360,7 +398,16 @@ export default function Settings() {
           </View>
 
           <View style={styles.AboutAppSection}> 
-            <Text style={[styles.sectionTitle, { color: theme.secondary, marginRight: 20 }]}>{t("aboutApp")}</Text>             
+            <Text style={[styles.sectionTitle, { color: theme.secondary, marginRight: 20 }]}>{t("aboutApp")}</Text>  
+            <View style={[styles.optionsContainer2, { borderColor: theme.borders, backgroundColor: theme.card }]}>
+              <View style={[styles.options, {flexDirection : isRTL ? 'row-reverse' : 'row', justifyContent: 'center'}]}>
+                <Pressable onPress={() => router.push('/about')} style={[styles.About, {flexDirection : isRTL ? 'row-reverse' : 'row', borderWidth: 1, borderColor: mainColor}]}>
+                  <Text style={[styles.optionText, { color: theme.primary }]}>{t("aboutApp")}</Text>
+                </Pressable>
+
+              </View>
+              
+            </View>           
           </View>
           
 
@@ -625,5 +672,30 @@ const styles = StyleSheet.create({
     marginTop: 5,
     borderRadius: 5,
     marginHorizontal: 10
+  },
+  refreshBtn:{
+    fontSize: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 8,
+    marginTop: 5,
+    borderRadius: 5,
+    marginHorizontal: 10
+  },
+  ResBtn:{
+    fontSize: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 8,
+    marginTop: 5,
+    borderRadius: 5,
+    marginHorizontal: 10
+  },
+  About:{
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 5,
+    marginHorizontal: 10,
   }
 });

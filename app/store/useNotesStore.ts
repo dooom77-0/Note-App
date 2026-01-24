@@ -21,8 +21,8 @@ type NotesState = {
   updateNote: (id: string, data: { title: string; content: string }) => void;
   deleteAllNotes: () => void;
   removeAllFavorites: () => void;
-  // deleteAllDeleted: () => void;
-  // restoreAllDeleted: () => void;
+  deleteAllDeleted: () => void;
+  restoreAllDeleted: () => void;
 };
 
 export const useNotesStore = create<NotesState>()(
@@ -90,7 +90,19 @@ export const useNotesStore = create<NotesState>()(
         set((state) => ({
           notes: state.notes.map((note) => !note.deleted && note.favorite ? { ...note, favorite: false } : note),
         }))
-      }
+      },
+      // دالة حذف كل المحذوفات
+      deleteAllDeleted: () => {
+        set((state) => ({
+          notes: state.notes.filter((note) => !note.deleted),
+        }))
+      },
+      // دالة استعادة كل المحذوفات
+      restoreAllDeleted: () => {
+        set((state) => ({
+          notes: state.notes.map((note) => note.deleted ? { ...note, deleted: false } : note),
+        }))
+      },
       
     }),
     {
