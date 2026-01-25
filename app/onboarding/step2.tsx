@@ -3,6 +3,7 @@ import React from 'react'
 import { router } from 'expo-router';
 import { Button } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const Step2 = () => {
 
@@ -12,6 +13,12 @@ const Step2 = () => {
     }
   return (
     <View style={styles.container}>
+        <LinearGradient
+         colors={['#A5D8FF', '#4BA3FF']}
+         style={styles.background}
+         start={{ x: 1, y: 1 }}
+         end={{ x: 0, y: 0 }}
+         />
         <View style={styles.container}>
             <Image 
             source={require("@/assets/images/rocket.png")}
@@ -42,7 +49,6 @@ export default Step2
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#A7C7FF',
       alignItems: 'center',
       justifyContent: 'center',
     },
@@ -51,5 +57,12 @@ const styles = StyleSheet.create({
       textAlign: 'center',
       margin: 10,
       color: '#2D2D2D',
-    }
+    },
+    background:{
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        height: '100%',
+    },
 })

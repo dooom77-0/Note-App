@@ -1,8 +1,8 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import { useState } from 'react'
 import { TextInput } from 'react-native-paper'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { router } from 'expo-router'
+import { LinearGradient } from 'expo-linear-gradient'
 const Signup = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -26,12 +26,17 @@ const Signup = () => {
       console.log('Email:', email);
       console.log('Password:', password);
       console.log('Signup successful!');
-      router.replace('/(tabs)');
+      router.replace('/');
     }
   }
   return (
-    <SafeAreaView style={styles.container}>
       <View style={styles.container}>
+        <LinearGradient
+         colors={['#A5D8FF', '#4BA3FF']}
+         style={styles.background}
+         start={{ x: 0, y: 1 }}
+         end={{ x: 1, y: 0 }}
+         />
         <Text style={styles.title}>إنشاء حساب </Text>
         
         <View style={styles.inputContainer}>
@@ -134,7 +139,6 @@ const Signup = () => {
             <Text style={styles.iconText}>المتابعة بواسطة Twitter/X</Text>
           </TouchableOpacity>
       </View>
-    </SafeAreaView>
   )
 }
 
@@ -143,12 +147,16 @@ export default Signup;
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#A7C7FF',
       alignItems: 'center',
       justifyContent: 'center',
-      paddingBottom: 10,
-    paddingVertical: 20
       
+    },
+    background:{
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        height: '100%'
     },
   title: {
       fontSize: 20,
@@ -194,7 +202,6 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       borderRadius: 20,
       justifyContent: 'center',
-      backgroundColor: '#A7C7FF',
       padding: 5
   },
   backLoginText: {

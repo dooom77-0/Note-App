@@ -1,11 +1,8 @@
 // Add Notes screen 
-
 import { StyleSheet, Text, TouchableOpacity, View, TextInput } from 'react-native'
 import {useState, useRef, useEffect} from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { router } from 'expo-router'
-// import { StatusBar } from 'expo-status-bar'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Ionicons } from '@expo/vector-icons'
 import { useThemeStore } from '../store/useThemeStore'
 import { Colors } from '../Constants/Colors'

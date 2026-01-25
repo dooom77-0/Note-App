@@ -2,8 +2,8 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import { useState } from 'react'
 import { Button, TextInput } from 'react-native-paper';
 import { router } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { LinearGradient } from 'expo-linear-gradient';
+ 
 const Login = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -24,12 +24,18 @@ const Login = () => {
         setError('كلمة المرور يجب ان تكون على الاقل 6 حروف');
         return;
       }
-      router.replace('/(tabs)');
+      router.replace('/');
     }
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#A7C7FF',padding: 10}}>
-      <View style={styles.container}>
+    <View style={styles.container}>
+      <LinearGradient 
+      colors={['#A5D8FF', '#4BA3FF']}
+      style={styles.background}
+      start={{ x: 0, y: 1 }}
+      end={{ x: 1, y: 0 }}
+      />
         <Text style={styles.title}>تسجيل الدخول</Text>
+        <Text style={styles.subtitle}>تسجيل دخول غير حقيقي </Text>
         <TextInput
           label="البريد الالكتروني"
           value={email}
@@ -115,7 +121,6 @@ const Login = () => {
           </View>
         
       </View>
-    </SafeAreaView>
   )
 }
 
@@ -124,11 +129,22 @@ export default Login;
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#A7C7FF',
       alignItems: 'center',
       justifyContent: 'center',
-      paddingBottom: 20,
       paddingHorizontal: 12
+    },
+    subtitle: {
+      fontSize: 12,
+      marginBottom: 15,
+      fontWeight: 'bold',
+      color: 'yellow'
+    },
+    background:{
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        height: '100%',
     },
     title: {
       fontSize: 20,
