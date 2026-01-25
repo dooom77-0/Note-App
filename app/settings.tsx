@@ -361,9 +361,9 @@ export default function Settings() {
                 <Text style={[styles.optionText, { color: theme.primary }]}>{t("Logout")}</Text>
                 <TouchableOpacity
                 onPress={() => setLogoutModal(true)}
-                style={[styles.DeleteBtn, { backgroundColor: theme.card, borderColor: theme.borders }]}
+                style={[styles.DeleteBtn, { backgroundColor: 'red', borderColor: theme.borders }]}
                 >
-                  <Ionicons name="log-out-outline" size={24} color={theme.primary} />
+                  <Ionicons name="log-out-outline" size={24} color={'white'} />
                 </TouchableOpacity>
                    {/* <LogoutModal /> */}
                 <SharedModal

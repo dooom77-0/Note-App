@@ -42,5 +42,22 @@
     "Logout": "Logout",
     "sureLogout": "Are you sure you want to log out?",
     "aboutApp": "About the app",
-    "version": "Version"
+
+    "appName": "Rishah",
+    "version": "Version 1.0.0",
+    "descriptionTitle": "About the app:",
+    "description": "Simple and easy app to write your daily notes. Save your thoughts, tasks, and memories in one place with a stylish and sleek design.",
+    "featuresTitle": "Features:",
+    "feature1Edit":"Create and edit notes easily",
+    "feature2Search":"Quick search for your notes",
+    "feature3Trash":"Trash for easy note recovery",
+    "feature4DarkMode":"Dark mode",
+    "feature5Language":"Support for Arabic and English languages",
+    "feature6Theme":"Change app theme",
+    "feature7More":"More...",
+    "developerTitle":"Developer:",
+    "developer":"This app was developed by Abd Alrahman",
+    "email":"Contact us",
+    "Copyright":"© 2023 Rishah. All rights reserved."
+
 }

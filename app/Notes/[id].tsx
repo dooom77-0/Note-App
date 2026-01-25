@@ -98,9 +98,8 @@ const Details = () => {
               <Text style={[styles.title, {color: theme.primary}]}>{note?.title}</Text>
               <View style={styles.line} />
               <Text style={[styles.date, {color: theme.primary}]}>
-                {dayjs().diff(dayjs(note?.createdAt), 'day') > 7 
-                ? dayjs(note?.createdAt).format('DD MMMM YYYY') 
-                : dayjs(note?.createdAt).fromNow()}</Text>
+                  {dayjs(note?.createdAt).format("DD MMMM YYYY - hh:mm A")}
+                </Text>
               <Text style={[styles.contentText, {color: theme.primary}]}>{note?.content}</Text>
           </View>
         
