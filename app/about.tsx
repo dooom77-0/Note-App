@@ -12,7 +12,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import i18n from './i18n/i18n';
-
+ 
 function AboutScreen() {
   const isRTL = i18n.language === 'ar';
   const { t } = useTranslation();

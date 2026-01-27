@@ -8,7 +8,7 @@ import { Colors } from "./Constants/Colors";
 import { useTranslation } from 'react-i18next';
 import i18n from './i18n/i18n'
 import { useNotesStore } from "./store/useNotesStore";
-
+ 
 const TrashPin = () => {
   const deletepermanentlyNote = useNotesStore((s) => s.deletepermanentlyNote);
   const restoreNote = useNotesStore((s) => s.restoreNote);
@@ -157,6 +157,7 @@ const TrashPin = () => {
                         <TouchableOpacity style={styles.DELBtn}
                         onPress={() => {
                           deletepermanentlyNote(item.id);
+                          setShowModal(false);
                         }} 
                         >
                           <Text style={styles.DELBtnText}>{t("DEL")}</Text>

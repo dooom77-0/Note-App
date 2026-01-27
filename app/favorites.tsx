@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import i18n from './i18n/i18n'
 import { useNotesStore } from './store/useNotesStore'
 
-
+ 
 
 // مكون صفحة المفضلة، مبني بنفس طريقة سلة المحذوفات
 const Favorites = () => {

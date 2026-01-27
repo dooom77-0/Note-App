@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import SharedModal from "./components/sharedModal";
 import { useNotesStore } from "./store/useNotesStore";
 
-
+ 
 
 export default function Settings() {
   const { t, i18n } = useTranslation();

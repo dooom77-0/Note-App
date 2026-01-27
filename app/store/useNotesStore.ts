@@ -82,7 +82,7 @@ export const useNotesStore = create<NotesState>()(
       
       deleteAllNotes: () => {
         set((state) => ({
-          notes: state.notes.map((note) => !note.deleted && !note.favorite ? { ...note, deleted: true } : note),
+          notes: state.notes.map((note) => !note.deleted ? { ...note, deleted: true } : note),
         }))
       },
       // دالة حذف كل المفضلات

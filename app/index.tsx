@@ -12,7 +12,7 @@ import { useThemeStore } from "./store/useThemeStore";
 import { Colors } from "./Constants/Colors";
 import { useTranslation } from "react-i18next";
 import { useNotesStore } from "./store/useNotesStore";
-
+ 
 
 export default function Index() {
   useEffect(() => {
