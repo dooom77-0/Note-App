@@ -379,7 +379,7 @@ export default function Settings() {
                     {t("sureLogout")}
                   </Text>
                   <View style={styles.modalButtons}>
-                    <TouchableOpacity style={[styles.LogoutBtn, { backgroundColor: 'red' }]} onPress={() => { router.replace('/Auth/Login'); setLogoutModal(false); }}>
+                    <TouchableOpacity style={[styles.LogoutBtn, { backgroundColor: 'red' }]} onPress={() => { router.replace('../Auth/Login'); setLogoutModal(false); }}>
                       <Text style={{ color: 'white', fontWeight: 'bold' }}>{t("Logout")}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.CancelBtn ,{backgroundColor: '#3B82F6'}]} onPress={() => setLogoutModal(false)}>

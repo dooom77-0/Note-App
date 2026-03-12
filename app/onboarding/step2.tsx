@@ -9,7 +9,7 @@ const Step2 = () => {
 
     const Finish = async () => {
         await AsyncStorage.setItem('onboarding', 'true');
-        router.replace('/Auth/Login');
+        router.replace('../Auth/Login');
     }
   return (
     <View style={styles.container}>
