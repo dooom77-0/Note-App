@@ -4,7 +4,7 @@
     "slug": "NoteApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/AppIcon.png",
+    "icon": "./assets/images/AppIcon2.png",
     "scheme": "noteapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -33,7 +33,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/AppIcon.png",
+          "image": "./assets/images/AppIcon2.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#0277BD",
@@ -41,7 +41,8 @@
             "backgroundColor": "#0277BD"
           }
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true,

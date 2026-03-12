@@ -138,7 +138,7 @@ const TrashPin = () => {
                     </TouchableOpacity>
                   </View>
                 </View>
-                {/* START MODAL FRO DELETE PERMANENTLY */}
+                {/* START MODAL FOR DELETE PERMANENTLY */}
                 <Modal 
                 visible={showModal} 
                 animationType="fade" 
