@@ -6,10 +6,10 @@ import { useEffect, useState} from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { router, useLocalSearchParams } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons';
-import { useThemeStore } from '../../store/useThemeStore';
-import { Colors } from '../../Constants/Colors';
+import { useThemeStore } from '../../../store/useThemeStore';
+import { Colors } from '../../../Constants/Colors';
 import { useTranslation } from 'react-i18next';
-import { useNotesStore } from '@/app/store/useNotesStore';
+import { useNotesStore } from '../../../store/useNotesStore';
 const EditPage = () => {
   const { t } = useTranslation();
     const { id } = useLocalSearchParams();

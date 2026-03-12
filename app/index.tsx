@@ -3,15 +3,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useSegments } from "expo-router";
 import { useState, useRef, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import i18n from "./i18n/i18n";
+import i18n from "../i18n/i18n";
 import dayjs from "dayjs";
 import 'dayjs/locale/ar';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import * as Clipboard from 'expo-clipboard';
-import { useThemeStore } from "./store/useThemeStore";
-import { Colors } from "./Constants/Colors";
+import { useThemeStore } from "../store/useThemeStore";
+import { Colors } from "../Constants/Colors";
 import { useTranslation } from "react-i18next";
-import { useNotesStore } from "./store/useNotesStore";
+import { useNotesStore } from "../store/useNotesStore";
  
 
 export default function Index() {

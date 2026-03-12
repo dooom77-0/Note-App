@@ -6,11 +6,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ar';
-import { useThemeStore } from '../store/useThemeStore';
+import { useThemeStore } from '../../store/useThemeStore';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { Colors } from '../Constants/Colors';
+import { Colors } from '../../Constants/Colors';
 import { useTranslation } from 'react-i18next';
-import { useNotesStore } from '../store/useNotesStore';
+import { useNotesStore } from '../../store/useNotesStore';
 
 
 dayjs.extend(relativeTime);

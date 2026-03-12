@@ -3,11 +3,11 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Ionicons from '@expo/vector-icons/build/Ionicons'
 import { router, useSegments } from 'expo-router'
 import { useState, useRef } from 'react'
-import { useThemeStore } from "./store/useThemeStore";
-import { Colors } from "./Constants/Colors";
+import { useThemeStore } from "../store/useThemeStore";
+import { Colors } from "../Constants/Colors";
 import { useTranslation } from 'react-i18next';
-import i18n from './i18n/i18n'
-import { useNotesStore } from "./store/useNotesStore";
+import i18n from '../i18n/i18n'
+import { useNotesStore } from "../store/useNotesStore";
  
 const TrashPin = () => {
   const deletepermanentlyNote = useNotesStore((s) => s.deletepermanentlyNote);

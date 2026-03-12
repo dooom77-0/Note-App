@@ -4,11 +4,11 @@ import { router, useSegments } from "expo-router";
 import { useRef, useState } from 'react';
 import { Ionicons } from "@expo/vector-icons";
 import { Switch } from "react-native-paper";
-import { useThemeStore } from "./store/useThemeStore";
-import { Colors } from "./Constants/Colors";
+import { useThemeStore } from "../store/useThemeStore";
+import { Colors } from "../Constants/Colors";
 import { useTranslation } from "react-i18next";
-import SharedModal from "./components/sharedModal";
-import { useNotesStore } from "./store/useNotesStore";
+import SharedModal from "../components/sharedModal";
+import { useNotesStore } from "../store/useNotesStore";
 
  
 
