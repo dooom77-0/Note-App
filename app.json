@@ -7,7 +7,7 @@
     "icon": "./assets/images/AppIcon2.png",
     "scheme": "noteapp",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "ios": {
       "supportsTablet": true
     },
@@ -33,12 +33,12 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/AppIcon2.png",
+          "image": "./assets/images/splashScreen.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#0277BD",
+          "backgroundColor": "#E6F4FE",
           "dark": {
-            "backgroundColor": "#0277BD"
+            "backgroundColor": "#E6F4FE"
           }
         }
       ],

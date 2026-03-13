@@ -23,8 +23,6 @@ const Signup = () => {
     }
       
     else {
-      console.log('Email:', email);
-      console.log('Password:', password);
       console.log('Signup successful!');
       router.replace('/');
     }

@@ -4,18 +4,13 @@ import { Button, TextInput } from 'react-native-paper';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
  
-const Login = () => {
+ const Login = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
     
     const handleLogin = () => {
-      if(email && password) {
-        console.log('Email:', email);
-        console.log('Password:', password);
-        console.log('Login successful!');
-      }
       if(!email || !password) {
         setError('يرجى ملء جميع الحقول');
         return;
@@ -125,6 +120,7 @@ const Login = () => {
 }
 
 export default Login;
+
 
 const styles = StyleSheet.create({
     container: {
